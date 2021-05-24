@@ -1,0 +1,19 @@
+// Vscode 옵션 설정
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+		"~/*": [
+			"./*"
+		],
+		// @/ 입력 시 /src/로 변경됨
+		"@/*": [
+			"./src/*"
+		],
+		}
+	},
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
+}
