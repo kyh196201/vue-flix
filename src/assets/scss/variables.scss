@@ -2,7 +2,12 @@
 // 참고: https://uxgjs.tistory.com/256
 // 설명: 프로젝트 전체에 적용되는 변수에 대해 정의한 파일
 **/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 // 사용자 정의 변수
-$color-main: #141414;
+// Colors
+$main-color: #141414;
 $black: #000;
+
+// Fonts
+$noto: 'Noto Sans KR', sans-serif;
