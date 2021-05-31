@@ -1,7 +1,9 @@
 <template>
 	<div class="app">
 		<AppHeader />
-		<main class="app-main">App Main</main>
+		<main class="app-main">
+			<router-view></router-view>
+		</main>
 		<AppFooter />
 	</div>
 </template>

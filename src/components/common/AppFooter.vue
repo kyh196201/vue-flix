@@ -9,10 +9,5 @@ export default {
 </script>
 
 <style lang="scss">
-.app-footer {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 70px;
-}
+@import '@/assets/scss/components/footer.scss';
 </style>
