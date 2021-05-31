@@ -7,7 +7,8 @@ module.exports = {
 		loaderOptions: {
 			scss: {
 				additionalData: `
-					@import "@/assets/scss/variables.scss";
+					@import "@/assets/scss/_variables.scss";
+					@import "@/assets/scss/_mixins.scss";
 				`,
 			},
 		},

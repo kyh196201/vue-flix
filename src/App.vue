@@ -1,15 +1,24 @@
 <template>
 	<div class="app">
-		<header class="app-header">헤더</header>
-		<main class="app-main">메인</main>
-		<footer class="app-footer">푸터</footer>
+		<AppHeader />
+		<main class="app-main">App Main</main>
+		<AppFooter />
 	</div>
 </template>
 
 <script>
+import AppHeader from '@/components/common/AppHeader.vue';
+import AppFooter from '@/components/common/AppFooter.vue';
+
 export default {
 	name: 'App',
+	components: {
+		AppHeader,
+		AppFooter,
+	},
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import '@/assets/scss/layout.scss';
+</style>

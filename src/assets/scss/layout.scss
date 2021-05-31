@@ -1,0 +1,15 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: $main-color;
+    color: $white;
+    font-size: 1.6rem;
+}
+
+.app-main {
+    flex: 1;
+    background-color: $gray-6;
+}
+
+// TODO 미디어 쿼리 작성

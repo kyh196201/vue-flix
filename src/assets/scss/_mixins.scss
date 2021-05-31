@@ -1,0 +1,39 @@
+// Reference1: https://nykim.work/84
+// Reference2: https://chaewonkong.github.io/posts/scss-media-query.html
+// Break Point
+$mobile-small: 375px;
+$mobile: 425px;
+$tablet: 768px;
+$labtop: 1024px;
+$desktop: 1400px;
+
+// Mixins
+@mixin desktop {
+    @media (max-width: #{$desktop}) {
+        @content;
+    }
+}
+
+@mixin labtop {
+    @media (max-width: #{$labtop}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: #{$tablet}) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media (max-width: #{$mobile}) {
+        @content;
+    }
+}
+
+@mixin mobile-small {
+    @media (max-width: #{$mobile-small}) {
+        @content;
+    }
+}
