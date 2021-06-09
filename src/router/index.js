@@ -4,8 +4,8 @@ import { createWebHistory, createRouter } from 'vue-router';
 const routes = [
 	{
 		path: '/',
-		name: 'Home',
-		component: () => import('@/views/Home.vue'),
+		name: 'HomePage',
+		component: () => import('@/views/HomePage.vue'),
 	},
 	{
 		path: '/movie',

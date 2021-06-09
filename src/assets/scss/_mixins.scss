@@ -37,3 +37,19 @@ $desktop: 1400px;
         @content;
     }
 }
+
+
+// Reference: https://13akstjq.github.io/sass/2020/02/22/useful-sass-mixin.html
+@mixin ellipsis($line: 1) {
+    @if ($line == 1) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    } @else {
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: $line;
+    }
+}
