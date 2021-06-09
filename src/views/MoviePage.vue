@@ -1,20 +1,20 @@
 <template>
-	<section class="home">
-		<h1 class="visually-hidden">홈 페이지</h1>
+	<section class="movie-page">
+		<h1 class="visually-hidden">영화 페이지</h1>
 	</section>
 </template>
 
 <script>
 export default {
-	name: 'home',
+	name: 'movie-page',
 	data() {
 		return {
-			message: 'This is Home page.',
+			message: 'This is Movie page.',
 		};
 	},
 
 	created() {
-		console.log('Home.vue created!', this.message);
+		console.log('MoviePage.vue created!', this.message);
 	},
 };
 </script>
