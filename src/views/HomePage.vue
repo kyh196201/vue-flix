@@ -53,6 +53,7 @@
 <script>
 // FIXME 임시 포스터 이미지
 import posterImage from '@/assets/images/common/poster.jpg';
+import { getMovieDetail } from '@/api/movie.js';
 
 export default {
 	name: 'home',
@@ -69,6 +70,17 @@ export default {
 
 	created() {
 		console.log('Home.vue created!', this.message);
+
+		this.fetchData();
+	},
+
+	methods: {
+		async fetchData() {
+			const tempId = 550;
+			const response = await getMovieDetail(tempId);
+
+			console.log('fetchData response', response);
+		},
 	},
 };
 </script>
