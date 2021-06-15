@@ -6,39 +6,53 @@
 			<h2 class="visually-hidden">홈 페이지 메인 영화 정보</h2>
 			<article class="billboard">
 				<div class="billboard__inner">
-					<div class="billboard__back">
-						<!-- 이미지 -->
-						<div class="billboard__poster">
-							<figure class="poster">
-								<img :src="posterImage" alt="천사와 악마" />
-							</figure>
+					<template v-if="billBoard">
+						<div class="billboard__back">
+							<!-- 이미지 -->
+							<div class="billboard__poster">
+								<figure
+									class="poster"
+									v-if="billBoard.backdrop_path"
+								>
+									<!-- TODO 이미지 에러 -->
+									<img
+										:src="billBoardImage"
+										:alt="billBoard.title"
+									/>
+								</figure>
+							</div>
+							<!-- 비디오 -->
+							<!-- <div class="billboard__trailer"></div> -->
 						</div>
-						<!-- 비디오 -->
-						<!-- <div class="billboard__trailer"></div> -->
-					</div>
-					<div class="billboard__front">
-						<div class="billboard__front__inner">
-							<!-- 영화 정보 -->
-							<div class="billboard__info">
-								<div class="billboard__title">너의 이름은</div>
-								<div class="billboard__overview">
-									새로운 교황 선출을 앞두고 일루미나티가
-									나타난다. 이들이 원하는 건 피의 복수뿐.
-									비극을 막으려면 단서를 찾아 해독해야 한다.
-									위험한 반물질에 바티칸이 파괴되기 전에.
+						<div class="billboard__front">
+							<div class="billboard__front__inner">
+								<!-- 영화 정보 -->
+								<div class="billboard__info">
+									<div
+										class="billboard__title"
+										v-if="billBoard.title"
+									>
+										{{ billBoard.title }}
+									</div>
+									<div
+										class="billboard__overview"
+										v-if="billBoard.overview"
+									>
+										{{ billBoard.overview }}
+									</div>
+								</div>
+								<!-- 비디오 버튼 및 연령 표시 -->
+								<div class="billboard__control">
+									<button type="button" class="btn btn--play">
+										재생
+									</button>
+									<button type="button" class="btn btn--info">
+										상세정보
+									</button>
 								</div>
 							</div>
-							<!-- 비디오 버튼 및 연령 표시 -->
-							<div class="billboard__control">
-								<button type="button" class="btn btn--play">
-									재생
-								</button>
-								<button type="button" class="btn btn--info">
-									상세정보
-								</button>
-							</div>
 						</div>
-					</div>
+					</template>
 				</div>
 			</article>
 		</section>
@@ -51,35 +65,61 @@
 </template>
 
 <script>
-// FIXME 임시 포스터 이미지
-import posterImage from '@/assets/images/common/poster.jpg';
+// Api
 import { getMovieDetail } from '@/api/movie.js';
+
+// Utils
+import getImageUrl from '@/utils/common/getImageUrl.js';
 
 export default {
 	name: 'home',
 	data() {
 		return {
-			message: 'This is Home page.',
-			// FIXME 임시 포스터 이미지
-			posterImage: posterImage,
+			$tag: 'home-page',
+
+			loading: {
+				billBoard: false,
+			},
 
 			// 빌보드 데이터
-			billBoard: {},
+			billBoard: null,
+
+			// TODO 에러 처리 임시 데이터
+			errorData: null,
 		};
 	},
 
-	created() {
-		console.log('Home.vue created!', this.message);
+	computed: {
+		billBoardImage() {
+			if (!this.billBoard?.backdrop_path) return '';
 
-		this.fetchData();
+			return getImageUrl(this.billBoard.backdrop_path, 2, 'backdrop');
+		},
+	},
+
+	created() {
+		this.init();
 	},
 
 	methods: {
-		async fetchData() {
-			const tempId = 550;
-			const response = await getMovieDetail(tempId);
+		init() {
+			this.fetchBillBoard();
+		},
 
-			console.log('fetchData response', response);
+		async fetchBillBoard() {
+			this.loading.billBoard = true;
+
+			const tempId = 337404;
+			const result = await getMovieDetail(tempId);
+
+			// 에러
+			if (result.isError) {
+				this.errorData = result.errorData;
+			} else {
+				this.billBoard = result.data;
+			}
+
+			this.loading.billBoard = false;
 		},
 	},
 };
