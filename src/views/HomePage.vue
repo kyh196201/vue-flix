@@ -54,12 +54,21 @@
 						</div>
 					</template>
 				</div>
+				<div class="billboard__blur"></div>
 			</article>
 		</section>
 
 		<!-- 장르별 영화 영역 -->
-		<section class="home__programs">
+		<section class="home__movies">
 			<h2 class="visually-hidden">홈 페이지 장르별 영화</h2>
+
+			<!-- 영화 > 행 -->
+			<div class="home__movie-row">
+				<article class="movie-row">
+					<div class="movie-row__title">latest movies</div>
+					<div class="movie-row__slider">영화 슬라이더</div>
+				</article>
+			</div>
 		</section>
 	</section>
 </template>

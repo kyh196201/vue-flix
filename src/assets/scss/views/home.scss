@@ -2,8 +2,6 @@
 @import '/node_modules/open-color/open-color.scss';
 
 .home {
-    min-height: 50vh;
-
     // 빌보드 영역
     &__billboard {
         .billboard {
@@ -32,7 +30,7 @@
                     position: absolute;
                     left: 0;
                     bottom: 0;
-                    padding: 0 4%;
+                    padding: 0 4% 2%;
                 }
             }
 
@@ -108,8 +106,20 @@
                     }
                 }
             }
+
+            // 빌보드 블러 영역
+            &__blur {
+                position: relative;
+                height: 10vw;
+                background-image: linear-gradient(0deg, rgba(20, 20, 20, 1), rgba(20, 20, 20, 0));
+            }
         }
     }
 
     // 장르별 영화 영역
+    &__movies {
+        position: relative;
+        padding: 4% 0;
+        background-color: $main-color;
+    }
 }
