@@ -77,14 +77,18 @@ export default {
 		return {
 			$tag: 'home-page',
 
+			// 로딩 상태
 			loading: {
 				billBoard: false,
 			},
 
+			// 빌보드 영화 ID 리스트
+			movieIds: [257211, 337404, 372058, 13],
+
 			// 빌보드 데이터
 			billBoard: null,
 
-			// TODO 에러 처리 임시 데이터
+			// TODO 에러 처리 임시 데이터 => 공통으로 처리
 			errorData: null,
 		};
 	},
@@ -106,11 +110,21 @@ export default {
 			this.fetchBillBoard();
 		},
 
+		// 빌보드 영화 ID 랜덤하게 가져오기
+		getRandomBillBoardId() {
+			const randomIndex = Math.floor(
+				Math.random() * this.movieIds.length,
+			);
+
+			return this.movieIds[randomIndex];
+		},
+
+		// 빌보드 API 요청
 		async fetchBillBoard() {
 			this.loading.billBoard = true;
 
-			const tempId = 337404;
-			const result = await getMovieDetail(tempId);
+			const movieId = this.getRandomBillBoardId();
+			const result = await getMovieDetail(movieId);
 
 			// 에러
 			if (result.isError) {
