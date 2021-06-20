@@ -121,5 +121,15 @@
         position: relative;
         padding: 4% 0;
         background-color: $main-color;
+
+        // home__movies__inner
+        &__inner {
+            margin-top: -10vw;
+        }
+
+        // home__movies__row
+        &__row {
+            margin-bottom: 3vw;
+        }
     }
 }

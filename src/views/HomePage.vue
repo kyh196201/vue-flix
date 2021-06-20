@@ -62,12 +62,13 @@
 		<section class="home__movies">
 			<h2 class="visually-hidden">홈 페이지 장르별 영화</h2>
 
-			<!-- 영화 > 행 -->
-			<div class="home__movie-row">
-				<article class="movie-row">
-					<div class="movie-row__title">latest movies</div>
-					<div class="movie-row__slider">영화 슬라이더</div>
-				</article>
+			<div class="home__movies__inner">
+				<!-- 영화 > 행 -->
+				<template v-for="(type, index) in releaseTypes" :key="index">
+					<div class="home__movies__row">
+						<MovieRow v-bind="type"></MovieRow>
+					</div>
+				</template>
 			</div>
 		</section>
 	</section>
@@ -79,9 +80,18 @@ import { getMovieDetail } from '@/api/movie.js';
 
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl.js';
+import { RELEASE_TYPES } from '@/utils/common/constants.js';
+
+// Components
+import MovieRow from '@/components/home/MovieRow.vue';
 
 export default {
 	name: 'home',
+
+	components: {
+		MovieRow,
+	},
+
 	data() {
 		return {
 			$tag: 'home-page',
@@ -93,6 +103,9 @@ export default {
 
 			// 빌보드 영화 ID 리스트
 			movieIds: [257211, 337404, 372058, 13],
+
+			// 영화 release type
+			releaseTypes: [...RELEASE_TYPES],
 
 			// 빌보드 데이터
 			billBoard: null,

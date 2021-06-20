@@ -33,9 +33,13 @@ export async function getMovieDetail(id) {
  * https://developers.themoviedb.org/3/movies/get-now-playing
  * @param {String} releaseType : release type
  */
-export async function getMovieLists(releaseType) {
+export async function getMovieLists(releaseType, page = 1) {
 	try {
-		const { data } = await movieInstance.get(releaseType);
+		const { data } = await movieInstance.get(releaseType, {
+			params: {
+				page,
+			},
+		});
 
 		return {
 			isError: false,
