@@ -7,21 +7,15 @@
 			<!-- 영화 슬라이더 -->
 			<div class="movie-row__slider">
 				<div class="slider-container">
-					<template v-if="movies.length">
-						<swiper
-							v-bind="swiperOptions"
-							:pagination="true"
-							class="movie-swiper"
-							@swiper="onSwiper"
+					<div class="slider-wrapper">
+						<div
+							class="slider-slide"
+							v-for="(movie, index) in movies"
+							:key="`${movie.id}-${index}`"
 						>
-							<swiper-slide
-								v-for="(movie, index) in movies"
-								:key="`${movie.id}-${index}`"
-							>
-								<MovieItem :movieData="movie"></MovieItem>
-							</swiper-slide>
-						</swiper>
-					</template>
+							<MovieItem :movieData="movie"></MovieItem>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -35,21 +29,10 @@ import { getMovieLists } from '@/api/movie.js';
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
 
-import SwiperCore, { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-
-SwiperCore.use([Pagination]);
-
-// Import Swiper styles
-import 'swiper/swiper.scss';
-import 'swiper/components/pagination/pagination.scss';
-
 export default {
 	name: 'home-movie-row',
 
 	components: {
-		Swiper,
-		SwiperSlide,
 		MovieItem,
 	},
 
@@ -67,42 +50,14 @@ export default {
 
 	data() {
 		return {
+			imageSrc:
+				'https://image.tmdb.org/t/p/w780/8ChCpCYxh9YXusmHwcE9YzP0TSG.jpg',
+
 			movies: [],
 
 			page: 1,
 
 			totalPages: 0,
-
-			// swiper instance
-			$swiper: null,
-
-			// Swiper 옵션
-			swiperOptions: {
-				slidesPerView: 6,
-				slidesPerGroup: 6,
-				spaceBetween: 10,
-				breakpoints: {
-					375: {
-						slidesPerView: 1,
-					},
-					425: {
-						slidesPerView: 2,
-						slidesPerGroup: 2,
-					},
-					768: {
-						slidesPerView: 3,
-						slidesPerGroup: 3,
-					},
-					1024: {
-						slidesPerView: 4,
-						slidesPerGroup: 4,
-					},
-					1400: {
-						slidesPerView: 5,
-						slidesPerGroup: 5,
-					},
-				},
-			},
 		};
 	},
 
@@ -124,16 +79,11 @@ export default {
 			this.totalPages = total_pages;
 			this.movies.push(...results);
 		},
-
-		// 스와이퍼 인스턴스가 생성되면 실행되는 함수
-		onSwiper(swiper) {
-			this.$swiper = swiper;
-		},
 	},
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .movie-row {
 	// 이너
 
@@ -190,11 +140,6 @@ export default {
 					width: 100%;
 				}
 			}
-		}
-
-		.movie-swiper {
-			overflow: visible;
-			padding-top: 10px;
 		}
 	}
 }
