@@ -10,9 +10,11 @@
 					<template v-if="movies.length">
 						<swiper
 							v-bind="swiperOptions"
-							:pagination="true"
 							class="movie-swiper"
-							@swiper="onSwiper"
+							:class="swiperClass"
+							@swiper="setSwiperRef"
+							@mouseenter="handleMouseEnterSwiper"
+							@mouseleave="handleMouseLeaveSwiper"
 						>
 							<swiper-slide
 								v-for="(movie, index) in movies"
@@ -35,14 +37,15 @@ import { getMovieLists } from '@/api/movie.js';
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
 
-import SwiperCore, { Pagination } from 'swiper';
+import SwiperCore, { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
-SwiperCore.use([Pagination]);
+SwiperCore.use([Pagination, Navigation]);
 
 // Import Swiper styles
 import 'swiper/swiper.scss';
 import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/navigation/navigation.min.css';
 
 export default {
 	name: 'home-movie-row',
@@ -76,11 +79,27 @@ export default {
 			// swiper instance
 			$swiper: null,
 
+			// swiper mouseEnter 여부
+			isHover: false,
+
 			// Swiper 옵션
 			swiperOptions: {
+				// 루프
+				// loop: true,
+
+				// loop와 slidesPerGroup를 같이 사용하기 위한 옵션
+				// loopFillGroupWithBlank: true,
+
+				// 네비게이션
+				navigation: true,
+
+				// 페이지네이션
+				pagination: true,
+
 				slidesPerView: 6,
 				slidesPerGroup: 6,
 				spaceBetween: 10,
+				// 반응형 breakpoints
 				breakpoints: {
 					375: {
 						slidesPerView: 1,
@@ -106,11 +125,25 @@ export default {
 		};
 	},
 
+	computed: {
+		/**
+		 * @returns {Object} movie-swiper 추가되는 클래스
+		 */
+		swiperClass() {
+			return {
+				'movie-swiper--active': this.isHover,
+			};
+		},
+	},
+
 	created() {
 		this.fetchMovies();
 	},
 
 	methods: {
+		/**
+		 * releaseType에 따라 영화 데이터 조회
+		 */
 		async fetchMovies() {
 			const result = await getMovieLists(this.releaseType, this.page);
 
@@ -126,14 +159,116 @@ export default {
 		},
 
 		// 스와이퍼 인스턴스가 생성되면 실행되는 함수
-		onSwiper(swiper) {
+		setSwiperRef(swiper) {
 			this.$swiper = swiper;
+		},
+
+		/**
+		 * swiper mouseenter 이벤트 핸들러
+		 */
+		handleMouseEnterSwiper() {
+			this.isHover = true;
+		},
+
+		/**
+		 * swiper mouseleave 이벤트 핸들러
+		 */
+		handleMouseLeaveSwiper() {
+			this.isHover = false;
 		},
 	},
 };
 </script>
 
 <style lang="scss">
+// movie-swiper
+.movie-swiper {
+	// swiper
+	.swiper {
+		// pagination
+		&-pagination {
+			&-bullets {
+				display: flex;
+				bottom: auto;
+				left: auto;
+				top: -10px;
+				right: 4%;
+				width: auto;
+				height: auto;
+				opacity: 0;
+			}
+
+			// bullet 스타일
+			&-bullet {
+				width: 10px;
+				height: 2px;
+				border-radius: 1px;
+				margin: 0 1px !important;
+				background-color: $white;
+				opacity: 0.3;
+
+				// bullet active 스타일
+				&-active {
+					opacity: 1;
+				}
+			}
+		}
+		// pagination End
+
+		// navigation button 스타일
+		&-button {
+			&-prev,
+			&-next {
+				top: 0;
+				bottom: 0;
+				margin: 0;
+				background-color: $black;
+				opacity: 0;
+				width: 4%;
+				height: auto;
+			}
+
+			// prev button 스타일
+			&-prev {
+				left: 2px;
+			}
+
+			// next button 스타일
+			&-next {
+				right: 2px;
+			}
+		}
+	}
+	// swiper End
+
+	// movie-swiper에 마우스 오버시 스타일
+	&.movie-swiper--active {
+		.swiper {
+			// pagination
+			&-pagination {
+				&-bullets {
+					opacity: 1;
+				}
+			}
+			// pagination End
+
+			// navigation
+			&-button {
+				&-prev,
+				&-next {
+					opacity: 0.7;
+
+					&:hover {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+}
+</style>
+
+<style lang="scss" scoped>
 .movie-row {
 	// 이너
 
@@ -156,8 +291,14 @@ export default {
 		.slider {
 			// slider-container
 			&-container {
+				overflow: hidden;
 				position: relative;
-				padding: 0 4%;
+				padding-top: 10px;
+
+				.movie-swiper {
+					overflow: visible;
+					padding: 0 4%;
+				}
 			}
 
 			// slider-wrapper
@@ -190,11 +331,6 @@ export default {
 					width: 100%;
 				}
 			}
-		}
-
-		.movie-swiper {
-			overflow: visible;
-			padding-top: 10px;
 		}
 	}
 }
