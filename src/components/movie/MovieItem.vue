@@ -63,6 +63,7 @@ export default {
 			width: 100%;
 			height: auto;
 			max-height: 100%;
+			background-color: $oc-gray-6;
 		}
 	}
 }

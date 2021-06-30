@@ -45,7 +45,7 @@ SwiperCore.use([Pagination, Navigation]);
 // Import Swiper styles
 import 'swiper/swiper.scss';
 import 'swiper/components/pagination/pagination.scss';
-import 'swiper/components/navigation/navigation.min.css';
+import 'swiper/components/navigation/navigation.scss';
 
 export default {
 	name: 'home-movie-row',
