@@ -44,8 +44,6 @@ SwiperCore.use([Pagination, Navigation]);
 
 // Import Swiper styles
 import 'swiper/swiper.scss';
-import 'swiper/components/pagination/pagination.scss';
-import 'swiper/components/navigation/navigation.scss';
 
 export default {
 	name: 'home-movie-row',
@@ -181,6 +179,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import 'swiper/components/pagination/pagination.scss';
+@import 'swiper/components/navigation/navigation.scss';
+
 // movie-swiper
 .movie-swiper {
 	// swiper
