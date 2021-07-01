@@ -2,7 +2,11 @@
 	<article class="movie-row">
 		<div class="movie-row__inner">
 			<!-- 제목 -->
-			<div class="movie-row__title">{{ title }}</div>
+			<div class="movie-row__title">
+				<span class="title">
+					{{ title }}
+				</span>
+			</div>
 
 			<!-- 영화 슬라이더 -->
 			<div class="movie-row__slider">
@@ -68,6 +72,8 @@ export default {
 
 	data() {
 		return {
+			loading: false,
+
 			movies: [],
 
 			page: 1,
@@ -135,10 +141,16 @@ export default {
 	},
 
 	created() {
-		this.fetchMovies();
+		this.init();
 	},
 
 	methods: {
+		async init() {
+			this.loading = true;
+			await this.fetchMovies();
+			this.loading = false;
+		},
+
 		/**
 		 * releaseType에 따라 영화 데이터 조회
 		 */
@@ -231,12 +243,12 @@ export default {
 
 			// prev button 스타일
 			&-prev {
-				left: 2px;
+				left: 0;
 			}
 
 			// next button 스타일
 			&-next {
-				right: 2px;
+				right: 0;
 			}
 		}
 	}
