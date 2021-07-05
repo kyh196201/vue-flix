@@ -4,7 +4,6 @@
 **/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-// 사용자 정의 변수
 // Colors
 $gray-9: #212529;
 $gray-8: #343a40;
@@ -14,6 +13,7 @@ $main-color: #141414;
 $black: #000;
 $white: #fff;
 $dim-color: rgba(0, 0, 0, 0.75);
+$skeleton-color: $oc-gray-8;
 
 // Fonts
 $noto: 'Noto Sans KR', sans-serif;

@@ -6,7 +6,6 @@
 					v-if="useLazy"
 					src=""
 					:data-src="imageSrc"
-					:alt="movieTitle"
 					@error="onImageError"
 					class="lazy"
 					ref="lazy-img"
@@ -113,12 +112,17 @@ export default {
 		 */
 		handleIntersect(entries, observer) {
 			const [entry] = entries;
-			const { isIntersecting, target } = entry;
+			const { isIntersecting, target, intersectionRatio } = entry;
+
+			if (isIntersecting) {
+				console.log(entry);
+				console.log(intersectionRatio);
+			}
 
 			if (isIntersecting) {
 				const $lazyImg = this.$refs['lazy-img'];
 				const imageUrl = $lazyImg.dataset.src;
-				$lazyImg.src = imageUrl;
+				$lazyImg.setAttribute('src', imageUrl);
 				$lazyImg.classList.remove('lazy');
 				observer.unobserve(target);
 			}
@@ -156,16 +160,15 @@ export default {
 			width: 100%;
 			height: auto;
 			max-height: 100%;
-			background-color: $dim-color;
+			border: none;
 
 			&.lazy {
 				height: 100%;
-				// TODO 수정 필요
-				// 임시로 src 없을 때 노출되는 이미지 아이콘 제거하기위해서 적용
-				padding-top: 100%;
-				// alt 태그 가리기
-				// https://stackoverflow.com/questions/36305805/how-to-hide-alt-text-using-css-when-the-image-is-not-present
 				text-indent: -9999px;
+				background-image: linear-gradient(
+					$skeleton-color 100%,
+					transparent 0
+				);
 			}
 		}
 	}

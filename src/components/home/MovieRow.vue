@@ -107,6 +107,7 @@ export default {
 				breakpoints: {
 					375: {
 						slidesPerView: 1,
+						slidesPerGroup: 1,
 					},
 					425: {
 						slidesPerView: 2,
