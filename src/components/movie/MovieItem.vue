@@ -25,6 +25,8 @@
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl.js';
 
+import MyObserver from '@/utils/observer';
+
 export default {
 	name: 'movie-item',
 
@@ -67,7 +69,7 @@ export default {
 
 	created() {
 		if (this.useLazy) {
-			this.createLazyObserver();
+			this.createObserver();
 		}
 	},
 
@@ -85,26 +87,8 @@ export default {
 			if ($parent) $parent.style.backgroundColor = '#000';
 		},
 
-		/**
-		 * IntersectionObserver 인스턴스 생성
-		 */
-		createObserver(handler, options = {}) {
-			if (typeof handler !== 'function') {
-				throw new Error('handler must be function');
-			}
-
-			return new IntersectionObserver(handler, options);
-		},
-
-		/**
-		 * IntersectionObserver 옵션 생성
-		 */
-		createObserverOption({ root, rootMargin, threshold }) {
-			return {
-				root,
-				rootMargin,
-				threshold,
-			};
+		createObserver() {
+			this.$observer = new MyObserver(this.handleIntersect.bind(this));
 		},
 
 		/**
@@ -121,18 +105,6 @@ export default {
 				$lazyImg.classList.remove('lazy');
 				observer.unobserve(target);
 			}
-		},
-
-		/**
-		 * lazy-loading IntersectionObserver 인스턴스 생성
-		 */
-		createLazyObserver() {
-			const options = this.createObserverOption({
-				root: null,
-				rootMargin: '0px',
-				threshold: 0.5,
-			});
-			this.$observer = this.createObserver(this.handleIntersect, options);
 		},
 	},
 };
