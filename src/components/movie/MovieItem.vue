@@ -112,12 +112,7 @@ export default {
 		 */
 		handleIntersect(entries, observer) {
 			const [entry] = entries;
-			const { isIntersecting, target, intersectionRatio } = entry;
-
-			if (isIntersecting) {
-				console.log(entry);
-				console.log(intersectionRatio);
-			}
+			const { isIntersecting, target } = entry;
 
 			if (isIntersecting) {
 				const $lazyImg = this.$refs['lazy-img'];

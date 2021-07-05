@@ -16,7 +16,8 @@
 							v-bind="swiperOptions"
 							class="movie-swiper"
 							:class="swiperClass"
-							@swiper="setSwiperRef"
+							@swiper="onSwiperReady"
+							@observerUpdate="onSwiperUpdate"
 							@mouseenter="handleMouseEnterSwiper"
 							@mouseleave="handleMouseLeaveSwiper"
 						>
@@ -94,6 +95,8 @@ export default {
 				// loop와 slidesPerGroup를 같이 사용하기 위한 옵션
 				// loopFillGroupWithBlank: true,
 
+				observer: true,
+
 				// 네비게이션
 				navigation: true,
 
@@ -169,9 +172,14 @@ export default {
 			this.movies.push(...results);
 		},
 
-		// 스와이퍼 인스턴스가 생성되면 실행되는 함수
-		setSwiperRef(swiper) {
+		// set swiper instance
+		onSwiperReady(swiper) {
 			this.$swiper = swiper;
+		},
+
+		// Ref: swiper observerUpdate events
+		onSwiperUpdate(swiper) {
+			swiper.update();
 		},
 
 		/**
@@ -303,7 +311,6 @@ export default {
 	// 슬라이더
 	&__slider {
 		.slider {
-			// slider-container
 			&-container {
 				overflow: hidden;
 				position: relative;
