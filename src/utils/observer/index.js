@@ -2,8 +2,10 @@
  * IntersectionObserver Custom Class
  */
 class MyObserver {
+	$observer = null;
+
 	constructor(handler, options) {
-		return this.setup(handler, options);
+		this.setup(handler, options);
 	}
 
 	get defaultOptions() {
@@ -34,7 +36,7 @@ class MyObserver {
 
 		const observerOption = this.createOptions(options);
 
-		return new IntersectionObserver(handler, observerOption);
+		this.$observer = new IntersectionObserver(handler, observerOption);
 	}
 
 	/**

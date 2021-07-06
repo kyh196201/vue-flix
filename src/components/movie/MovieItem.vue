@@ -74,7 +74,7 @@ export default {
 	},
 
 	mounted() {
-		if (this.$observer instanceof IntersectionObserver) {
+		if (this.$observer instanceof MyObserver) {
 			this.$observer.observe(this.$el);
 		}
 	},
