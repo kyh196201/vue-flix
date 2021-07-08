@@ -37,7 +37,7 @@
 
 <script>
 // Api
-import { getMovieLists } from '@/api/movie.js';
+import { movieAPI } from '@/api/';
 
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
@@ -159,7 +159,10 @@ export default {
 		 * releaseType에 따라 영화 데이터 조회
 		 */
 		async fetchMovies() {
-			const result = await getMovieLists(this.releaseType, this.page);
+			const result = await movieAPI.getMovieLists(
+				this.releaseType,
+				this.page,
+			);
 
 			if (result.isError) {
 				console.error(result.errorData);

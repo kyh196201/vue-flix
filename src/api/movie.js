@@ -1,11 +1,24 @@
-import { movieInstance } from './index';
+import { API_KEY } from '@/configs/';
+import createInstance from './common/createInstance';
+
+/**
+ * movie API 요청 인스턴스
+ * https://api.themoviedb.org/3/movie/
+ */
+const movieInstance = createInstance({
+	baseURL: process.env.VUE_APP_TMDB_ENDPOINT + 'movie/',
+	params: {
+		api_key: API_KEY,
+		language: 'ko-KR',
+	},
+});
 
 /**
  * 영화 상세 정보 조회
  * https://developers.themoviedb.org/3/movies/get-movie-details
  * @param {Number} id : 영화 아이디
  */
-export async function getMovieDetail(id) {
+async function getMovieDetail(id) {
 	try {
 		const { data } = await movieInstance.get('' + id);
 
@@ -33,7 +46,7 @@ export async function getMovieDetail(id) {
  * https://developers.themoviedb.org/3/movies/get-now-playing
  * @param {String} releaseType : release type
  */
-export async function getMovieLists(releaseType, page = 1) {
+async function getMovieLists(releaseType, page = 1) {
 	try {
 		const { data } = await movieInstance.get(releaseType, {
 			params: {
@@ -57,3 +70,5 @@ export async function getMovieLists(releaseType, page = 1) {
 		};
 	}
 }
+
+export { getMovieDetail, getMovieLists };

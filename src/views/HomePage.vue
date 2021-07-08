@@ -76,7 +76,7 @@
 
 <script>
 // Api
-import { getMovieDetail } from '@/api/movie.js';
+import { movieAPI } from '@/api';
 
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl.js';
@@ -146,7 +146,7 @@ export default {
 			this.loading.billBoard = true;
 
 			const movieId = this.getRandomBillBoardId();
-			const result = await getMovieDetail(movieId);
+			const result = await movieAPI.getMovieDetail(movieId);
 
 			// 에러
 			if (result.isError) {
