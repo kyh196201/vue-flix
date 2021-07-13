@@ -71,6 +71,8 @@
 				</template>
 			</div>
 		</section>
+		<button type="button" @click="showModal = true">Open Modal</button>
+		<Modal v-if="showModal" @close="showModal = false"></Modal>
 	</section>
 </template>
 
@@ -84,12 +86,14 @@ import { RELEASE_TYPES } from '@/utils/common/constants.js';
 
 // Components
 import MovieRow from '@/components/home/MovieRow.vue';
+import Modal from '@/components/common/Modal.vue';
 
 export default {
 	name: 'home',
 
 	components: {
 		MovieRow,
+		Modal,
 	},
 
 	data() {
@@ -112,6 +116,9 @@ export default {
 
 			// TODO 에러 처리 임시 데이터 => 공통으로 처리
 			errorData: null,
+
+			// Temp
+			showModal: false,
 		};
 	},
 
