@@ -72,7 +72,7 @@
 			</div>
 		</section>
 		<button type="button" @click="showModal = true">Open Modal</button>
-		<Modal v-if="showModal" @close="showModal = false"></Modal>
+		<MovieModal v-if="showModal" @close="showModal = false"></MovieModal>
 	</section>
 </template>
 
@@ -86,14 +86,14 @@ import { RELEASE_TYPES } from '@/utils/common/constants.js';
 
 // Components
 import MovieRow from '@/components/home/MovieRow.vue';
-import Modal from '@/components/common/Modal.vue';
+import MovieModal from '@/components/movie/MovieModal.vue';
 
 export default {
 	name: 'home',
 
 	components: {
 		MovieRow,
-		Modal,
+		MovieModal,
 	},
 
 	data() {

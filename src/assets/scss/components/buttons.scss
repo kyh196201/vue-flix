@@ -2,10 +2,10 @@
     버튼의 공통 스타일을 정의한 scss파일입니다.
 */
 
-.btn {
+button {
     padding: 0;
     margin: 0;
-    background-color: transparent;
+    background-color: inherit;
     border: none;
     outline: none;
     cursor: pointer;
@@ -16,6 +16,10 @@
 .btn--play {
     background-color: $white;
     color: $black;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 // 상세 정보 버튼
