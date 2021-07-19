@@ -82,22 +82,10 @@
                 margin-top: 1.5vw;
 
                 .btn {
-                    padding: 0.4rem 0.8rem;
-                    border-radius: 4px;
                     transition: opacity 0.3s ease;
-                    font-size: 16px;
-                    font-weight: 500;
-
-                    @include labtop {
-                        font-size: 12px;
-                    }
-
-                    @include mobile {
-                        font-size: 10px;
-                    }
 
                     &:first-child {
-                        margin-right: 1rem;
+                        margin-right: 10px;
                     }
 
                     &:hover {
@@ -110,7 +98,7 @@
             &__blur {
                 position: relative;
                 height: 10vw;
-                background-image: linear-gradient(0deg, rgba(20, 20, 20, 1), rgba(20, 20, 20, 0));
+                background-image: $blur-gradient;
             }
         }
     }

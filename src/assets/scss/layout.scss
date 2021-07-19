@@ -1,19 +1,13 @@
-.app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: $main-color;
-    color: $white;
-    font-size: 1.6rem;
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
 }
 
-.app-main {
-    flex: 1;
-    background-color: $gray-6;
+html, body {
+    font-size: 62.5%;
 }
 
-.scroll-lock {
-    overflow: hidden !important;
+body {
+	font-family: $noto;
 }
-
-// TODO 미디어 쿼리 작성
