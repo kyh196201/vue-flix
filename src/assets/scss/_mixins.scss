@@ -53,3 +53,11 @@ $desktop: 1400px;
       -webkit-line-clamp: $line;
     }
 }
+
+@mixin clearfix {
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}

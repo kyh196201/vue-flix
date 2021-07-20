@@ -1,0 +1,91 @@
+@charset 'utf-8';
+
+.age-badge {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    
+    &::after {
+        content: 'all';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: $white;
+        font-weight: bold;
+        letter-spacing: -0.4px;
+        font-size: 16px;
+        background-color: $oc-green-8;
+        text-transform: uppercase;
+    }
+}
+
+.running-time {
+    letter-spacing: 0.4px;
+}
+
+.synopsis {
+    line-height: 1.4;
+}
+
+// info-row
+.info-row {
+    @include clearfix;
+
+    &:not(:last-child) {
+        margin-bottom: 12px;
+    }
+
+    &__title {
+        float: left;
+        margin-right: 4px;
+        color: #777;
+        font-size: 1em;
+        line-height: 1.4;
+
+        &::after {
+            content: ':';
+        }
+    }
+
+    &__list {
+        font-size: 1em;
+    }
+
+    &__item {
+        float: left;
+        margin-right: 4px;
+        color: $white;
+        line-height: 1.4;
+
+        &:not(:last-child) {
+            &::after {
+                content: ',';
+            }
+        }
+
+        span {
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &__more-btn {
+        cursor: pointer;
+        font-style: italic;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
