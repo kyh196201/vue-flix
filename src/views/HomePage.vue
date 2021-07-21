@@ -44,10 +44,18 @@
 								<!-- 비디오 버튼 및 연령 표시 -->
 								<div class="billboard__control">
 									<button type="button" class="btn btn--play">
-										재생
+										<font-awesome-icon
+											class="btn__icon"
+											:icon="['fas', 'play']"
+										></font-awesome-icon>
+										<span class="btn__title">재생</span>
 									</button>
 									<button type="button" class="btn btn--info">
-										상세정보
+										<font-awesome-icon
+											class="btn__icon"
+											:icon="['fas', 'info']"
+										></font-awesome-icon>
+										<span class="btn__title">상세정보</span>
 									</button>
 								</div>
 							</div>
