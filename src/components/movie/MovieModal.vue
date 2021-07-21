@@ -30,7 +30,11 @@
 											type="button"
 											class="btn btn--play"
 										>
-											재생
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'play']"
+											></font-awesome-icon>
+											<span class="btn__title">재생</span>
 										</button>
 									</li>
 									<!-- +, 좋아요, 싫어요 버튼 -->
@@ -39,15 +43,41 @@
 											type="button"
 											class="btn btn--user"
 										>
-											&plus;
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'plus']"
+											></font-awesome-icon>
+											<span class="btn__title"
+												>찜하기</span
+											>
 										</button>
 									</li>
 									<li>
 										<button
 											type="button"
-											class="btn btn--user"
+											class="btn btn--user btn--like"
 										>
-											&minus;
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'thumbs-up']"
+											></font-awesome-icon>
+											<span class="btn__title"
+												>좋아요</span
+											>
+										</button>
+									</li>
+									<li>
+										<button
+											type="button"
+											class="btn btn--user btn--dislike"
+										>
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'thumbs-down']"
+											></font-awesome-icon>
+											<span class="btn__title"
+												>마음에 안들어요</span
+											>
 										</button>
 									</li>
 								</ul>
@@ -241,6 +271,7 @@ $modal-padding: 48px;
 
 					&--play {
 						height: 42px;
+						padding: 0 22px;
 
 						&:hover {
 							opacity: 0.7;
@@ -248,6 +279,10 @@ $modal-padding: 48px;
 
 						@include labtop {
 							height: 32px;
+						}
+
+						@include tablet {
+							padding: 0 10px;
 						}
 					}
 
@@ -278,6 +313,10 @@ $modal-padding: 48px;
 				li {
 					&:not(:last-child) {
 						margin-right: 10px;
+
+						@include labtop {
+							margin-right: 5px;
+						}
 					}
 				}
 			}

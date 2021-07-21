@@ -1,12 +1,11 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-// solid icons
-import { faPlay, faInfo } from '@fortawesome/free-solid-svg-icons';
+import sollidIcons from './soldIcons';
+import regularIcons from './regularIcons';
 
 export default {
 	install: (app, options = {}) => {
-		let icons = [faPlay, faInfo];
+		let icons = [...sollidIcons, ...regularIcons];
 
 		if (Array.isArray(options.icons)) {
 			icons.push(...options.icons);
