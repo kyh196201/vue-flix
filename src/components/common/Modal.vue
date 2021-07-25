@@ -8,7 +8,10 @@
 						class="modal__close-btn"
 						@click="$emit('close')"
 					>
-						&times;
+						<font-awesome-icon
+							class="btn__icon"
+							:icon="['fas', 'times']"
+						></font-awesome-icon>
 					</button>
 				</slot>
 				<div class="modal__body">
@@ -77,14 +80,21 @@ export default {
 
 	// default close btn
 	&__close-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		position: absolute;
 		top: 0;
 		right: 0;
-		width: 36px;
-		height: 36px;
+		width: 3.6rem;
+		height: 3.6rem;
 		background-color: $modal-color;
 		color: rgba(255, 255, 255, 0.8);
 		border-radius: 50%;
+
+		.btn__icon {
+			font-size: 1em;
+		}
 	}
 }
 </style>

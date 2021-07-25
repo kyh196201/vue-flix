@@ -277,6 +277,10 @@ $modal-padding: 48px;
 							opacity: 0.7;
 						}
 
+						.btn__icon {
+							margin-right: 0.4em;
+						}
+
 						@include labtop {
 							height: 32px;
 						}
