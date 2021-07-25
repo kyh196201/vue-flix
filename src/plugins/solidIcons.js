@@ -7,6 +7,7 @@ import {
 	faPlus,
 	faTimes,
 	faCheck,
+	faVolumeMute,
 } from '@fortawesome/free-solid-svg-icons';
 
 const sollidIcons = [
@@ -17,6 +18,7 @@ const sollidIcons = [
 	faPlus,
 	faCheck,
 	faTimes,
+	faVolumeMute,
 ];
 
 export default sollidIcons;

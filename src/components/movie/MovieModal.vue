@@ -1,5 +1,5 @@
 <template>
-	<Modal class="movie-modal">
+	<Modal class="movie-modal" @close="handleClose">
 		<template v-slot:body>
 			<section class="movie-modal__body">
 				<h2 class="visually-hidden">영화 상세 모달</h2>
@@ -9,18 +9,20 @@
 						<!-- 포스터 -->
 						<figure class="billboard__poster">
 							<img
-								:src="posterImage"
-								alt="너의 이름은"
-								style="width: 100%"
+								v-if="movieData"
+								:src="backdropImage"
+								:alt="movieData.title"
 							/>
 						</figure>
 
 						<!-- 비디오 -->
 					</div>
 					<div class="billboard__front">
-						<div class="billboard__info">
+						<div class="billboard__info" v-if="movieData">
 							<!-- 제목 -->
-							<div class="billboard__title">너의 이름은</div>
+							<div class="billboard__title">
+								{{ movieData.title }}
+							</div>
 
 							<!-- 버튼 -->
 							<div class="billboard__interface">
@@ -81,7 +83,12 @@
 										</button>
 									</li>
 								</ul>
-								<button class="btn btn--user">mute</button>
+								<button class="btn btn--user">
+									<font-awesome-icon
+										class="btn__icon"
+										:icon="['fas', 'volume-mute']"
+									></font-awesome-icon>
+								</button>
 							</div>
 						</div>
 						<div class="billboard__blur"></div>
@@ -92,37 +99,36 @@
 				<section class="movie-modal__main">
 					<h3 class="visually-hidden">영화 상세 메인 영역</h3>
 					<!-- main > info -->
-					<section class="movie-modal__movie-info">
+					<section
+						class="movie-modal__movie-info"
+						v-if="movieData && movieCredits"
+					>
 						<div class="movie-info__left">
 							<div class="movie-info__basic">
-								<span class="release-date">2017</span>
+								<span class="release-date">{{
+									releaseDate
+								}}</span>
 								<span class="age-badge"></span>
-								<span class="running-time"> 2시간 13분 </span>
+								<span class="running-time">
+									{{ runTime }}
+								</span>
 							</div>
 							<div class="movie-info__synopsis">
 								<p class="synopsis">
-									악명 높은 폭탄 테러범 유나바머. 그의
-									희생자는 늘어가는데 단서는 찾을 수가 없다.
-									대중 사이에 퍼져나가는 공포. 마침내 FBI는
-									새로운 타입의 프로파일러를 불러온다.
+									{{ movieData.overview }}
 								</p>
 							</div>
 						</div>
 						<div class="movie-info__right">
-							<div class="info-row">
+							<div class="info-row" v-if="castList.length">
 								<span class="info-row__title">출연</span>
 								<ul class="info-row__list">
-									<li class="info-row__item">
-										<span>샘 워딩턴</span>
-									</li>
-									<li class="info-row__item">
-										<span>토비 맥과이어</span>
-									</li>
-									<li class="info-row__item">
-										<span>로버트 다우니 주니어</span>
-									</li>
-									<li class="info-row__item">
-										<span>휴고 위빙</span>
+									<li
+										class="info-row__item"
+										v-for="cast in castList"
+										:key="`cast-${cast.id}`"
+									>
+										<span>{{ cast.name }}</span>
 									</li>
 									<li class="info-row__item">
 										<a href="#" class="info-row__more-btn">
@@ -131,7 +137,7 @@
 									</li>
 								</ul>
 							</div>
-							<div class="info-row">
+							<div class="info-row" v-if="false">
 								<span class="info-row__title"
 									>프로그램 특징</span
 								>
@@ -142,11 +148,21 @@
 								</ul>
 							</div>
 
-							<div class="info-row">
+							<!-- 장르 -->
+							<div
+								class="info-row"
+								v-if="
+									movieData.genres && movieData.genres.length
+								"
+							>
 								<span class="info-row__title">장르</span>
 								<ul class="info-row__list">
-									<li class="info-row__item">
-										<span> 미스터리</span>
+									<li
+										class="info-row__item"
+										v-for="genre in movieData.genres"
+										:key="`genre-${genre.id}`"
+									>
+										<span>{{ genre.name }}</span>
 									</li>
 								</ul>
 							</div>
@@ -165,10 +181,35 @@
 </template>
 
 <script>
+// Mixin
+import movieDetailMixin from '@/mixins/movie';
+
+// Component
 import Modal from '@/components/common/Modal.vue';
+
+// Api
+import { getMovieDetail, getMovieCredits } from '@/api/movie';
+
+// Utils
+import { isString } from '@/utils/validate';
+
+// TODO remove
 import poster from '@/assets/images/common/poster.jpg';
 
 export default {
+	name: 'MovieModal',
+
+	extends: movieDetailMixin,
+
+	props: {
+		propName: {
+			movieId: {
+				type: [Number, String],
+				required: true,
+			},
+		},
+	},
+
 	components: {
 		Modal,
 	},
@@ -177,6 +218,60 @@ export default {
 		return {
 			posterImage: poster,
 		};
+	},
+
+	created() {
+		// API 요청
+		this.fetchData();
+	},
+
+	methods: {
+		// close 이벤트 emit
+		handleClose() {
+			this.$router.back();
+		},
+
+		// 데이터 fetch
+		async fetchData() {
+			if (isString(this.movieIdAsNumber)) {
+				this.movieIdAsNumber = Number(this.movieIdAsNumber);
+			}
+
+			this.fetchMovieDetail();
+			this.fetchMovieCredits();
+		},
+
+		// 영화 상세 정보 조회
+		async fetchMovieDetail() {
+			try {
+				const result = await getMovieDetail(this.movieIdAsNumber);
+
+				if (result.isError) {
+					console.error(result.errorData);
+					return false;
+				}
+
+				this.movieData = result.data;
+			} catch (error) {
+				console.error(error.message);
+			}
+		},
+
+		// 영화 출연진 조회
+		async fetchMovieCredits() {
+			try {
+				const result = await getMovieCredits(this.movieIdAsNumber);
+
+				if (result.isError) {
+					console.error(result.errorData);
+					return false;
+				}
+
+				this.movieCredits = result.data;
+			} catch (error) {
+				console.error(error.message);
+			}
+		},
 	},
 };
 </script>

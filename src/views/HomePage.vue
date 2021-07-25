@@ -50,7 +50,11 @@
 										></font-awesome-icon>
 										<span class="btn__title">재생</span>
 									</button>
-									<button type="button" class="btn btn--info">
+									<button
+										type="button"
+										class="btn btn--info"
+										@click="handleClickDetail"
+									>
 										<font-awesome-icon
 											class="btn__icon"
 											:icon="['fas', 'info']"
@@ -80,7 +84,7 @@
 			</div>
 		</section>
 		<button type="button" @click="showModal = true">Open Modal</button>
-		<MovieModal v-if="showModal" @close="showModal = false"></MovieModal>
+		<router-view></router-view>
 	</section>
 </template>
 
@@ -94,14 +98,12 @@ import { RELEASE_TYPES } from '@/utils/common/constants.js';
 
 // Components
 import MovieRow from '@/components/home/MovieRow.vue';
-import MovieModal from '@/components/movie/MovieModal.vue';
 
 export default {
 	name: 'home',
 
 	components: {
 		MovieRow,
-		MovieModal,
 	},
 
 	data() {
@@ -171,6 +173,18 @@ export default {
 			}
 
 			this.loading.billBoard = false;
+		},
+
+		// 빌보드 상세 정보 클릭 이벤트
+		handleClickDetail() {
+			const movieId = this.billBoard.id;
+
+			this.$router.push({
+				name: 'MovieModal',
+				params: {
+					movieId,
+				},
+			});
 		},
 	},
 };

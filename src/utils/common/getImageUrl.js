@@ -1,6 +1,4 @@
-// TODO '/configuration'을 통해서 기본 세팅하기
-// TMDB API 이미지 base url
-const baseUrl = 'https://image.tmdb.org/t/p/';
+import { baseImageUrl } from '@/configs';
 
 // image sizes
 const imgSizes = {
@@ -13,8 +11,8 @@ const imgSizes = {
 
 export default function getImageUrl(url, size = 2, type) {
 	if (type === 'backdrop') {
-		return baseUrl + imgSizes.backdrop_sizes[size] + url;
+		return baseImageUrl + imgSizes.backdrop_sizes[size] + url;
 	} else {
-		return baseUrl + imgSizes.poster_sizes[size] + url;
+		return baseImageUrl + imgSizes.poster_sizes[size] + url;
 	}
 }
