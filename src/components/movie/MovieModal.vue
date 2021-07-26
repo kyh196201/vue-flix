@@ -91,7 +91,6 @@
 								</button>
 							</div>
 						</div>
-						<div class="billboard__blur"></div>
 					</div>
 				</section>
 
@@ -99,73 +98,81 @@
 				<section class="movie-modal__main">
 					<h3 class="visually-hidden">영화 상세 메인 영역</h3>
 					<!-- main > info -->
-					<section
-						class="movie-modal__movie-info"
-						v-if="movieData && movieCredits"
-					>
+					<section class="movie-modal__movie-info">
 						<div class="movie-info__left">
 							<div class="movie-info__basic">
-								<span class="release-date">{{
-									releaseDate
-								}}</span>
-								<span class="age-badge"></span>
-								<span class="running-time">
-									{{ runTime }}
-								</span>
+								<SkeletonBox :width="'50%'" v-if="isLoading" />
+								<template v-else-if="!isLoading && movieData">
+									<span class="release-date">{{
+										releaseDate
+									}}</span>
+									<span class="age-badge"></span>
+									<span class="running-time">
+										{{ runTime }}
+									</span>
+								</template>
 							</div>
 							<div class="movie-info__synopsis">
-								<p class="synopsis">
+								<SkeletonBox
+									:height="'10rem'"
+									v-if="isLoading"
+								/>
+								<p
+									class="synopsis"
+									v-else-if="!isLoading && movieData.overview"
+								>
 									{{ movieData.overview }}
 								</p>
 							</div>
 						</div>
 						<div class="movie-info__right">
-							<div class="info-row" v-if="castList.length">
-								<span class="info-row__title">출연</span>
-								<ul class="info-row__list">
-									<li
-										class="info-row__item"
-										v-for="cast in castList"
-										:key="`cast-${cast.id}`"
+							<SkeletonList v-if="isLoading" :rows="2" />
+							<template v-else>
+								<div class="info-row" v-if="castList.length">
+									<span class="info-row__title">출연</span>
+									<ul class="info-row__list">
+										<li
+											class="info-row__item"
+											v-for="cast in castList"
+											:key="`cast-${cast.id}`"
+										>
+											<span>{{ cast.name }}</span>
+										</li>
+										<li class="info-row__item">
+											<a
+												href="#"
+												class="info-row__more-btn"
+											>
+												더 보기
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="info-row" v-if="false">
+									<span class="info-row__title"
+										>프로그램 특징</span
 									>
-										<span>{{ cast.name }}</span>
-									</li>
-									<li class="info-row__item">
-										<a href="#" class="info-row__more-btn">
-											더 보기
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="info-row" v-if="false">
-								<span class="info-row__title"
-									>프로그램 특징</span
-								>
-								<ul class="info-row__list">
-									<li class="info-row__item">
-										<span>긴장감 넘치는</span>
-									</li>
-								</ul>
-							</div>
+									<ul class="info-row__list">
+										<li class="info-row__item">
+											<span>긴장감 넘치는</span>
+										</li>
+									</ul>
+								</div>
 
-							<!-- 장르 -->
-							<div
-								class="info-row"
-								v-if="
-									movieData.genres && movieData.genres.length
-								"
-							>
-								<span class="info-row__title">장르</span>
-								<ul class="info-row__list">
-									<li
-										class="info-row__item"
-										v-for="genre in movieData.genres"
-										:key="`genre-${genre.id}`"
-									>
-										<span>{{ genre.name }}</span>
-									</li>
-								</ul>
-							</div>
+								<!-- 장르 -->
+								<div class="info-row" v-if="isGenres">
+									<span class="info-row__title">장르</span>
+									<ul class="info-row__list">
+										<li
+											class="info-row__item"
+											v-for="genre in movieData.genres"
+											:key="`genre-${genre.id}`"
+										>
+											<span>{{ genre.name }}</span>
+										</li>
+									</ul>
+								</div>
+							</template>
 						</div>
 					</section>
 
@@ -186,6 +193,8 @@ import movieDetailMixin from '@/mixins/movie';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
+import SkeletonBox from '@/components/common/SkeletonBox.vue';
+import SkeletonList from '@/components/common/SkeletonList.vue';
 
 // Api
 import { getMovieDetail, getMovieCredits } from '@/api/movie';
@@ -202,16 +211,16 @@ export default {
 	extends: movieDetailMixin,
 
 	props: {
-		propName: {
-			movieId: {
-				type: [Number, String],
-				required: true,
-			},
+		movieId: {
+			type: [Number, String],
+			required: true,
 		},
 	},
 
 	components: {
 		Modal,
+		SkeletonBox,
+		SkeletonList,
 	},
 
 	data() {
@@ -244,6 +253,7 @@ export default {
 		// 영화 상세 정보 조회
 		async fetchMovieDetail() {
 			try {
+				this.loading.movieData = true;
 				const result = await getMovieDetail(this.movieIdAsNumber);
 
 				if (result.isError) {
@@ -254,12 +264,15 @@ export default {
 				this.movieData = result.data;
 			} catch (error) {
 				console.error(error.message);
+			} finally {
+				this.loading.movieData = false;
 			}
 		},
 
 		// 영화 출연진 조회
 		async fetchMovieCredits() {
 			try {
+				this.loading.movieCredits = true;
 				const result = await getMovieCredits(this.movieIdAsNumber);
 
 				if (result.isError) {
@@ -270,6 +283,8 @@ export default {
 				this.movieCredits = result.data;
 			} catch (error) {
 				console.error(error.message);
+			} finally {
+				this.loading.movieCredits = false;
 			}
 		},
 	},
@@ -334,6 +349,7 @@ $modal-padding: 48px;
 			// front
 			&__front {
 				height: 100%;
+				background: linear-gradient(to top, #181818, transparent 50%);
 			}
 
 			// billboard > info
@@ -418,16 +434,6 @@ $modal-padding: 48px;
 						}
 					}
 				}
-			}
-
-			// billboard > blur
-			&__blur {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				padding-top: 50px;
-				background-image: $blur-gradient;
 			}
 		}
 	}

@@ -3,23 +3,27 @@ import { getReleaseYear, formatRuntime } from '@/utils/movie';
 import getImageUrl from '@/utils/common/getImageUrl';
 
 const movieDetailMixin = {
-	props: {
-		movieId: {
-			type: [Number, String],
-			required: true,
-		},
-	},
-
 	data() {
 		return {
 			movieIdAsNumber: this.movieId,
 
 			movieData: null,
 			movieCredits: null,
+
+			loading: {
+				movieData: false,
+				movieCredits: false,
+			},
 		};
 	},
 
 	computed: {
+		isLoading() {
+			const { movieData, movieCredits } = this.loading;
+
+			return movieData && movieCredits;
+		},
+
 		/**
 		 * 영화 출시일
 		 * @returns {string}
@@ -64,6 +68,14 @@ const movieDetailMixin = {
 			}
 
 			return this.movieCredits.cast.slice(0, 4);
+		},
+
+		/**
+		 * 장르 데이터 존재 여부
+		 * @returns {boolean}
+		 */
+		isGenres() {
+			return !!this.movieData?.genres?.length;
 		},
 	},
 };

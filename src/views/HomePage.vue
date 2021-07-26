@@ -83,7 +83,6 @@
 				</template>
 			</div>
 		</section>
-		<button type="button" @click="showModal = true">Open Modal</button>
 		<router-view></router-view>
 	</section>
 </template>
