@@ -54,6 +54,9 @@ export default {
 
 	// mask
 	&-mask {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		overflow: auto;
 		position: fixed;
 		top: 0;
@@ -66,12 +69,8 @@ export default {
 
 	// container
 	&-container {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		min-width: 300px;
-		min-height: 200px;
+		min-width: 100px;
+		min-height: 100px;
 		background-color: $white;
 		box-shadow: $modal-box-shadow;
 	}

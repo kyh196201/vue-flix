@@ -299,13 +299,13 @@ $modal-padding: 48px;
 		// 컨테이너
 		&-container {
 			overflow: hidden;
-			top: 30px;
+			align-self: flex-start;
+			margin-top: 30px;
 			width: 90vw;
 			max-width: 1200px;
 			height: auto;
 			background-color: $modal-color;
 			border-radius: 12px;
-			transform: translate(-50%, 0);
 		}
 
 		// close 버튼
@@ -477,6 +477,36 @@ $modal-padding: 48px;
 			&__synopsis {
 				.synopsis {
 					font-size: 18px;
+				}
+			}
+		}
+	}
+}
+
+@include mobile {
+	.movie-modal {
+		.modal {
+			&-container {
+				width: 100vw;
+				min-height: 100vh;
+				margin: 0;
+				border-radius: 0;
+			}
+		}
+
+		&__movie {
+			&-info {
+				flex-direction: column;
+
+				.movie-info {
+					&__left,
+					&__right {
+						width: 100%;
+					}
+
+					&__left {
+						margin: 0 0 2rem 0;
+					}
 				}
 			}
 		}
