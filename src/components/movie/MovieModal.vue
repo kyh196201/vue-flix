@@ -295,6 +295,10 @@ export default {
 $modal-padding: 48px;
 
 .movie-modal {
+	&.modal-mask {
+		// transition: opacity 1s;
+	}
+
 	.modal {
 		// 컨테이너
 		&-container {

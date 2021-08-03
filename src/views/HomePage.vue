@@ -83,7 +83,12 @@
 				</template>
 			</div>
 		</section>
-		<router-view></router-view>
+		<!-- router-view -->
+		<router-view v-slot="{ Component }">
+			<transition name="modal" mode="out-in">
+				<component :is="Component"></component>
+			</transition>
+		</router-view>
 	</section>
 </template>
 

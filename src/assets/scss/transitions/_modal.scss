@@ -1,0 +1,16 @@
+.modal-enter-from {
+    opacity: 0;
+}
+
+.modal-leave-to {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.modal-enter-active {
+    transition: opacity 0.3s linear;
+}
+
+.modal-leave-active {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
