@@ -119,7 +119,11 @@
 								/>
 								<p
 									class="synopsis"
-									v-else-if="!isLoading && movieData.overview"
+									v-else-if="
+										!isLoading &&
+										movieData &&
+										movieData.overview
+									"
 								>
 									{{ movieData.overview }}
 								</p>
@@ -296,7 +300,7 @@ $modal-padding: 48px;
 
 .movie-modal {
 	&.modal-mask {
-		// transition: opacity 1s;
+		padding: 30px 0;
 	}
 
 	.modal {
@@ -304,7 +308,6 @@ $modal-padding: 48px;
 		&-container {
 			overflow: hidden;
 			align-self: flex-start;
-			margin-top: 30px;
 			width: 90vw;
 			max-width: 1200px;
 			height: auto;
@@ -489,6 +492,10 @@ $modal-padding: 48px;
 
 @include mobile {
 	.movie-modal {
+		&.modal-mask {
+			padding: 0;
+		}
+
 		.modal {
 			&-container {
 				width: 100vw;

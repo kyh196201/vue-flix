@@ -1,6 +1,6 @@
 <template>
 	<div class="movie-item">
-		<a href="#" class="movie-item__link">
+		<a href="#" class="movie-item__link" @click.prevent="handleClick">
 			<figure class="movie-item__image">
 				<img
 					v-if="useLazy"
@@ -105,6 +105,21 @@ export default {
 				$lazyImg.classList.remove('lazy');
 				observer.unobserve(target);
 			}
+		},
+
+		// click event handler
+		// FIXME 추후에 다른 url에서 사용할 경우 에러 발생할 우려 있음
+		handleClick() {
+			const { id } = this.movieData;
+
+			const { path, query } = this.$route;
+			const url = path === '/' ? `detail/${id}` : `/detail/${id}`;
+			const targetPath = path + url;
+
+			this.$router.push({
+				path: targetPath,
+				query,
+			});
 		},
 	},
 };
