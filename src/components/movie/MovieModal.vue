@@ -181,7 +181,9 @@
 					</section>
 
 					<!-- main > similar -->
-					<section class="movie-modal__similar">similar</section>
+					<section class="movie-modal__similar">
+						<h3>비슷한 콘텐츠</h3>
+					</section>
 
 					<!-- main > detail -->
 					<section class="movie-modal__detail">detail</section>

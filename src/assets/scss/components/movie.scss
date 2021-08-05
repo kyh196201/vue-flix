@@ -89,3 +89,19 @@
         }
     }
 }
+
+// movie images
+.backdrop-image,
+.poster-image {
+    position: relative;
+    width: 100%;
+}
+
+// FIXME scoped 컴포넌트에 css 적용하는 방법 찾기
+>>> .backdrop-image {
+    padding-top: 56.25%;
+}
+
+.poster-image {
+    padding-top: 130%;
+}
