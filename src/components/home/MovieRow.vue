@@ -262,6 +262,13 @@ export default {
 			&-next {
 				right: 0;
 			}
+
+			&-prev,
+			&-next {
+				@include mobile {
+					display: none;
+				}
+			}
 		}
 	}
 	// swiper End
