@@ -5,13 +5,13 @@
 				<img
 					v-if="useLazy"
 					src=""
-					:data-src="imageSrc"
+					:data-src="posterImage"
 					@error="onImageError"
 					class="lazy"
 					ref="lazy-img"
 				/>
 				<img
-					:src="imageSrc"
+					:src="posterImage"
 					:alt="movieTitle"
 					@error="onImageError"
 					v-else
@@ -22,12 +22,27 @@
 </template>
 
 <script>
-// Utils
-import getImageUrl from '@/utils/common/getImageUrl.js';
+// Composable
+import movieItemComposable from '@/composable/movieItem';
 
+// Utils
+import { IMAGE_TYPES } from '@/utils/common/constants';
+
+// Observer
 import MyObserver from '@/utils/observer';
 
 export default {
+	setup(props) {
+		const { isMovieData, posterImage, movieTitle } =
+			movieItemComposable(props);
+
+		return {
+			isMovieData,
+			posterImage,
+			movieTitle,
+		};
+	},
+
 	name: 'movie-item',
 
 	props: {
@@ -46,25 +61,20 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+
+		/**
+		 * image type
+		 */
+		imageType: {
+			type: String,
+			default: IMAGE_TYPES.backdrop,
+		},
 	},
 
 	data() {
 		return {
 			$observer: null,
 		};
-	},
-
-	computed: {
-		imageSrc() {
-			return (
-				this.movieData &&
-				getImageUrl(this.movieData.backdrop_path, 1, 'backdrop')
-			);
-		},
-
-		movieTitle() {
-			return this.movieData?.title;
-		},
 	},
 
 	created() {

@@ -1,7 +1,3 @@
-/**
- *
- */
-
 // 영화 API 조회 > release-type
 export const RELEASE_TYPES = [
 	{
@@ -25,3 +21,8 @@ export const RELEASE_TYPES = [
 	// 	title: '최신 영화',
 	// },
 ];
+
+export const IMAGE_TYPES = {
+	backdrop: 'backdrop',
+	poster: 'poster',
+};
