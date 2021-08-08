@@ -19,15 +19,18 @@ const movieItem = props => {
 		}
 
 		const imageSrc = movieData[type];
-
 		return getImageUrl(imageSrc, 2, type);
 	});
+
+	// movie overview
+	const overview = computed(() => movieData?.overview);
 
 	return {
 		// Computed
 		isMovieData,
 		movieTitle,
 		posterImage,
+		overview,
 	};
 };
 

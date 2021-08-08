@@ -33,15 +33,46 @@
 </template>
 
 <script>
-import posterImage from '@/assets/images/common/poster.jpg';
+// Composable
+import movieItemComposable from '@/composable/movieItem';
+
+// Utils
+import { IMAGE_TYPES } from '@/utils/common/constants';
 
 export default {
 	name: 'movie-card',
 
-	data() {
-		return {
-			tempPoster: posterImage,
-		};
+	props: {
+		/**
+		 * 영화 데이터
+		 */
+		movieData: {
+			type: Object,
+			required: true,
+		},
+
+		/**
+		 * 레이지 로딩 사용 여부
+		 */
+		useLazy: {
+			type: Boolean,
+			default: true,
+		},
+
+		/**
+		 * image type
+		 */
+		imageType: {
+			type: String,
+			default: IMAGE_TYPES.backdrop,
+		},
+	},
+
+	setup(props) {
+		const { isMovieData, movieTitle, posterImage, overview } =
+			movieItemComposable(props);
+
+		return { isMovieData, movieTitle, posterImage, overview };
 	},
 };
 </script>

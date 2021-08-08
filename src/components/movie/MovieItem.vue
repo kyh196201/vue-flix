@@ -32,17 +32,6 @@ import { IMAGE_TYPES } from '@/utils/common/constants';
 import MyObserver from '@/utils/observer';
 
 export default {
-	setup(props) {
-		const { isMovieData, posterImage, movieTitle } =
-			movieItemComposable(props);
-
-		return {
-			isMovieData,
-			posterImage,
-			movieTitle,
-		};
-	},
-
 	name: 'movie-item',
 
 	props: {
@@ -87,6 +76,17 @@ export default {
 		if (this.$observer instanceof MyObserver) {
 			this.$observer.observe(this.$el);
 		}
+	},
+
+	setup(props) {
+		const { isMovieData, posterImage, movieTitle } =
+			movieItemComposable(props);
+
+		return {
+			isMovieData,
+			posterImage,
+			movieTitle,
+		};
 	},
 
 	methods: {
