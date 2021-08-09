@@ -1,6 +1,8 @@
 import { computed } from 'vue';
 
+// Utils
 import getImageUrl from '@/utils/common/getImageUrl.js';
+import { getReleaseYear, formatRuntime } from '@/utils/movie';
 
 const movieItem = props => {
 	const { movieData, imageType } = props;
@@ -19,11 +21,25 @@ const movieItem = props => {
 		}
 
 		const imageSrc = movieData[type];
-		return getImageUrl(imageSrc, 2, type);
+		return getImageUrl(imageSrc, 2, imageType);
 	});
 
 	// movie overview
 	const overview = computed(() => movieData?.overview);
+
+	// movie releaseDate
+	const releaseDate = computed(() => {
+		if (!movieData?.release_date) return '';
+
+		return getReleaseYear(movieData.release_date);
+	});
+
+	// movie runTime
+	const runTime = computed(() => {
+		if (!movieData?.runtime) return '';
+
+		return formatRuntime(movieData.runtime);
+	});
 
 	return {
 		// Computed
@@ -31,6 +47,8 @@ const movieItem = props => {
 		movieTitle,
 		posterImage,
 		overview,
+		releaseDate,
+		runTime,
 	};
 };
 

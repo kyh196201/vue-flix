@@ -107,7 +107,7 @@
 										releaseDate
 									}}</span>
 									<span class="age-badge"></span>
-									<span class="running-time">
+									<span class="run-time">
 										{{ runTime }}
 									</span>
 								</template>
@@ -181,8 +181,35 @@
 					</section>
 
 					<!-- main > similar -->
-					<section class="movie-modal__similar">
+					<section class="movie-modal__similar-contents">
 						<h3>비슷한 콘텐츠</h3>
+
+						<section class="similar-contents">
+							<div class="similar-contents__inner">
+								<ul
+									class="similar-contents__list"
+									v-if="movieData"
+								>
+									<li
+										class="similar-contents__item"
+										v-for="i in 10"
+										:key="i"
+									>
+										<MovieCard
+											:movieData="movieData"
+										></MovieCard>
+									</li>
+								</ul>
+							</div>
+						</section>
+						<!-- caret-up, down -->
+						<button type="button" class="btn btn--user btn--fold">
+							<font-awesome-icon
+								class="btn__icon"
+								:icon="['fas', 'caret-down']"
+							></font-awesome-icon>
+							<span class="btn__title">찜하기</span>
+						</button>
 					</section>
 
 					<!-- main > detail -->
@@ -201,6 +228,7 @@ import movieDetailMixin from '@/mixins/movie';
 import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/SkeletonBox.vue';
 import SkeletonList from '@/components/common/SkeletonList.vue';
+import MovieCard from '@/components/movie/MovieCard.vue';
 
 // Api
 import { getMovieDetail, getMovieCredits } from '@/api/movie';
@@ -227,6 +255,7 @@ export default {
 		Modal,
 		SkeletonBox,
 		SkeletonList,
+		MovieCard,
 	},
 
 	data() {
@@ -487,6 +516,47 @@ $modal-padding: 48px;
 				.synopsis {
 					font-size: 18px;
 				}
+			}
+		}
+	}
+
+	// similar-contents
+	&__similar-contents {
+		position: relative;
+		border-bottom: 1.5px solid rgba(255, 255, 255, 0.45);
+
+		h3 {
+			margin-bottom: 2.5rem;
+			font-size: 2.75rem;
+			line-height: 1em;
+			font-weight: 500;
+		}
+
+		.similar-contents {
+			// inner
+			&__inner {
+			}
+
+			// list
+			&__list {
+			}
+
+			&__item {
+				width: 33.33%;
+			}
+		}
+
+		// fold/unfold btn
+		.btn--fold {
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			transform: translate(-50%, 50%);
+			width: 6rem;
+			height: 6rem;
+
+			&:hover {
+				border-color: white;
 			}
 		}
 	}
