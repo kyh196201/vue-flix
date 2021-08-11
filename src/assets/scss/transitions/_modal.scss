@@ -1,9 +1,5 @@
-.modal-enter-from {
-    opacity: 0;
-}
-
+.modal-enter-from,
 .modal-leave-to {
-    transform: scale(0.8);
     opacity: 0;
 }
 
