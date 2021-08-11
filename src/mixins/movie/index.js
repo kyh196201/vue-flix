@@ -23,8 +23,10 @@ const movieDetailMixin = {
 			// 영화 출연진
 			movieCredits: null,
 
+			// 비슷한 영화 컨텐츠
 			similarContents: [],
 
+			// 로딩
 			loading: {
 				movieData: false,
 				movieCredits: false,
