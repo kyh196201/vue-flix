@@ -6,6 +6,7 @@ import createInstance from './common/createInstance';
  */
 const movieInstance = createInstance({
 	baseURL: process.env.VUE_APP_TMDB_ENDPOINT + 'movie/',
+	// 쿼리 스트링
 	params: {
 		api_key: API_KEY,
 		language: 'ko-KR',
@@ -13,8 +14,8 @@ const movieInstance = createInstance({
 });
 
 /**
- * 영화 상세 정보 조회
  * https://developers.themoviedb.org/3/movies/get-movie-details
+ * 영화 상세 정보 조회
  * @param {Number} movieId : 영화 아이디
  */
 const getMovieDetail = async movieId => {
@@ -41,6 +42,7 @@ const getMovieDetail = async movieId => {
 };
 
 /**
+ * 영화 출연진 조회
  * https://developers.themoviedb.org/3/movies/get-movie-credits
  */
 const getMovieCredits = async movieId => {
@@ -67,8 +69,8 @@ const getMovieCredits = async movieId => {
 };
 
 /**
- * now-playing, latest, top-rated, popular, upcoming에 해당하는 영화 리스트 조회
  * https://developers.themoviedb.org/3/movies/get-now-playing
+ * now-playing, latest, top-rated, popular, upcoming에 해당하는 영화 리스트 조회
  * @param {String} releaseType : release type
  */
 const getMovieLists = async (releaseType, page = 1) => {
@@ -96,4 +98,31 @@ const getMovieLists = async (releaseType, page = 1) => {
 	}
 };
 
-export { getMovieDetail, getMovieCredits, getMovieLists };
+const getSimilarMovies = async (movieId, page = 1) => {
+	try {
+		const url = `${movieId}/similar`;
+
+		const { data } = await movieInstance.get(url, {
+			params: {
+				page,
+			},
+		});
+
+		return {
+			isError: false,
+			data,
+		};
+	} catch (error) {
+		const { response } = error;
+
+		return {
+			isError: true,
+			errorData: {
+				message: response?.data?.status_message || error.message,
+				statusCode: response?.data?.status_code || null,
+			},
+		};
+	}
+};
+
+export { getMovieDetail, getMovieCredits, getMovieLists, getSimilarMovies };

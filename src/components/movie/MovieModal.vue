@@ -102,7 +102,7 @@
 						<div class="movie-info__left">
 							<div class="movie-info__basic">
 								<SkeletonBox :width="'50%'" v-if="isLoading" />
-								<template v-else-if="!isLoading && movieData">
+								<template v-else-if="isMovieDataLoaded">
 									<span class="release-date">{{
 										releaseDate
 									}}</span>
@@ -119,13 +119,9 @@
 								/>
 								<p
 									class="synopsis"
-									v-else-if="
-										!isLoading &&
-										movieData &&
-										movieData.overview
-									"
+									v-else-if="!isLoading && overview"
 								>
-									{{ movieData.overview }}
+									{{ overview }}
 								</p>
 							</div>
 						</div>
@@ -184,36 +180,60 @@
 					<section class="movie-modal__similar-contents">
 						<h3>비슷한 콘텐츠</h3>
 
-						<section class="similar-contents">
+						<section
+							class="similar-contents"
+							:class="{ opened: isSimilarContentsOpened }"
+						>
 							<div class="similar-contents__inner">
 								<ul
 									class="similar-contents__list"
-									v-if="movieData"
+									v-if="!isSimilarContentsLoaded"
 								>
 									<li
 										class="similar-contents__item"
-										v-for="i in 10"
+										v-for="i in 6"
 										:key="i"
 									>
+										<SkeletonBox
+											height="30rem"
+										></SkeletonBox>
+									</li>
+								</ul>
+								<ul
+									class="similar-contents__list"
+									v-else-if="
+										isSimilarContentsLoaded &&
+										isSimilarContents
+									"
+								>
+									<li
+										class="similar-contents__item"
+										v-for="movie in similarContents"
+										:key="`similar-${movie.id}`"
+									>
 										<MovieCard
-											:movieData="movieData"
+											:movieData="movie"
 										></MovieCard>
 									</li>
 								</ul>
 							</div>
 						</section>
 						<!-- caret-up, down -->
-						<button type="button" class="btn btn--user btn--fold">
+						<label class="btn btn--user btn--fold">
+							<input
+								type="checkbox"
+								v-model="isSimilarContentsOpened"
+							/>
 							<font-awesome-icon
 								class="btn__icon"
-								:icon="['fas', 'caret-down']"
+								:icon="foldBtnIcon"
 							></font-awesome-icon>
 							<span class="btn__title">찜하기</span>
-						</button>
+						</label>
 					</section>
 
 					<!-- main > detail -->
-					<section class="movie-modal__detail">detail</section>
+					<!-- <section class="movie-modal__detail">detail</section> -->
 				</section>
 			</section>
 		</template>
@@ -230,26 +250,10 @@ import SkeletonBox from '@/components/common/SkeletonBox.vue';
 import SkeletonList from '@/components/common/SkeletonList.vue';
 import MovieCard from '@/components/movie/MovieCard.vue';
 
-// Api
-import { getMovieDetail, getMovieCredits } from '@/api/movie';
-
-// Utils
-import { isString } from '@/utils/validate';
-
-// TODO remove
-import poster from '@/assets/images/common/poster.jpg';
-
 export default {
 	name: 'MovieModal',
 
 	extends: movieDetailMixin,
-
-	props: {
-		movieId: {
-			type: [Number, String],
-			required: true,
-		},
-	},
 
 	components: {
 		Modal,
@@ -260,13 +264,22 @@ export default {
 
 	data() {
 		return {
-			posterImage: poster,
+			isSimilarContentsOpened: false,
 		};
 	},
 
-	created() {
-		// API 요청
-		this.fetchData();
+	computed: {
+		/**
+		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
+		 * @returns array
+		 */
+		foldBtnIcon() {
+			const icon = this.isSimilarContentsOpened
+				? 'caret-up'
+				: 'caret-down';
+
+			return ['fas', icon];
+		},
 	},
 
 	methods: {
@@ -277,50 +290,9 @@ export default {
 
 		// 데이터 fetch
 		async fetchData() {
-			if (isString(this.movieIdAsNumber)) {
-				this.movieIdAsNumber = Number(this.movieIdAsNumber);
-			}
-
 			this.fetchMovieDetail();
 			this.fetchMovieCredits();
-		},
-
-		// 영화 상세 정보 조회
-		async fetchMovieDetail() {
-			try {
-				this.loading.movieData = true;
-				const result = await getMovieDetail(this.movieIdAsNumber);
-
-				if (result.isError) {
-					console.error(result.errorData);
-					return false;
-				}
-
-				this.movieData = result.data;
-			} catch (error) {
-				console.error(error.message);
-			} finally {
-				this.loading.movieData = false;
-			}
-		},
-
-		// 영화 출연진 조회
-		async fetchMovieCredits() {
-			try {
-				this.loading.movieCredits = true;
-				const result = await getMovieCredits(this.movieIdAsNumber);
-
-				if (result.isError) {
-					console.error(result.errorData);
-					return false;
-				}
-
-				this.movieCredits = result.data;
-			} catch (error) {
-				console.error(error.message);
-			} finally {
-				this.loading.movieCredits = false;
-			}
+			this.fetchSimilarMovies();
 		},
 	},
 };
@@ -589,6 +561,10 @@ $modal-padding: 48px;
 					}
 				}
 
+				.skeleton-box {
+					border-radius: 4px;
+				}
+
 				.movie-card {
 					height: 100%;
 
@@ -618,6 +594,10 @@ $modal-padding: 48px;
 			width: 6rem;
 			height: 6rem;
 			z-index: 1;
+
+			input {
+				display: none;
+			}
 
 			&:hover {
 				border-color: white;
