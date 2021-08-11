@@ -61,3 +61,15 @@ $desktop: 1400px;
         clear: both;
     }
 }
+
+// https://stackoverflow.com/questions/40739695/can-i-update-sass-variables-in-media-queries/54188902
+@mixin listLayout($count: 1, $gap: 1rem) {
+    $gapCount: $count - 1;
+
+    width: calc((100% - #{$gapCount * $gap}) / #{$count});
+    margin-bottom: $gap;
+    
+    &:not(:nth-child(#{$count}n)) {
+        margin-right: $gap;
+    }
+}

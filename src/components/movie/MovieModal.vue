@@ -523,6 +523,7 @@ $modal-padding: 48px;
 	// similar-contents
 	&__similar-contents {
 		position: relative;
+		margin-bottom: 3rem;
 		border-bottom: 1.5px solid rgba(255, 255, 255, 0.45);
 
 		h3 {
@@ -533,16 +534,78 @@ $modal-padding: 48px;
 		}
 
 		.similar-contents {
+			overflow: hidden;
+			max-height: 90rem;
+
+			&.opened {
+				max-height: none;
+			}
+
+			&:not(.opened) {
+				position: relative;
+
+				&:after {
+					content: '';
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					height: 5rem;
+					background: linear-gradient(to top, #181818, transparent);
+					z-index: 1;
+				}
+			}
+
 			// inner
 			&__inner {
+				padding-bottom: 8rem;
 			}
 
 			// list
 			&__list {
+				display: grid;
+				column-gap: 2rem;
+				row-gap: 2rem;
+				grid-template-columns: repeat(3, 1fr);
+
+				@include tablet {
+					column-gap: 1.6rem;
+					row-gap: 1.6rem;
+					grid-template-columns: repeat(2, 1fr);
+				}
+
+				@include mobile {
+					display: flex;
+					flex-direction: column;
+					column-gap: 0;
+					row-gap: 0;
+				}
 			}
 
 			&__item {
-				width: 33.33%;
+				@include mobile {
+					&:not(:last-child) {
+						margin-bottom: 1.6rem;
+					}
+				}
+
+				.movie-card {
+					height: 100%;
+
+					&__inner {
+						display: flex;
+						flex-direction: column;
+						height: 100%;
+					}
+
+					&__backdrop-image {
+						flex: 0;
+					}
+
+					&__info {
+						flex: 1;
+					}
+				}
 			}
 		}
 
@@ -554,6 +617,7 @@ $modal-padding: 48px;
 			transform: translate(-50%, 50%);
 			width: 6rem;
 			height: 6rem;
+			z-index: 1;
 
 			&:hover {
 				border-color: white;

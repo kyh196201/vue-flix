@@ -171,7 +171,7 @@ export default {
 			font-size: 1.4rem;
 			color: $movie-card-synopsis-color;
 
-			@include ellipsis(7);
+			@include ellipsis(10);
 		}
 
 		// plus/minus btn
@@ -179,6 +179,7 @@ export default {
 			position: absolute;
 			top: 2rem;
 			right: 1rem;
+			font-size: 1.5rem;
 
 			&:hover {
 				border-color: $white;
