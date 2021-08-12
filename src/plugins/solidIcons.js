@@ -10,6 +10,7 @@ import {
 	faVolumeMute,
 	faCaretDown,
 	faCaretUp,
+	faBell,
 } from '@fortawesome/free-solid-svg-icons';
 
 const sollidIcons = [
@@ -23,6 +24,7 @@ const sollidIcons = [
 	faVolumeMute,
 	faCaretDown,
 	faCaretUp,
+	faBell,
 ];
 
 export default sollidIcons;
