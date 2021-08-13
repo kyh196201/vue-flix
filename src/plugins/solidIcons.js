@@ -11,6 +11,7 @@ import {
 	faCaretDown,
 	faCaretUp,
 	faBell,
+	faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 
 const sollidIcons = [
@@ -25,6 +26,7 @@ const sollidIcons = [
 	faCaretDown,
 	faCaretUp,
 	faBell,
+	faSearch,
 ];
 
 export default sollidIcons;

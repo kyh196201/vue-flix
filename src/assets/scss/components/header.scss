@@ -1,5 +1,6 @@
+$sidePadding: 4%;
 
-.app-header {
+.header {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -10,8 +11,9 @@
 	&__inner {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		height: 100%;
+		padding: 0 $sidePadding;
 
 		// Reference: netflix 스타일
 		background-image: linear-gradient(
@@ -19,5 +21,104 @@
 			rgba(0, 0, 0, 0.7) 10%,
 			rgba(0, 0, 0, 0)
 		);
+	}
+
+	// left
+	&__left,
+	&__right {
+		display: flex;
+		height: 100%;
+	}
+
+	// logo
+	&__logo {
+		display: flex;
+		align-items: center;
+		height: 100%;
+		margin-right: 20px;
+
+		.logo {
+			width: 92.5px;
+			height: 31px;
+			object-fit: cover;
+		}
+	}
+
+	&__nav {
+		// FIXME Mobile
+		.nav-menu-btn {
+			display: none;
+		}
+
+		// FIXME Mobile
+		
+		.nav-list {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+
+			&__item {
+				&:not(:last-child) {
+					margin-right: 20px;
+				}
+
+				a {
+					line-height: 70px;
+					font-size: 14px;
+					transition: opacity 0.3s ease;
+
+					&:hover {
+						opacity: 0.6;
+					}
+				}
+			}
+		}
+	}
+
+	&__right {
+		align-items: center;
+
+		&__item {
+			&:not(:first-child) {
+				margin-left: 20px;
+			}
+		}
+	}
+
+
+	&__menu {
+		display: none;
+	}
+
+	&__search {
+		.search-btn {
+
+		}
+	}
+	
+	&__right__btn {
+		color: $white;
+		font-size: 18px;
+		transition: opacity 0.3s ease-in-out;
+
+		&:hover {
+			opacity: 0.6;
+		}
+	}
+
+	&__notice {
+		.notice-btn {
+
+		}
+	}
+
+
+	&__profile {
+
+	}
+
+	//FIXME
+	&__config-menu {
+		display: none;
 	}
 }

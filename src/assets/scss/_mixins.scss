@@ -73,3 +73,9 @@ $desktop: 1400px;
         margin-right: $gap;
     }
 }
+
+@mixin flexBox($align: center, $justify: center) {
+    display: flex;
+    align-items: $align;
+    justify-content: $justify;
+}
