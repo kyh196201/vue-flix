@@ -22,7 +22,24 @@ export const RELEASE_TYPES = [
 	// },
 ];
 
+// tmdb image type
 export const IMAGE_TYPES = {
 	backdrop: 'backdrop',
 	poster: 'poster',
 };
+
+// router links
+export const routerLinks = [
+	{
+		path: '/',
+		name: '홈',
+	},
+	{
+		path: '/movie',
+		name: '영화',
+	},
+	{
+		path: 'favorite',
+		name: '내가 찜한 콘텐츠',
+	},
+];

@@ -14,110 +14,123 @@
 
 					<!-- PC -->
 					<ul class="nav-list">
-						<li class="nav-list__item">
-							<a href="#" class="nav-link">홈</a>
-						</li>
-						<li class="nav-list__item">
-							<a href="#" class="nav-link">영화</a>
-						</li>
-						<li class="nav-list__item">
-							<a href="#" class="nav-link"
-								>NEW! 요즘 대세 콘텐츠</a
-							>
-						</li>
-						<li class="nav-list__item">
-							<a href="#" class="nav-link">내가 찜한 콘텐츠</a>
-						</li>
-						<li class="nav-list__item">
-							<a href="#" class="nav-link">영화</a>
+						<li
+							class="nav-list__item"
+							v-for="(route, index) in routerLinks"
+							:key="index"
+						>
+							<router-link :to="route.path" class="nav-link">{{
+								route.name
+							}}</router-link>
 						</li>
 					</ul>
 
 					<!-- Mobile Menu -->
-					<div class="header__menu">
-						<ul class="menu">
-							<li class="menu__item">
-								<a href="#" class="menu-link">gha</a>
-							</li>
-							<li class="menu__item">
-								<a href="#" class="menu-link">영화</a>
-							</li>
-						</ul>
+					<div class="header__nav-dropdown">
+						<article class="nav-dropdown dropdown">
+							<ul class="nav-dropdown__list">
+								<li
+									class="nav-dropdown__item"
+									v-for="(route, index) in routerLinks"
+									:key="index"
+								>
+									<router-link :to="route.path">{{
+										route.name
+									}}</router-link>
+								</li>
+							</ul>
+						</article>
 					</div>
 				</nav>
 			</section>
 			<!-- right -->
 			<section class="header__right">
-				<div class="header__search header__right__item">
-					<!-- search -->
-					<button type="button" class="search-btn header__right__btn">
-						<font-awesome-icon
-							:icon="['fas', 'search']"
-						></font-awesome-icon>
-					</button>
-				</div>
-				<div class="header__notice header__right__item">
-					<button class="notice-btn header__right__btn">
-						<font-awesome-icon
-							:icon="['fas', 'bell']"
-						></font-awesome-icon>
-					</button>
-				</div>
-				<div class="header__profile header__right__item">
-					<!-- profile component -->
-					<div class="profile">
-						<div class="profile__avatar">
-							<img
-								:src="profileAvatar"
-								alt="zootopia"
-								class="profile__image"
-							/>
-							<span class="profile__caret"></span>
-						</div>
-						<div class="profile__status"></div>
+				<div class="header__nav-item">
+					<div class="header__search">
+						<!-- search -->
+						<button type="button" class="nav-icon">
+							<font-awesome-icon
+								:icon="['fas', 'search']"
+							></font-awesome-icon>
+						</button>
 					</div>
+				</div>
+				<!-- notice-dropdown -->
+				<div class="header__nav-item">
+					<div class="header__notice-dropdown">
+						<button class="nav-icon">
+							<font-awesome-icon
+								:icon="['fas', 'bell']"
+							></font-awesome-icon>
+						</button>
+					</div>
+				</div>
+				<!-- account-dropdown -->
+				<div class="header__nav-item">
+					<div class="header__account-dropdown">
+						<a href="#" class="dropdown-btn">
+							<div class="avatar">
+								<img :src="profileAvatar" alt="zootopia" />
+							</div>
+							<span class="caret-icon"></span>
+						</a>
 
-					<!-- config-menu -->
-					<div class="header__config-menu">
-						<article class="config-menu menu">
-							<ul class="profile-menu">
-								<li class="profile-menu__item">
-									<a href="#" class="profile-menu__link">
-										<!-- profile -->
-										<div class="profile__avatar">
-											<img
-												:src="profileAvatar"
-												alt="zootopia"
-												class="profile__image"
-											/>
-											<span class="profile__name"
-												>Sam</span
-											>
-										</div>
-										<div class="profile__status">잠김</div>
-									</a>
+						<!-- config-menu -->
+						<article class="account-dropdown dropdown">
+							<section class="account-dropdown__top">
+								<ul class="account-list">
+									<li>
+										<a href="">
+											<div class="profile">
+												<div class="profile__info">
+													<div class="avatar">
+														<img
+															:src="profileAvatar"
+															alt="zootopia"
+														/>
+													</div>
+													<span class="profile__name">
+														승우
+													</span>
+												</div>
+												<div class="profile__status">
+													잠김
+												</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="profile">
+												<div class="profile__info">
+													<div class="avatar">
+														<img
+															:src="profileAvatar"
+															alt="zootopia"
+														/>
+													</div>
+													<span class="profile__name">
+														승우
+													</span>
+												</div>
+												<div class="profile__status">
+													잠김
+												</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+								<a href="#" class="profile-link">프로필 관리</a>
+							</section>
+							<ul class="config-list">
+								<li>
+									<a href="#">계정</a>
 								</li>
-								<li class="profile-menu__item">
-									<a href="#" class="profile-menu__link">
-										프로필 관리
-									</a>
+								<li>
+									<a href="#">고객 센터</a>
 								</li>
-							</ul>
-							<ul class="config-menu__configs">
-								<li class="config-menu__config">
-									<a href="#" class="config-menu__link">
-										계정
-									</a>
-								</li>
-								<li class="config-menu__config">
-									<a href="#" class="config-menu__link">
-										고객 센터
-									</a>
-								</li>
-								<li class="config-menu__config">
-									<a href="#" class="config-menu__link">
-										뷰플릭스에서 로그아웃
-									</a>
+								<li>
+									<a href="#">뷰플릭스에서 로그아웃</a>
 								</li>
 							</ul>
 						</article>
@@ -132,13 +145,17 @@
 import headerLogo from '@/assets/images/common/logo-small.svg';
 import profileAvatar from '@/assets/images/common/profile.jpg';
 
+import { routerLinks } from '@/utils/common/constants';
+
 export default {
 	name: 'app-header',
 
 	data() {
 		return {
 			logo: headerLogo,
-			profileAvatar: profileAvatar,
+			profileAvatar,
+
+			routerLinks,
 		};
 	},
 };

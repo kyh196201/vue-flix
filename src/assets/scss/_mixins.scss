@@ -4,6 +4,7 @@
 $mobile-small: 375px;
 $mobile: 425px;
 $tablet: 768px;
+$labtop-small: 880px;
 $labtop: 1024px;
 $desktop: 1400px;
 
@@ -16,6 +17,12 @@ $desktop: 1400px;
 
 @mixin labtop {
     @media (max-width: #{$labtop}) {
+        @content;
+    }
+}
+
+@mixin labtop-small {
+    @media (max-width: #{$labtop-small}) {
         @content;
     }
 }
