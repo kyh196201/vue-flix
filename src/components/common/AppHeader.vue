@@ -9,9 +9,6 @@
 					</a>
 				</h1>
 				<nav class="header__nav">
-					<!-- Mobile -->
-					<span class="nav-menu-btn">메뉴</span>
-
 					<!-- PC -->
 					<ul class="nav-list">
 						<li
@@ -26,8 +23,15 @@
 					</ul>
 
 					<!-- Mobile Menu -->
-					<div class="header__nav-dropdown">
-						<article class="nav-dropdown dropdown">
+					<DropdownMenu
+						class="header__nav-dropdown"
+						@toggle="toggleNavDropdown"
+						v-bind="dropdowns.nav"
+					>
+						<template v-slot:button>
+							<span class="nav-menu-btn">메뉴</span>
+						</template>
+						<template v-slot:content>
 							<ul class="nav-dropdown__list">
 								<li
 									class="nav-dropdown__item"
@@ -39,8 +43,8 @@
 									}}</router-link>
 								</li>
 							</ul>
-						</article>
-					</div>
+						</template>
+					</DropdownMenu>
 				</nav>
 			</section>
 			<!-- right -->
@@ -67,74 +71,58 @@
 				</div>
 				<!-- account-dropdown -->
 				<div class="header__nav-item">
-					<div class="header__account-dropdown">
-						<a href="#" class="dropdown-btn">
-							<div class="avatar">
-								<img :src="profileAvatar" alt="zootopia" />
+					<DropdownMenu
+						class="header__account-dropdown"
+						v-bind="dropdowns.account"
+						@toggle="toggleAccountDropdown"
+					>
+						<template v-slot:button>
+							<div class="account-dropdown__btn">
+								<div class="avatar">
+									<img :src="profileAvatar" alt="zootopia" />
+								</div>
+								<span class="caret-icon"></span>
 							</div>
-							<span class="caret-icon"></span>
-						</a>
-
-						<!-- config-menu -->
-						<article class="account-dropdown dropdown">
-							<section class="account-dropdown__top">
-								<ul class="account-list">
-									<li>
-										<a href="">
-											<div class="profile">
-												<div class="profile__info">
-													<div class="avatar">
-														<img
-															:src="profileAvatar"
-															alt="zootopia"
-														/>
-													</div>
-													<span class="profile__name">
-														승우
-													</span>
+						</template>
+						<template v-slot:content>
+							<ul class="account-menu">
+								<li class="account-menu__item">
+									<a href="#" class="account-menu__link">
+										<div class="profile">
+											<div class="profile__info">
+												<div class="avatar">
+													<img
+														:src="profileAvatar"
+														alt="zootopia"
+													/>
 												</div>
-												<div class="profile__status">
-													잠김
-												</div>
+												<span class="profile__name">
+													승우
+												</span>
 											</div>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<div class="profile">
-												<div class="profile__info">
-													<div class="avatar">
-														<img
-															:src="profileAvatar"
-															alt="zootopia"
-														/>
-													</div>
-													<span class="profile__name">
-														승우
-													</span>
-												</div>
-												<div class="profile__status">
-													잠김
-												</div>
-											</div>
-										</a>
-									</li>
-								</ul>
-								<a href="#" class="profile-link">프로필 관리</a>
-							</section>
-							<ul class="config-list">
-								<li>
+										</div>
+									</a>
+									<div class="lock-icon">잠김</div>
+								</li>
+								<li class="account-menu__item">
+									<a href="#" class="account-menu__link"
+										>프로필 관리</a
+									>
+								</li>
+							</ul>
+							<ul class="config-menu">
+								<li class="config-menu__item">
 									<a href="#">계정</a>
 								</li>
-								<li>
+								<li class="config-menu__item">
 									<a href="#">고객 센터</a>
 								</li>
-								<li>
+								<li class="config-menu__item">
 									<a href="#">뷰플릭스에서 로그아웃</a>
 								</li>
 							</ul>
-						</article>
-					</div>
+						</template>
+					</DropdownMenu>
 				</div>
 			</section>
 		</div>
@@ -147,8 +135,15 @@ import profileAvatar from '@/assets/images/common/profile.jpg';
 
 import { routerLinks } from '@/utils/common/constants';
 
+// Components
+import DropdownMenu from '@/components/common/DropdownMenu.vue';
+
 export default {
 	name: 'app-header',
+
+	components: {
+		DropdownMenu,
+	},
 
 	data() {
 		return {
@@ -156,7 +151,40 @@ export default {
 			profileAvatar,
 
 			routerLinks,
+
+			dropdowns: {
+				nav: {
+					isOpen: false,
+					activator: 'hover',
+				},
+				account: {
+					isOpen: false,
+					activator: 'hover',
+				},
+			},
 		};
+	},
+
+	watch: {
+		$route: {
+			handler() {
+				const { nav } = this.dropdowns;
+
+				if (!nav.isOpen) return;
+
+				nav.isOpen = false;
+			},
+		},
+	},
+
+	methods: {
+		toggleNavDropdown(toggle) {
+			this.dropdowns.nav.isOpen = toggle;
+		},
+
+		toggleAccountDropdown(toggle) {
+			this.dropdowns.account.isOpen = toggle;
+		},
 	},
 };
 </script>

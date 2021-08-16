@@ -82,32 +82,6 @@ $sidePadding: 4%;
 
 	&__nav-dropdown {
 		display: none;
-		position: absolute;
-		left: $sidePadding;
-		top: 100%;
-		width: 300px;
-		border: 1px solid $gray-9;
-		border-top: 1.5px solid $white;
-		margin-top: 20px;
-
-		.nav-dropdown {
-			&::before {
-				top: -11.5px;
-			}
-
-			&__item {
-				a {
-					display: block;
-					height: 50px;
-					line-height: 50px;
-					text-align: center;
-
-					&:hover {
-						background-color: rgba(255, 255, 255, 0.1);
-					}
-				}
-			}
-		}
 	}
 
 	&__right {
@@ -138,84 +112,57 @@ $sidePadding: 4%;
 			margin-left: 30px;
 		}
 	}
-
+	
 	&__account-dropdown {
-		display: flex;
-		align-items: center;
-		height: 100%;
+		font-size: 12px;
 
-		.dropdown-btn {
-			display: flex;
-			align-items: center;
+		.account-dropdown {
+			&__btn {
+				display: flex;
+				align-items: center;
+				height: 70px;
+				cursor: pointer;
 
-			.avatar {
-				margin-right: 10px;
-			}
-
-			.caret-icon {
-				width: 10px;
-				height: 5px;
-				background: url('#{$iconImages}caret-down.svg') no-repeat center/100%;
-				transition: transform 0.3s ease;
-				will-change: transform;
+				.avatar {
+					margin-right: 10px;
+				}
 			}
 		}
 
-		.account-dropdown {
-			display: none;
-			position: absolute;
-			top: 100%;
-			right: $sidePadding;
-			width: 200px;
-			margin-top: 20px;
-
-			&::before {
-				left: unset;
-				border-left-width: 8px;
-				border-right-width: 8px;
-				border-bottom-width: 8px;
+		.dropdown-menu {
+			&__content {
 				right: 0;
+				width: 200px;
 			}
+		}
 
-			&__top {
-				padding: 2rem 0;
-				border-bottom: 1px solid $gray-9;
+		.account-menu {
+			padding: 1rem 0;
+			border-bottom: 1px solid $oc-gray-8;
 
-				.profile-link {
-					padding: 0 1rem;
+			&__item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 0.5rem;
 
-					&:hover {
-						text-decoration: underline;
-					}
+				&:not(:first-child) {
+					margin-top: 1rem;
+				}
+				
+				&:last-child {
+					margin-top: 1.5rem;
 				}
 			}
 
-			.config-list {
-				padding: 2rem 0;
-			}
+			&__link {
+				flex: 1;
 
-			.account-list {
-				li {
-					margin-bottom: 1rem;
-
-					&:last-child {
-						margin-bottom: 2rem;
-					}
-
-					a {
-						&:hover {
-							text-decoration: underline;
-						}
-					}
+				&:hover {
+					text-decoration: underline;
 				}
 
 				.profile {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					width: 100%;
-					padding: 0 1rem;
-
 					&__info {
 						display: flex;
 						align-items: center;
@@ -226,35 +173,23 @@ $sidePadding: 4%;
 					}
 				}
 			}
-
-			.config-list {
-				li { 
-					a {
-						padding: 0 1rem;
-						font-weight: 500;
-
-						&:hover {
-							text-decoration: underline;
-						}
-					}
-
-					&:not(:last-child) {
-						margin-bottom: 1rem;
-					}
-				}
-			}
 		}
 
-		&:hover {
-			.dropdown-btn {
-				.caret-icon {
-					transform: rotate(180deg);
-				}
-			}
+		.config-menu {
+			padding: 1rem 0;
 
-			// FIXME 스크립트 처리
-			.account-dropdown {
-				display: block;
+			&__item {
+				padding: 0 0.5rem;
+
+				&:not(:first-child) {
+					margin-top: 1rem;
+				}
+
+				a {
+					&:hover {
+						text-decoration: underline;
+					}
+				}
 			}
 		}
 	}
@@ -290,24 +225,45 @@ $sidePadding: 4%;
 					margin-left: 5px;
 					background: url('#{$iconImages}caret-down.svg') no-repeat center/100%;
 				}
-
-			}
-
-			// FIXME 스크립트 처리
-			&:hover {
-				.header__nav-dropdown {
-					display: block;
-
-					.nav-dropdown {
-						&::before {
-							display: none;
-						}
-					}
-				}
 			}
 
 			.nav-list {
 				display: none;
+			}
+		}
+
+		&__nav-dropdown {
+			display: block;
+			font-size: 12px;
+
+			.dropdown-menu {
+				&__content {
+					left: 50%;
+					margin-left: -100px;
+					width: 200px;
+				}
+			}
+
+			.nav-dropdown {
+				&__item {
+					a {
+						display: block;
+						height: 4rem;
+						line-height: 4rem;
+						text-align: center;
+						color: rgba(255, 255, 255, 0.8);
+
+						&.router-link-exact-active {
+							color: $white;
+							font-weight: bold;
+							pointer-events: none;
+						}
+
+						&:hover {
+							background: rgba(255, 255, 255, 0.2);
+						}
+					}
+				}
 			}
 		}
 
@@ -322,15 +278,12 @@ $sidePadding: 4%;
 		}
 
 		&__account-dropdown {
-			.dropdown-btn { 
-				.avatar {
-					margin: 0;
-				}
-
-				.caret-icon {
-					display: none;
+			.account-dropdown {
+				&__btn {
+					height: 41px;
 				}
 			}
 		}
 	}
+	// media-query End
 }

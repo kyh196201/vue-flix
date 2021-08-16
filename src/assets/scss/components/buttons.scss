@@ -84,3 +84,13 @@ button {
     }
 }
 
+.caret-icon {
+    display: inline-block;
+    width: 10px;
+    height: 5px;
+    background: url('#{$images}icons/caret-down.svg') no-repeat center/100%;
+}
+
+.lock-icon {
+    
+}
