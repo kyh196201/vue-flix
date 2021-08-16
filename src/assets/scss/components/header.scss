@@ -123,8 +123,19 @@ $sidePadding: 4%;
 				height: 70px;
 				cursor: pointer;
 
+				&:hover {
+					.caret-icon {
+						transform: rotate(180deg);
+					}
+				}
+
 				.avatar {
 					margin-right: 10px;
+				}
+
+				.caret-icon {
+					transition: transform 0.3s ease;
+					will-change: transform;
 				}
 			}
 		}
@@ -281,6 +292,14 @@ $sidePadding: 4%;
 			.account-dropdown {
 				&__btn {
 					height: 41px;
+
+					.avatar {
+						margin: 0;
+					}
+
+					.caret-icon {
+						display: none;
+					}
 				}
 			}
 		}
