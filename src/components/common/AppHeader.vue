@@ -4,9 +4,9 @@
 			<!-- left -->
 			<section class="header__left">
 				<h1 class="header__logo">
-					<a href="#">
+					<router-link to="/">
 						<img :src="logo" alt="vue-flix" class="logo" />
-					</a>
+					</router-link>
 				</h1>
 				<nav class="header__nav">
 					<!-- PC -->
@@ -50,10 +50,7 @@
 			<!-- right -->
 			<section class="header__right">
 				<div class="header__nav-item">
-					<div
-						class="header__search"
-						:class="{ 'is-search': isSearchForm }"
-					>
+					<div class="header__search">
 						<!-- search-form -->
 						<transition name="slide-fade">
 							<SearchInput
