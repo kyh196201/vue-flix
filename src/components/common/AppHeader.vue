@@ -50,9 +50,24 @@
 			<!-- right -->
 			<section class="header__right">
 				<div class="header__nav-item">
-					<div class="header__search">
-						<!-- search -->
-						<button type="button" class="nav-icon">
+					<div
+						class="header__search"
+						:class="{ 'is-search': isSearchForm }"
+					>
+						<!-- search-form -->
+						<transition name="slide-fade">
+							<SearchInput
+								v-if="isSearchForm"
+								@close="isSearchForm = false"
+							></SearchInput>
+						</transition>
+						<!-- search icon -->
+						<button
+							v-if="!isSearchForm"
+							type="button"
+							class="nav-icon"
+							@click.stop="isSearchForm = true"
+						>
 							<font-awesome-icon
 								:icon="['fas', 'search']"
 							></font-awesome-icon>
@@ -137,21 +152,25 @@ import { routerLinks } from '@/utils/common/constants';
 
 // Components
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
+import SearchInput from '@/components/common/SearchInput.vue';
 
 export default {
 	name: 'app-header',
 
 	components: {
 		DropdownMenu,
+		SearchInput,
 	},
 
 	data() {
 		return {
+			// static image
 			logo: headerLogo,
 			profileAvatar,
 
 			routerLinks,
 
+			// dropdown options
 			dropdowns: {
 				nav: {
 					isOpen: false,
@@ -162,6 +181,9 @@ export default {
 					activator: 'hover',
 				},
 			},
+
+			// toggle search-form
+			isSearchForm: false,
 		};
 	},
 

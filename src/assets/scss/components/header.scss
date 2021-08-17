@@ -89,7 +89,7 @@ $sidePadding: 4%;
 
 		.nav-icon {
 			color: $white;
-			font-size: 24px;
+			font-size: 22px;
 			transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 			will-change: transform, opacity;
 
@@ -110,6 +110,22 @@ $sidePadding: 4%;
 
 		&:not(:first-child) {
 			margin-left: 30px;
+		}
+	}
+
+	// search
+	&__search {
+		position: relative;
+		display: flex;
+		align-items: center;
+		height: 100%;
+
+		.search-input {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+			margin: 0;
 		}
 	}
 	
