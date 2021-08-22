@@ -13,6 +13,14 @@ export default {
 		};
 	},
 
+	watch: {
+		$route: {
+			handler(newValue) {
+				console.log(newValue);
+			},
+		},
+	},
+
 	created() {
 		console.log('SearchPage.vue created!', this.message);
 	},

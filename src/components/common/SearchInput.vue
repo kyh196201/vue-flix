@@ -3,8 +3,18 @@
 		<span class="search-icon">
 			<font-awesome-icon :icon="['fas', 'search']"></font-awesome-icon>
 		</span>
-		<input type="text" class="search-input-form" ref="input" />
-		<button type="button" class="close-btn" @click.stop="close">
+		<input
+			type="text"
+			class="search-input-form"
+			v-model="inputText"
+			ref="input"
+		/>
+		<button
+			type="button"
+			class="close-btn"
+			v-if="isInputText"
+			@click.stop="clearInputText"
+		>
 			<font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
 		</button>
 	</label>
@@ -17,7 +27,39 @@ export default {
 	data() {
 		return {
 			clickHandlerReference: this.handleClickOutside.bind(this),
+
+			inputText: '',
 		};
+	},
+
+	computed: {
+		isInputText() {
+			return !!this.inputText.length;
+		},
+	},
+
+	watch: {
+		inputText(newValue, oldValue) {
+			console.log(newValue, oldValue);
+
+			if (newValue.length <= 0) {
+				// FIXME 이전 페이지로 이동하도록 수정
+				if (this.$route.name === 'SearchPage') {
+					this.$router.push({
+						name: 'HomePage',
+					});
+				} else {
+					this.close();
+				}
+			} else {
+				this.$router.push({
+					name: 'SearchPage',
+					query: {
+						q: this.inputText,
+					},
+				});
+			}
+		},
 	},
 
 	mounted() {
@@ -43,9 +85,13 @@ export default {
 		handleClickOutside(e) {
 			const isInside = this.$el.contains(e.target);
 
-			if (isInside) return false;
+			if (isInside || this.isInputText) return false;
 
 			this.close();
+		},
+
+		clearInputText() {
+			this.inputText = '';
 		},
 
 		close() {
@@ -58,7 +104,9 @@ export default {
 <style lang="scss" scoped>
 .search-input {
 	display: flex;
+	position: relative;
 	height: 36px;
+	padding-right: 34px;
 	background-color: $black;
 	border: 1px solid $white;
 	color: $white;
@@ -91,6 +139,9 @@ export default {
 }
 
 .close-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
 	height: 100%;
 	color: $white;
 }
