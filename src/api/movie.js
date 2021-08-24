@@ -1,4 +1,4 @@
-import { API_KEY, TMDB_ENDPOINT } from '@/configs/';
+import { API_KEY, TMDB_ENDPOINT, TMDB_LANGUAGE } from '@/configs/';
 import createInstance from './common/createInstance';
 
 /**
@@ -9,7 +9,7 @@ const movieInstance = createInstance({
 	// 쿼리 스트링
 	params: {
 		api_key: API_KEY,
-		language: 'ko-KR',
+		language: TMDB_LANGUAGE,
 	},
 });
 
