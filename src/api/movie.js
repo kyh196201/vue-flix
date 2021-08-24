@@ -1,11 +1,11 @@
-import { API_KEY } from '@/configs/';
+import { API_KEY, TMDB_ENDPOINT } from '@/configs/';
 import createInstance from './common/createInstance';
 
 /**
  * movie API 인스턴스
  */
 const movieInstance = createInstance({
-	baseURL: process.env.VUE_APP_TMDB_ENDPOINT + 'movie/',
+	baseURL: TMDB_ENDPOINT + 'movie/',
 	// 쿼리 스트링
 	params: {
 		api_key: API_KEY,

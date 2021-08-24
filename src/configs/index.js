@@ -1,5 +1,7 @@
 // TMDB API KEY
-export const API_KEY = '5c641d77de2e4b7554d8ebbf14934986';
+export const API_KEY = process.env.VUE_APP_TMDB_API_KEY;
+
+export const TMDB_ENDPOINT = process.env.VUE_APP_TMDB_ENDPOINT;
 
 // TMDB Image base url
 // TODO '/configuration'을 통해서 기본 세팅하기
