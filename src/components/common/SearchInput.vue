@@ -55,7 +55,7 @@ export default {
 				this.$router.push({
 					name: 'SearchPage',
 					query: {
-						q: this.inputText,
+						q: encodeURIComponent(this.inputText),
 					},
 				});
 			}

@@ -10,6 +10,7 @@ const searchInstance = createInstance({
 	},
 });
 
+// https://developers.themoviedb.org/3/search/search-movies
 const searchMovie = async (query, page = 1) => {
 	try {
 		const { data } = await searchInstance.get('movie', {
