@@ -4,10 +4,9 @@
 			<figure class="movie-item__image">
 				<img
 					v-if="useLazy"
-					src=""
 					:data-src="posterImage"
-					@error="onImageError"
 					class="lazy"
+					@error="onImageError"
 					ref="lazy-img"
 				/>
 				<img
@@ -92,18 +91,16 @@ export default {
 	methods: {
 		// TODO 공통 믹스인으로 옮기기
 		onImageError(e) {
-			const $parent = e.target.closest('figure');
-
-			if ($parent) $parent.style.backgroundColor = '#000';
+			// FIXME 대체 이미지 적용하기
+			e.target.style.visibility = 'hidden';
 		},
 
 		createObserver() {
 			this.$observer = new MyObserver(this.handleIntersect.bind(this));
 		},
 
-		/**
-		 * observe 핸들러
-		 */
+		// observe 핸들러
+
 		handleIntersect(entries, observer) {
 			const [entry] = entries;
 			const { isIntersecting, target } = entry;
@@ -137,13 +134,13 @@ export default {
 
 <style lang="scss" scoped>
 .movie-item {
-	// 이미지
 	&__image {
 		overflow: hidden;
 		position: relative;
 		width: 100%;
 		padding-bottom: 56.25%;
 		border-radius: 5px;
+		background-color: $black;
 
 		img {
 			position: absolute;
@@ -155,7 +152,6 @@ export default {
 			border: none;
 
 			&.lazy {
-				height: 100%;
 				text-indent: -9999px;
 				background-image: linear-gradient(
 					$skeleton-color 100%,
