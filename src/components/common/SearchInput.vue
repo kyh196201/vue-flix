@@ -6,7 +6,7 @@
 		<input
 			type="text"
 			class="search-input-form"
-			v-model="inputText"
+			@input="handleInput"
 			ref="input"
 		/>
 		<button
@@ -75,6 +75,10 @@ export default {
 		// focus to input tag
 		focusInput() {
 			this.$refs.input?.focus();
+		},
+
+		handleInput(event) {
+			this.inputText = event.target.value;
 		},
 
 		setClickOutside() {
