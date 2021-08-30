@@ -42,9 +42,7 @@ export default {
 	},
 
 	watch: {
-		inputText(newValue, oldValue) {
-			console.log(newValue, oldValue);
-
+		inputText(newValue) {
 			if (newValue.length <= 0) {
 				// FIXME 이전 페이지로 이동하도록 수정
 				if (this.$route.name === 'SearchPage') {
@@ -54,7 +52,7 @@ export default {
 				} else {
 					this.close();
 				}
-			} else {
+			} else if (newValue.trim().length > 0) {
 				this.$router.push({
 					name: 'SearchPage',
 					query: {
