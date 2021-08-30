@@ -1,6 +1,11 @@
+// Root Mutations
 const mutations = {
-	increment(state) {
-		state.count += 1;
+	openSearchForm(state) {
+		state.isSearchForm = true;
+	},
+
+	closeSearchForm(state) {
+		state.isSearchForm = false;
 	},
 };
 

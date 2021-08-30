@@ -53,17 +53,14 @@
 					<div class="header__search">
 						<!-- search-form -->
 						<transition name="slide-fade">
-							<SearchInput
-								v-if="isSearchForm"
-								@close="isSearchForm = false"
-							></SearchInput>
+							<SearchInput v-if="isSearchForm"></SearchInput>
 						</transition>
 						<!-- search icon -->
 						<button
 							v-if="!isSearchForm"
 							type="button"
 							class="nav-icon"
-							@click.stop="isSearchForm = true"
+							@click.stop="openSearchForm"
 						>
 							<font-awesome-icon
 								:icon="['fas', 'search']"
@@ -142,6 +139,7 @@
 </template>
 
 <script>
+// Images
 import headerLogo from '@/assets/images/common/logo-small.svg';
 import profileAvatar from '@/assets/images/common/profile.jpg';
 
@@ -150,6 +148,9 @@ import { routerLinks } from '@/utils/common/constants';
 // Components
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
 import SearchInput from '@/components/common/SearchInput.vue';
+
+// Vuex
+import { mapMutations, mapState } from 'vuex';
 
 export default {
 	name: 'app-header',
@@ -178,10 +179,11 @@ export default {
 					activator: 'hover',
 				},
 			},
-
-			// toggle search-form
-			isSearchForm: false,
 		};
+	},
+
+	computed: {
+		...mapState(['isSearchForm']),
 	},
 
 	watch: {
@@ -189,14 +191,16 @@ export default {
 			handler() {
 				const { nav } = this.dropdowns;
 
-				if (!nav.isOpen) return;
-
-				nav.isOpen = false;
+				if (nav.isOpen) {
+					nav.isOpen = false;
+				}
 			},
 		},
 	},
 
 	methods: {
+		...mapMutations(['openSearchForm']),
+
 		toggleNavDropdown(toggle) {
 			this.dropdowns.nav.isOpen = toggle;
 		},

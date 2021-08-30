@@ -1,6 +1,7 @@
+// Root State
 const state = function () {
 	return {
-		count: 0,
+		isSearchForm: false,
 	};
 };
 

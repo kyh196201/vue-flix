@@ -6,6 +6,7 @@
 		<input
 			type="text"
 			class="search-input-form"
+			:value="inputText"
 			@input="handleInput"
 			ref="input"
 		/>
@@ -21,6 +22,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
 	name: 'search-input',
 
@@ -72,6 +75,8 @@ export default {
 	},
 
 	methods: {
+		...mapMutations(['closeSearchForm']),
+
 		// focus to input tag
 		focusInput() {
 			this.$refs.input?.focus();
@@ -99,7 +104,7 @@ export default {
 		},
 
 		close() {
-			this.$emit('close');
+			this.closeSearchForm();
 		},
 	},
 };

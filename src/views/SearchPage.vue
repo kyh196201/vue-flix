@@ -113,10 +113,6 @@ export default {
 		},
 	},
 
-	created() {
-		console.log('SearchPage.vue created!', this.message);
-	},
-
 	methods: {
 		async fetchData() {
 			this.loading = true;
