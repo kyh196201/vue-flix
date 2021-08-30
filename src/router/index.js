@@ -27,6 +27,15 @@ const routes = [
 		path: '/search',
 		name: 'SearchPage',
 		component: () => import('@/views/SearchPage.vue'),
+		children: [
+			{
+				path: 'detail/:movieId',
+				name: 'SearchMovieModal',
+				component: MovieModal,
+				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
+				props: true,
+			},
+		],
 	},
 	{
 		path: '/:catchAll(.*)',
