@@ -22,7 +22,8 @@
     "swiper": "^6.7.1",
     "vue": "^3.0.11",
     "vue-awesome-swiper": "^4.1.1",
-    "vue-router": "^4.0.8"
+    "vue-router": "^4.0.8",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
