@@ -43,9 +43,11 @@ export default {
 
 	watch: {
 		inputText(newValue) {
+			const { name } = this.$route;
+
 			if (newValue.length <= 0) {
 				// FIXME 이전 페이지로 이동하도록 수정
-				if (this.$route.name === 'SearchPage') {
+				if (name === 'SearchPage') {
 					this.$router.push({
 						name: 'HomePage',
 					});
@@ -53,12 +55,21 @@ export default {
 					this.close();
 				}
 			} else if (newValue.trim().length > 0) {
-				this.$router.push({
-					name: 'SearchPage',
-					query: {
-						q: encodeURIComponent(this.inputText),
-					},
-				});
+				const query = {
+					q: encodeURIComponent(this.inputText),
+				};
+
+				if (name === 'SearchPage') {
+					this.$router.replace({
+						name: 'SearchPage',
+						query,
+					});
+				} else {
+					this.$router.push({
+						name: 'SearchPage',
+						query,
+					});
+				}
 			}
 		},
 	},
