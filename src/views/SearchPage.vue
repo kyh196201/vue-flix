@@ -2,9 +2,7 @@
 	<section class="search-page">
 		<h1 class="visually-hidden">검색 페이지</h1>
 
-		<div v-if="loading">loading...</div>
-
-		<template v-else>
+		<template v-if="!loading">
 			<!-- 검색 결과 -->
 			<section class="search-page__movie-list" v-if="isMovieList">
 				<ul class="movie-list">
