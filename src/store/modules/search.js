@@ -1,4 +1,4 @@
-import api from '@/api/search';
+import * as api from '@/api/search';
 
 export default {
 	namespaced: true,
@@ -7,7 +7,7 @@ export default {
 		return {
 			searchResult: [],
 
-			totalPages: 0,
+			totalPages: null,
 
 			page: 1,
 
@@ -43,11 +43,10 @@ export default {
 
 	actions: {
 		async searchMovie({ commit }, { query, page }) {
-			commit('setLoading', true);
-
 			const result = await api.searchMovie(query, page);
 
 			if (result.isError) {
+				commit('setTotalPages', null);
 				throw result.errorData;
 			}
 
@@ -55,9 +54,18 @@ export default {
 
 			commit('setSearchResult', results);
 			commit('setTotalPages', total_pages);
-			commit('setLoading', false);
+		},
+
+		clearState({ commit }) {
+			commit('clearPage');
+			commit('setSearchResult', []);
+			commit('setTotalPages', null);
 		},
 	},
 
-	getters: {},
+	getters: {
+		isSearchResult(state) {
+			return !!state.searchResult.length;
+		},
+	},
 };

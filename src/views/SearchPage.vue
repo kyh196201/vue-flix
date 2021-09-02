@@ -4,10 +4,10 @@
 
 		<template v-if="!loading">
 			<!-- 검색 결과 -->
-			<section class="search-page__movie-list" v-if="isMovieList">
+			<section class="search-page__movie-list" v-if="isSearchResult">
 				<ul class="movie-list">
 					<li
-						v-for="(movie, index) in movieList"
+						v-for="(movie, index) in searchResult"
 						:key="`${index}-${movie.id}`"
 					>
 						<MovieItem :movieData="movie"></MovieItem>
@@ -18,7 +18,7 @@
 			<!-- 검색 결과 없을 경우 -->
 			<section
 				class="search-page__no-result"
-				v-else-if="searchFlag && !isMovieList"
+				v-else-if="totalPages === null && !isSearchResult"
 			>
 				<div class="no-result">
 					<h2>
@@ -52,14 +52,18 @@
 </template>
 
 <script>
-// Api
-import { searchMovie } from '@/api/search';
-
 // Utils
 import { isString } from '@/utils/validate';
+import debounce from '@/utils/common/debounce';
 
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
+
+// Vuex
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapState, mapActions, mapMutations, mapGetters } =
+	createNamespacedHelpers('search');
 
 export default {
 	name: 'search-page',
@@ -68,27 +72,11 @@ export default {
 		MovieItem,
 	},
 
-	data() {
-		return {
-			message: 'This is Search page.',
-
-			movieList: [],
-
-			pagination: {
-				totalPages: 0,
-				totalResults: 0,
-				page: 1,
-			},
-
-			loading: false,
-
-			// 검색했는지 여부 판단 변수
-			// FIXME: 더 좋은 방법 있는지 찾아보기
-			searchFlag: false,
-		};
-	},
-
 	computed: {
+		...mapState(['totalPages', 'searchResult', 'loading', 'page']),
+
+		...mapGetters(['isSearchResult']),
+
 		/**
 		 * @returns $route.query.q
 		 */
@@ -101,43 +89,45 @@ export default {
 
 			return '';
 		},
-
-		isMovieList() {
-			return this.movieList.length > 0;
-		},
 	},
 
 	watch: {
 		$route: {
 			handler() {
-				if (!this.query) return;
+				if (this.query === '') return;
 
-				this.fetchData();
+				this.debouncedFetchData({
+					query: this.query,
+					page: this.page,
+				});
 			},
+
 			immediate: true,
 		},
 	},
 
 	methods: {
-		async fetchData() {
-			this.loading = true;
+		...mapActions(['searchMovie']),
+		...mapMutations(['setLoading']),
 
-			const { page } = this.pagination;
+		// https://stackoverflow.com/questions/45178621/how-to-correctly-use-vue-js-watch-with-lodash-debounce
+		debouncedFetchData: debounce(function (params) {
+			this.fetchData(params);
+		}),
 
-			const result = await searchMovie(this.query, page);
+		async fetchData({ query, page }) {
+			try {
+				this.setLoading(true);
 
-			if (result.isError) {
-				console.log(result.errorData.message);
-			} else {
-				const { total_pages, total_results, results } = result.data;
-
-				this.pagination.totalPages = total_pages;
-				this.pagination.totalResults = total_results;
-				this.movieList = results;
+				await this.searchMovie({
+					query,
+					page,
+				});
+			} catch (error) {
+				console.error(error.message);
+			} finally {
+				this.setLoading(false);
 			}
-
-			this.loading = false;
-			this.searchFlag = true;
 		},
 
 		validateQuery(value) {
