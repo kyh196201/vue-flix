@@ -26,14 +26,8 @@ export default {
 			state.totalPages = pages;
 		},
 
-		// 페이지 1 증가
-		increasePage(state) {
-			state.page += 1;
-		},
-
-		// 현재 페이지 1페이지로 초기화
-		clearPage(state) {
-			state.page = 1;
+		setPage(state, page = 1) {
+			state.page = page;
 		},
 
 		setLoading(state, loading) {
@@ -42,8 +36,8 @@ export default {
 	},
 
 	actions: {
-		async searchMovie({ commit }, { query, page }) {
-			const result = await api.searchMovie(query, page);
+		async searchMovie({ commit, state }, query) {
+			const result = await api.searchMovie(query, state.page);
 
 			if (result.isError) {
 				commit('setTotalPages', null);
@@ -57,7 +51,7 @@ export default {
 		},
 
 		clearState({ commit }) {
-			commit('clearPage');
+			commit('setPage', 1);
 			commit('setSearchResult', []);
 			commit('setTotalPages', null);
 		},

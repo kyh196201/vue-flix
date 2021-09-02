@@ -18,7 +18,7 @@
 			<!-- 검색 결과 없을 경우 -->
 			<section
 				class="search-page__no-result"
-				v-else-if="totalPages === null && !isSearchResult"
+				v-else-if="totalPages !== null && !isSearchResult"
 			>
 				<div class="no-result">
 					<h2>
@@ -96,10 +96,9 @@ export default {
 			handler() {
 				if (this.query === '') return;
 
-				this.debouncedFetchData({
-					query: this.query,
-					page: this.page,
-				});
+				this.setPage(1);
+
+				this.debouncedFetchData(this.query);
 			},
 
 			immediate: true,
@@ -108,21 +107,18 @@ export default {
 
 	methods: {
 		...mapActions(['searchMovie']),
-		...mapMutations(['setLoading']),
+		...mapMutations(['setLoading', 'setPage']),
 
 		// https://stackoverflow.com/questions/45178621/how-to-correctly-use-vue-js-watch-with-lodash-debounce
-		debouncedFetchData: debounce(function (params) {
-			this.fetchData(params);
+		debouncedFetchData: debounce(function (query) {
+			this.fetchData(query);
 		}),
 
-		async fetchData({ query, page }) {
+		async fetchData(query) {
 			try {
 				this.setLoading(true);
 
-				await this.searchMovie({
-					query,
-					page,
-				});
+				await this.searchMovie(query);
 			} catch (error) {
 				console.error(error.message);
 			} finally {
