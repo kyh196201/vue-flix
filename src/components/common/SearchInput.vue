@@ -42,6 +42,19 @@ export default {
 	},
 
 	watch: {
+		$route: {
+			handler(newRoute, oldRoute) {
+				if (!oldRoute) return false;
+
+				if (
+					oldRoute.name === 'SearchPage' &&
+					oldRoute.name !== newRoute.name
+				) {
+					this.clearInputText();
+				}
+			},
+		},
+
 		inputText(newValue) {
 			const { name } = this.$route;
 
