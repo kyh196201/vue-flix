@@ -9,6 +9,8 @@ export default {
 
 			totalPages: null,
 
+			totalResults: 0,
+
 			page: 1,
 
 			loading: false,
@@ -26,8 +28,17 @@ export default {
 			state.totalPages = pages;
 		},
 
+		// API 결과 total_pages
+		setTotalResults(state, totalResults) {
+			state.totalResults = totalResults;
+		},
+
 		setPage(state, page = 1) {
 			state.page = page;
+		},
+
+		increasePage(state) {
+			state.page += 1;
 		},
 
 		setLoading(state, loading) {
@@ -44,22 +55,49 @@ export default {
 				throw result.errorData;
 			}
 
-			const { total_pages, results } = result.data;
+			const { total_pages, results, total_results } = result.data;
 
 			commit('setSearchResult', results);
 			commit('setTotalPages', total_pages);
+			commit('setTotalResults', total_results);
+
+			return results;
+		},
+
+		// 인피니티 스크롤을 통해서 추가 데이터 불러오는 API 함수
+		async fetchMoreMovies({ commit, state }, query) {
+			const result = await api.searchMovie(query, state.page);
+
+			if (result.isError) {
+				commit('setTotalPages', null);
+				throw result.errorData;
+			}
+
+			const { total_pages, results, total_results } = result.data;
+
+			commit('setSearchResult', [...state.searchResult, ...results]);
+			commit('setTotalPages', total_pages);
+			commit('setTotalResults', total_results);
+
+			return results;
 		},
 
 		clearState({ commit }) {
 			commit('setPage', 1);
 			commit('setSearchResult', []);
 			commit('setTotalPages', null);
+			commit('setTotalResults', 0);
 		},
 	},
 
 	getters: {
 		isSearchResult(state) {
 			return !!state.searchResult.length;
+		},
+
+		// 더 불러올 데이터 있는지 체크
+		isMoreData(state) {
+			return state.totalResults > state.searchResult.length;
 		},
 	},
 };
