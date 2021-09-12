@@ -68,10 +68,9 @@ import MovieItem from '@/components/movie/MovieItem.vue';
 import Spinner from '@/components/common/Spinner.vue';
 
 // Vuex
-import { createNamespacedHelpers } from 'vuex';
+import { createNamespacedHelpers, mapMutations } from 'vuex';
 
-const { mapState, mapActions, mapMutations, mapGetters } =
-	createNamespacedHelpers('search');
+const searchModule = createNamespacedHelpers('search');
 
 export default {
 	name: 'search-page',
@@ -82,7 +81,7 @@ export default {
 	},
 
 	computed: {
-		...mapState([
+		...searchModule.mapState([
 			'totalPages',
 			'searchResult',
 			'loading',
@@ -90,7 +89,7 @@ export default {
 			'searchText',
 		]),
 
-		...mapGetters(['isSearchResult', 'isMoreData']),
+		...searchModule.mapGetters(['isSearchResult', 'isMoreData']),
 
 		/**
 		 * @returns searchText
@@ -110,6 +109,7 @@ export default {
 
 				if (this.validateQuery(q)) {
 					this.setSearchText(decodeURIComponent(q));
+					this.openSearchForm();
 				}
 			},
 
@@ -134,8 +134,14 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['searchMovie', 'fetchMoreMovies', 'clearState']),
-		...mapMutations([
+		...mapMutations(['openSearchForm']),
+
+		...searchModule.mapActions([
+			'searchMovie',
+			'fetchMoreMovies',
+			'clearState',
+		]),
+		...searchModule.mapMutations([
 			'setLoading',
 			'setPage',
 			'increasePage',
