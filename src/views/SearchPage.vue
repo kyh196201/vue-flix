@@ -128,8 +128,13 @@ export default {
 		},
 	},
 
+	beforeUnmount() {
+		// 페이지 데이터 초기화
+		this.clearState();
+	},
+
 	methods: {
-		...mapActions(['searchMovie', 'fetchMoreMovies']),
+		...mapActions(['searchMovie', 'fetchMoreMovies', 'clearState']),
 		...mapMutations([
 			'setLoading',
 			'setPage',

@@ -5,16 +5,22 @@ export default {
 
 	state() {
 		return {
+			// 검색어
 			searchText: '',
 
+			// 검색 결과
 			searchResult: [],
 
+			// 총 페이지
 			totalPages: null,
 
+			// 총 결과
 			totalResults: 0,
 
+			// 현재 검색하고있는 페이지
 			page: 1,
 
+			// 로딩
 			loading: false,
 		};
 	},
@@ -44,16 +50,19 @@ export default {
 			state.page = page;
 		},
 
+		// 페이지 1 증가
 		increasePage(state) {
 			state.page += 1;
 		},
 
+		// 로딩 상태 변경
 		setLoading(state, loading) {
 			state.loading = loading;
 		},
 	},
 
 	actions: {
+		// 영화 검색
 		async searchMovie({ commit, state }, query) {
 			const result = await api.searchMovie(query, state.page);
 
@@ -89,11 +98,13 @@ export default {
 			return results;
 		},
 
+		// state 초기화
 		clearState({ commit }) {
 			commit('setPage', 1);
 			commit('setSearchResult', []);
 			commit('setTotalPages', null);
 			commit('setTotalResults', 0);
+			commit('setLoading', false);
 		},
 	},
 
@@ -103,7 +114,6 @@ export default {
 		},
 
 		// 더 불러올 데이터 있는지 체크
-		// FIXME getters 내부에서 getters 불러올 방법 있는지 체크
 		isMoreData(state) {
 			return state.totalResults > state.searchResult.length;
 		},

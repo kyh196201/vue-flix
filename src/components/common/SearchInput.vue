@@ -46,6 +46,7 @@ export default {
 			handler(newRoute, oldRoute) {
 				if (!oldRoute) return false;
 
+				// 검색 페이지에서 다른 페이지로 이동할 경우 검색어 제거
 				if (
 					oldRoute.name === 'SearchPage' &&
 					oldRoute.name !== newRoute.name
