@@ -1,10 +1,11 @@
 <template>
 	<div class="movie-item">
 		<a href="#" class="movie-item__link" @click.prevent="handleClick">
-			<figure class="movie-item__image">
+			<figure class="movie-item__image" :data-movie-title="movieTitle">
 				<img
 					v-if="useLazy"
 					:data-src="posterImage"
+					:alt="movieTitle"
 					class="lazy"
 					@error="onImageError"
 					ref="lazy-img"
@@ -89,10 +90,8 @@ export default {
 	},
 
 	methods: {
-		// TODO 공통 믹스인으로 옮기기
-		onImageError(e) {
-			// FIXME 대체 이미지 적용하기
-			e.target.style.visibility = 'hidden';
+		onImageError() {
+			this.$el.classList.add('error');
 		},
 
 		createObserver() {
@@ -140,7 +139,7 @@ export default {
 		width: 100%;
 		padding-bottom: 56.25%;
 		border-radius: 5px;
-		background-color: $black;
+		background-color: $movie-item-background-color;
 
 		img {
 			position: absolute;
@@ -157,6 +156,27 @@ export default {
 					$skeleton-color 100%,
 					transparent 0
 				);
+			}
+		}
+	}
+
+	// 이미지 로딩 에러
+	&.error {
+		.movie-item {
+			&__image {
+				&::after {
+					content: attr(data-movie-title);
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					font-size: 12px;
+					line-height: 1.2;
+				}
+
+				img {
+					visibility: hidden !important;
+				}
 			}
 		}
 	}
