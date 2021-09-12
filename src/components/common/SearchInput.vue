@@ -6,15 +6,15 @@
 		<input
 			type="text"
 			class="search-input-form"
-			:value="inputText"
+			:value="searchText"
 			@input="handleInput"
 			ref="input"
 		/>
 		<button
 			type="button"
 			class="close-btn"
-			v-if="isInputText"
-			@click.stop="clearInputText"
+			v-if="searchText"
+			@click.stop="clearSearchText"
 		>
 			<font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
 		</button>
@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, createNamespacedHelpers } from 'vuex';
+
+const searchModule = createNamespacedHelpers('search');
 
 export default {
 	name: 'search-input',
@@ -36,9 +38,7 @@ export default {
 	},
 
 	computed: {
-		isInputText() {
-			return !!this.inputText.length;
-		},
+		...searchModule.mapState(['searchText']),
 	},
 
 	watch: {
@@ -50,17 +50,17 @@ export default {
 					oldRoute.name === 'SearchPage' &&
 					oldRoute.name !== newRoute.name
 				) {
-					this.clearInputText();
+					this.clearSearchText();
 				}
 			},
 		},
 
-		inputText(newValue) {
+		searchText(newValue) {
 			const { name } = this.$route;
 
-			if (this.validateInputText(newValue)) {
+			if (this.validateSearchText(newValue)) {
 				const query = {
-					q: encodeURIComponent(this.inputText),
+					q: encodeURIComponent(this.searchText),
 				};
 
 				if (name === 'SearchPage') {
@@ -98,14 +98,15 @@ export default {
 
 	methods: {
 		...mapMutations(['closeSearchForm']),
+		...searchModule.mapMutations(['setSearchText']),
 
-		// focus to input tag
+		// 입력창으로 포커스 이동
 		focusInput() {
 			this.$refs.input?.focus();
 		},
 
 		handleInput(event) {
-			this.inputText = event.target.value;
+			this.setSearchText(event.target.value);
 		},
 
 		setClickOutside() {
@@ -116,16 +117,16 @@ export default {
 		handleClickOutside(e) {
 			const isInside = this.$el.contains(e.target);
 
-			if (isInside || this.isInputText) return false;
+			if (isInside || this.searchText) return false;
 
 			this.close();
 		},
 
-		clearInputText() {
-			this.inputText = '';
+		clearSearchText() {
+			this.setSearchText('');
 		},
 
-		validateInputText(value) {
+		validateSearchText(value) {
 			return value?.trim().length > 0;
 		},
 

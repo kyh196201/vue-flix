@@ -82,32 +82,46 @@ export default {
 	},
 
 	computed: {
-		...mapState(['totalPages', 'searchResult', 'loading', 'page']),
+		...mapState([
+			'totalPages',
+			'searchResult',
+			'loading',
+			'page',
+			'searchText',
+		]),
 
 		...mapGetters(['isSearchResult', 'isMoreData']),
 
 		/**
-		 * @returns $route.query.q
+		 * @returns searchText
 		 */
 		query() {
-			const { q } = this.$route.query;
-
-			if (this.validateQuery(q)) {
-				return decodeURIComponent(q);
-			}
-
-			return '';
+			return this.searchText ? this.searchText.trim() : '';
 		},
 	},
 
 	watch: {
 		$route: {
-			handler() {
-				if (this.query === '') return;
+			handler(newRoute, oldRoute) {
+				if (oldRoute) return;
 
-				this.setPage(1);
+				// 페이지를 새로고침 했을 경우
+				const { q } = newRoute.query;
 
-				this.debouncedFetchData(this.query);
+				if (this.validateQuery(q)) {
+					this.setSearchText(decodeURIComponent(q));
+				}
+			},
+
+			immediate: true,
+		},
+
+		query: {
+			handler(newValue) {
+				if (newValue.length) {
+					this.setPage(1);
+					this.debouncedFetchData(newValue);
+				}
 			},
 
 			immediate: true,
@@ -116,7 +130,12 @@ export default {
 
 	methods: {
 		...mapActions(['searchMovie', 'fetchMoreMovies']),
-		...mapMutations(['setLoading', 'setPage', 'increasePage']),
+		...mapMutations([
+			'setLoading',
+			'setPage',
+			'increasePage',
+			'setSearchText',
+		]),
 
 		// https://stackoverflow.com/questions/45178621/how-to-correctly-use-vue-js-watch-with-lodash-debounce
 		debouncedFetchData: debounce(async function (query) {

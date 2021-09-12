@@ -5,6 +5,8 @@ export default {
 
 	state() {
 		return {
+			searchText: '',
+
 			searchResult: [],
 
 			totalPages: null,
@@ -18,6 +20,11 @@ export default {
 	},
 
 	mutations: {
+		// 검색어
+		setSearchText(state, searchText) {
+			state.searchText = searchText;
+		},
+
 		// API 결과 result
 		setSearchResult(state, result = []) {
 			state.searchResult = [...result];
@@ -96,6 +103,7 @@ export default {
 		},
 
 		// 더 불러올 데이터 있는지 체크
+		// FIXME getters 내부에서 getters 불러올 방법 있는지 체크
 		isMoreData(state) {
 			return state.totalResults > state.searchResult.length;
 		},
