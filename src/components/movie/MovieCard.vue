@@ -141,6 +141,7 @@ export default {
 			max-width: 100%;
 			padding: 0 1rem;
 			font-size: 2rem;
+			line-height: 1.3;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 		}
