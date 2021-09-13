@@ -46,6 +46,14 @@ export default {
 			handler(newRoute, oldRoute) {
 				if (!oldRoute) return false;
 
+				// 검색 페이지 내에서 url이 변경될 경우(검색 페이지 자식 라우트 경로로 이동할 경우)
+				// 참고: https://github.com/vuejs/vue-router/issues/704#issuecomment-250788821
+				const isSearchRoute = newRoute.matched?.some(
+					m => m.name === 'SearchPage',
+				);
+
+				if (isSearchRoute) return false;
+
 				// 검색 페이지에서 다른 페이지로 이동할 경우 검색어 제거
 				if (
 					oldRoute.name === 'SearchPage' &&
