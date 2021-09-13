@@ -13,13 +13,7 @@
 						<MovieItem :movieData="movie"></MovieItem>
 					</li>
 				</ul>
-				<div
-					class="observe-target"
-					ref="observe-target"
-					v-if="isMoreData"
-				>
-					<Spinner />
-				</div>
+				<InfiniteScroll @infinite="infiniteHandler" />
 			</section>
 
 			<!-- 검색 결과 없을 경우 -->
@@ -65,7 +59,7 @@ import debounce from '@/utils/common/debounce';
 
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
-import Spinner from '@/components/common/Spinner.vue';
+import InfiniteScroll from '@/components/common/InfiniteScroll.vue';
 
 // Vuex
 import { createNamespacedHelpers, mapMutations } from 'vuex';
@@ -77,7 +71,7 @@ export default {
 
 	components: {
 		MovieItem,
-		Spinner,
+		InfiniteScroll,
 	},
 
 	computed: {
@@ -151,41 +145,6 @@ export default {
 		// https://stackoverflow.com/questions/45178621/how-to-correctly-use-vue-js-watch-with-lodash-debounce
 		debouncedFetchData: debounce(async function (query) {
 			await this.fetchData(query);
-
-			// 1. 검색이 완료되고 검색 결과가 있으면
-			const $observeTarget = this.$refs['observe-target'];
-
-			if ($observeTarget) {
-				// 2. 인터섹션 옵저버 인스턴스 생성
-				// FIXME 옵저버 컴포넌트 만들기
-				const observer = new IntersectionObserver(
-					async ([entry], observer) => {
-						const { isIntersecting, intersectionRatio } = entry;
-
-						// 3. 영역이 보이면 데이터 요청
-						if (isIntersecting) {
-							const results = await this.fetchMoreData();
-
-							if (!results.length) {
-								// 검색 결과가 빈 배열이면(다음 페이지의 데이터가 없으면) 옵저버 감지 멈춤
-								observer.disconnect();
-								return false;
-							}
-
-							// 데이터를 요청한 후에도 target 엘리먼트가 계속해서 보일 경우
-							this.$nextTick(() => {
-								const threshold = 0.5;
-								if (intersectionRatio >= threshold) {
-									this.fetchMoreData();
-								}
-							});
-						}
-					},
-					{ threshold: 0.5 },
-				);
-
-				observer.observe($observeTarget);
-			}
 		}),
 
 		async fetchData(query) {
@@ -217,6 +176,20 @@ export default {
 
 		validateQuery(value) {
 			return isString(value) && value.length > 0;
+		},
+
+		async infiniteHandler(state) {
+			try {
+				const results = await this.fetchMoreData();
+
+				if (results.length) {
+					state.loaded();
+				} else {
+					state.complete();
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
 		},
 	},
 };
