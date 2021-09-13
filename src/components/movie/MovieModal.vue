@@ -12,6 +12,7 @@
 								v-if="movieData"
 								:src="backdropImage"
 								:alt="movieData.title"
+								@error="onImageError"
 							/>
 						</figure>
 
@@ -294,6 +295,11 @@ export default {
 			this.fetchMovieCredits();
 			this.fetchSimilarMovies();
 		},
+
+		// 이미지 로드 에러
+		onImageError(event) {
+			event.target.style.visibility = 'hidden';
+		},
 	},
 };
 </script>
@@ -342,12 +348,15 @@ $modal-padding: 48px;
 			}
 
 			&__back {
+				height: 100%;
 				z-index: 0;
 			}
 
 			// poster
 			&__poster {
 				width: 100%;
+				height: 100%;
+				background-color: $movie-item-background-color;
 
 				img {
 					display: block;
