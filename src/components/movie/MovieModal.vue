@@ -375,7 +375,7 @@ $modal-padding: 48px;
 			&__title {
 				width: 70%;
 				font-size: 50px;
-				line-height: 50px;
+				line-height: 1.2;
 				color: $white;
 				@include ellipsis(2);
 			}
