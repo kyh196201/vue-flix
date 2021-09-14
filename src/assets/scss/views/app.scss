@@ -5,9 +5,36 @@
     background-color: $main-color;
     color: $white;
     font-size: 1.6rem;
+
+    .warn-mobile {
+        display: none;
+    }
 }
 
 .app-main {
     flex: 1;
     background-color: $main-color;
+}
+
+
+@include mobile-small {
+    .app {
+        .warn-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: $warn-background-color;
+            z-index: 99999;
+
+            &__text {
+                font-size: 16px;
+                line-height: 20px;
+            }
+        }
+    }
 }

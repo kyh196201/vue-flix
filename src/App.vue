@@ -5,6 +5,14 @@
 			<router-view></router-view>
 		</main>
 		<AppFooter />
+
+		<!-- FIXME 모바일 경고 페이지 -->
+		<div class="warn-mobile">
+			<p class="warn-mobile__text">
+				모바일은 지원하지 않습니다.<br />
+				PC 혹은 태블릿에서 이용해주세요. 😊
+			</p>
+		</div>
 	</div>
 </template>
 
