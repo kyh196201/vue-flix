@@ -1,20 +1,42 @@
 .login-page {
     position: relative;
-    min-height: 100vh;
     
     // 배경 이미지
+    &__background {
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100vh;
+        max-height: 100vh;
+        z-index: 0;
+
+        .background {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+        }
+    }
 
     // 헤더
+    &__header {
+        position: relative;
+    }
 
     // 로그인 폼
+    &__form {
+        position: relative;
+    }
+
+    @media (max-width: 2000px) {
+
+        &__background {
+            .background {
+                width: 2000px;
+                min-height: 100vh;
+            }
+        }
+    }
 }
-
-// @media screen and (min-width: 2000px) {
-//     .login-page {
-//         &__background {
-//             img {
-
-//             }
-//         }
-//     }
-// }
