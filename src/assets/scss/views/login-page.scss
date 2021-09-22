@@ -18,6 +18,17 @@
             height: auto;
             min-height: 100vh;
         }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
     }
 
     // 헤더
@@ -25,17 +36,55 @@
         position: relative;
     }
 
+    &__logo {
+        display: flex;
+        align-items: center;
+
+        a {
+            width: 160px;
+
+            img {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
     // 로그인 폼
     &__form {
         position: relative;
+        width: 450px;
+        margin: 0 auto;
+
+        .login-form {
+            border-radius: 4px;
+        }
     }
 
     @media (max-width: 2000px) {
-
         &__background {
             .background {
                 width: 2000px;
                 min-height: 100vh;
+            }
+        }
+    }
+
+    @include tablet {
+        &__form {
+            width: 100%;
+
+            .login-form {
+                padding: 0 32.5px;
+                background-color: inherit;
+                border-radius: none;
+            }
+        }
+
+        &__background {
+            &::after {
+                background-color: rgba(0, 0, 0, 0.9);
             }
         }
     }
