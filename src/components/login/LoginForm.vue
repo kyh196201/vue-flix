@@ -2,34 +2,47 @@
 	<div class="login-form">
 		<h3 class="login-form__title">로그인</h3>
 
-		<form class="form">
+		<form class="form" @submit.prevent="handleLogin">
 			<div class="form__row">
 				<!-- 이메일 -->
-				<div class="form-field">
+				<div class="form-field" :class="{ 'is-error': !emailValid }">
 					<input
 						type="text"
 						id="user-email"
 						class="form-field__input"
+						autocomplete="off"
+						:class="emailClass"
+						v-model="userEmail"
+						@input="validateEmail"
+						@blur="validateEmail"
 					/>
 					<label for="user-email" class="form-field__label"
 						>이메일 주소</label
 					>
 				</div>
-				<p class="form__error">정확한 이메일 주소를 입력하세요.</p>
+				<p class="form__error" v-if="!emailValid">
+					{{ errorBag.userEmail[0] }}
+				</p>
 			</div>
 			<div class="form__row">
 				<!-- 비밀 번호 -->
-				<div class="form-field">
+				<div class="form-field" :class="{ 'is-error': !passwordValid }">
 					<input
-						type="text"
+						type="password"
 						id="user-password"
 						class="form-field__input"
+						:class="passwordClass"
+						v-model="userPw"
+						@input="validatePassword"
+						@blur="validatePassword"
 					/>
 					<label for="user-password" class="form-field__label"
 						>비밀번호</label
 					>
 				</div>
-				<p class="form__error">비밀번호는 4 ~ 60자 사이여야 합니다.</p>
+				<p class="form__error" v-if="!passwordValid">
+					{{ errorBag.userPw[0] }}
+				</p>
 			</div>
 			<!-- 로그인 버튼 -->
 			<button type="submit" class="form__btn form__btn--login">
@@ -81,8 +94,80 @@
 </template>
 
 <script>
+import { isValidEmail } from '@/utils/validate';
+
 export default {
 	name: 'login-form',
+
+	data() {
+		return {
+			userEmail: '',
+			userPw: '',
+
+			// 에러 담을 객체
+			errorBag: {
+				userEmail: [],
+				userPw: [],
+			},
+		};
+	},
+
+	computed: {
+		emailClass() {
+			return this.userEmail.trim().length ? 'has-text' : '';
+		},
+
+		passwordClass() {
+			return this.userPw.trim().length ? 'has-text' : '';
+		},
+
+		emailValid() {
+			return !this.errorBag.userEmail.length;
+		},
+
+		passwordValid() {
+			return !this.errorBag.userPw.length;
+		},
+	},
+
+	methods: {
+		// 이메일 validation 검사
+		validateEmail() {
+			const email = this.userEmail.trim();
+
+			this.errorBag.userEmail = [];
+
+			if (!email) {
+				this.errorBag.userEmail.push('이메일을 입력해주세요.');
+			} else if (!isValidEmail(email)) {
+				this.errorBag.userEmail.push('정확한 이메일을 입력해주세요.');
+			}
+		},
+
+		// 비밀번호 validation 검사
+		validatePassword() {
+			const passwordLength = this.userPw.length;
+
+			this.errorBag.userPw = [];
+
+			if (passwordLength < 4 || passwordLength > 60) {
+				this.errorBag.userPw.push(
+					'비밀번호는 4 ~ 60자 사이여야 합니다.',
+				);
+			}
+		},
+
+		handleLogin() {
+			this.validateEmail();
+			this.validatePassword();
+
+			const isValid = this.emailValid && this.passwordValid;
+
+			if (isValid) {
+				console.log('로그인!!');
+			}
+		},
+	},
 };
 </script>
 
@@ -106,12 +191,23 @@ export default {
 		background-color: #333;
 		border-radius: 4px;
 
+		&.is-error {
+			border-bottom: 2px solid $form-warn-color;
+		}
+
 		&__input {
 			display: block;
 			width: 100%;
 			height: 100%;
 			color: $white;
 			font-size: 16px;
+
+			&:focus + label,
+			&.has-text + label {
+				font-size: 11px;
+				top: 4px;
+				transform: translateY(0);
+			}
 		}
 
 		&__label {
@@ -122,16 +218,6 @@ export default {
 			color: #8c8c8c;
 			transform: translateY(-50%);
 			transition: all 0.15s ease;
-		}
-
-		&.focus {
-			.form-field {
-				&__label {
-					font-size: 11px;
-					top: 4px;
-					transform: translateY(0);
-				}
-			}
 		}
 	}
 
@@ -146,7 +232,7 @@ export default {
 		&__error {
 			margin-top: 8px;
 			font-size: 14px;
-			color: $form-error-color;
+			color: $form-warn-color;
 		}
 
 		&__btn {
