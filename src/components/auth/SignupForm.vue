@@ -2,7 +2,7 @@
 	<div class="signup-form">
 		<h3 class="signup-form__title">회원가입</h3>
 
-		<form class="form" @submit.prevent="handleLogin">
+		<form class="form" @submit.prevent="handleSignup">
 			<div class="form__row">
 				<!-- 이메일 -->
 				<div class="form-field" :class="{ 'is-error': !emailValid }">
@@ -46,17 +46,25 @@
 			</div>
 			<div class="form__row">
 				<!-- 비밀 번호 확인 -->
-				<div class="form-field" :class="{ 'is-error': true }">
+				<div
+					class="form-field"
+					:class="{ 'is-error': !passwordConfirmValid }"
+				>
 					<input
 						type="password"
 						id="user-password-confirm"
 						class="form-field__input"
+						:class="passwordConfirmClass"
+						v-model="userPwConfirm"
+						@blur="validatePasswordConfirm"
 					/>
 					<label for="user-password-confirm" class="form-field__label"
 						>비밀번호 확인</label
 					>
 				</div>
-				<p class="form__error" v-if="true">비밀번호를 확인해주세요.</p>
+				<p class="form__error" v-if="!passwordConfirmValid">
+					비밀번호를 확인해주세요.
+				</p>
 			</div>
 			<!-- 회원가입 버튼 -->
 			<button type="submit" class="form__btn form__btn--login">
@@ -76,12 +84,12 @@ export default {
 		return {
 			userEmail: '',
 			userPw: '',
+			userPwConfirm: '',
 
 			// 에러 담을 객체
 			errorBag: {
 				userEmail: [],
 				userPw: [],
-				// TODO: 비밀번호 확인 기능
 				userPwConfirm: [],
 			},
 		};
@@ -96,12 +104,20 @@ export default {
 			return this.userPw.trim().length ? 'has-text' : '';
 		},
 
+		passwordConfirmClass() {
+			return this.userPwConfirm.trim().length ? 'has-text' : '';
+		},
+
 		emailValid() {
 			return !this.errorBag.userEmail.length;
 		},
 
 		passwordValid() {
 			return !this.errorBag.userPw.length;
+		},
+
+		passwordConfirmValid() {
+			return !this.errorBag.userPwConfirm.length;
 		},
 	},
 
@@ -132,14 +148,27 @@ export default {
 			}
 		},
 
-		handleLogin() {
+		// 비밀번호 확인 validation 검사
+		validatePasswordConfirm() {
+			this.errorBag.userPwConfirm = [];
+
+			if (!this.userPwConfirm || this.userPwConfirm !== this.userPw) {
+				this.errorBag.userPwConfirm.push('비밀번호를 확인해주세요');
+			}
+		},
+
+		handleSignup() {
 			this.validateEmail();
 			this.validatePassword();
+			this.validatePasswordConfirm();
 
-			const isValid = this.emailValid && this.passwordValid;
+			const isValid =
+				this.emailValid &&
+				this.passwordValid &&
+				this.passwordConfirmValid;
 
 			if (isValid) {
-				console.log('로그인!!');
+				console.log('회원가입 성공!!');
 			}
 		},
 	},
