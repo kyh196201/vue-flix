@@ -1,10 +1,10 @@
 <template>
 	<div class="app">
-		<AppHeader v-if="!isLoginPage" />
+		<AppHeader v-if="isAuth" />
 		<main class="app-main">
 			<router-view></router-view>
 		</main>
-		<AppFooter v-if="!isLoginPage" />
+		<AppFooter v-if="isAuth" />
 
 		<!-- FIXME 모바일 경고 페이지 -->
 		<div class="warn-mobile">
@@ -29,8 +29,10 @@ export default {
 
 	computed: {
 		// FIXME 로그인 페이지인지 체크
-		isLoginPage() {
-			return this.$route.name === 'LoginPage';
+		isAuth() {
+			const { name } = this.$route;
+
+			return !(name === 'LoginPage' || name === 'SignupPage');
 		},
 	},
 };

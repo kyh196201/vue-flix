@@ -1,4 +1,5 @@
-.login-page {
+.login-page,
+.signup-page {
     position: relative;
     
     // 배경 이미지
@@ -75,7 +76,8 @@
         &__form {
             width: 100%;
 
-            .login-form {
+            .login-form,
+            .signup-form {
                 padding: 0 32.5px;
                 background-color: inherit;
                 border-radius: none;

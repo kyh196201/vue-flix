@@ -1,9 +1,9 @@
 <template>
-	<section class="login-page">
-		<h2 class="visually-hidden">로그인 페이지</h2>
+	<section class="signup-page">
+		<h2 class="visually-hidden">회원가입 페이지</h2>
 
 		<!-- 배경 이미지 -->
-		<div class="login-page__background">
+		<div class="signup-page__background">
 			<img
 				:src="backgroundImages.large"
 				:srcset="`
@@ -12,23 +12,23 @@
 					${backgroundImages.large} 1500w
 				`"
 				class="background"
-				alt="로그인 페이지 배경 이미지"
+				alt="회원가입 페이지 배경 이미지"
 			/>
 		</div>
 
 		<!-- 헤더 -->
-		<header class="login-page__header">
+		<header class="signup-page__header">
 			<!-- 헤더 로고 -->
-			<h1 class="login-page__logo">
+			<h1 class="signup-page__logo">
 				<router-link to="/">
 					<img :src="logo" alt="vue-flix" />
 				</router-link>
 			</h1>
 		</header>
 
-		<!-- 로그인 폼 -->
-		<div class="login-page__form">
-			<LoginForm />
+		<!-- 회원가입 폼 -->
+		<div class="signup-page__form">
+			<SignupForm />
 		</div>
 	</section>
 </template>
@@ -38,13 +38,13 @@
 import logo from '@/assets/images/common/logo-small.svg';
 
 // 컴포넌트
-import LoginForm from '@/components/auth/LoginForm.vue';
+import SignupForm from '@/components/auth/SignupForm.vue';
 
 export default {
-	name: 'LoginPage',
+	name: 'SignupPage',
 
 	components: {
-		LoginForm,
+		SignupForm,
 	},
 
 	data() {

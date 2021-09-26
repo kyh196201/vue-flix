@@ -1,6 +1,6 @@
 <template>
-	<div class="login-form">
-		<h3 class="login-form__title">로그인</h3>
+	<div class="signup-form">
+		<h3 class="signup-form__title">회원가입</h3>
 
 		<form class="form" @submit.prevent="handleLogin">
 			<div class="form__row">
@@ -44,52 +44,25 @@
 					{{ errorBag.userPw[0] }}
 				</p>
 			</div>
-			<!-- 로그인 버튼 -->
+			<div class="form__row">
+				<!-- 비밀 번호 확인 -->
+				<div class="form-field" :class="{ 'is-error': true }">
+					<input
+						type="password"
+						id="user-password-confirm"
+						class="form-field__input"
+					/>
+					<label for="user-password-confirm" class="form-field__label"
+						>비밀번호 확인</label
+					>
+				</div>
+				<p class="form__error" v-if="true">비밀번호를 확인해주세요.</p>
+			</div>
+			<!-- 회원가입 버튼 -->
 			<button type="submit" class="form__btn form__btn--login">
-				로그인
+				회원가입
 			</button>
 		</form>
-
-		<div class="login-form__info">
-			<div class="login-form__options">
-				<div class="checkbox">
-					<label class="checkbox__label">
-						<input type="checkbox" class="checkbox__input" />
-						<span class="checkbox__title">로그인 정보 저장</span>
-					</label>
-				</div>
-			</div>
-
-			<div class="login-form__sns">
-				<ul class="sns__list">
-					<li class="sns__item">
-						<button
-							type="button"
-							class="sns-login sns-login--facebook"
-						>
-							<span class="sns-login__title"
-								>Facebook으로 로그인</span
-							>
-						</button>
-					</li>
-					<li class="sns__item">
-						<button
-							type="button"
-							class="sns-login sns-login--google"
-						>
-							<span class="sns-login__title"
-								>Google로 로그인</span
-							>
-						</button>
-					</li>
-				</ul>
-			</div>
-
-			<div class="login-form__signup-link">
-				Vueflix 회원이 아니신가요?
-				<a href="#" class="signup-link">지금 가입하세요</a>
-			</div>
-		</div>
 	</div>
 </template>
 
@@ -97,7 +70,7 @@
 import { isValidEmail } from '@/utils/validate';
 
 export default {
-	name: 'login-form',
+	name: 'signup-form',
 
 	data() {
 		return {
@@ -108,6 +81,8 @@ export default {
 			errorBag: {
 				userEmail: [],
 				userPw: [],
+				// TODO: 비밀번호 확인 기능
+				userPwConfirm: [],
 			},
 		};
 	},
@@ -172,7 +147,7 @@ export default {
 </script>
 
 <style lang="scss">
-.login-form {
+.signup-form {
 	width: 100%;
 	padding: 60px 68px;
 	background-color: rgba(0, 0, 0, 0.9);
@@ -284,6 +259,10 @@ export default {
 
 		.signup-link {
 			color: $white;
+
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 }
