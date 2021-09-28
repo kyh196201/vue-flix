@@ -57,6 +57,7 @@
 						:class="passwordConfirmClass"
 						v-model="userPwConfirm"
 						@blur="validatePasswordConfirm"
+						@input="validatePasswordConfirm"
 					/>
 					<label for="user-password-confirm" class="form-field__label"
 						>비밀번호 확인</label
