@@ -4,6 +4,7 @@ import mutations from './mutations';
 
 // Modules
 import search from './modules/search';
+import auth from './modules/auth';
 
 const store = createStore({
 	state,
@@ -11,6 +12,7 @@ const store = createStore({
 
 	modules: {
 		search,
+		auth,
 	},
 });
 

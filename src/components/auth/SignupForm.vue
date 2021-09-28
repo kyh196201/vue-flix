@@ -76,6 +76,12 @@
 </template>
 
 <script>
+// 스토어 Auth 모듈
+import { createNamespacedHelpers } from 'vuex';
+
+const authModule = createNamespacedHelpers('auth');
+
+// 유틸
 import { isValidEmail } from '@/utils/validate';
 
 export default {
@@ -123,6 +129,8 @@ export default {
 	},
 
 	methods: {
+		...authModule.mapActions(['signUp']),
+
 		// 이메일 validation 검사
 		validateEmail() {
 			const email = this.userEmail.trim();
@@ -158,7 +166,7 @@ export default {
 			}
 		},
 
-		handleSignup() {
+		async handleSignup() {
 			this.validateEmail();
 			this.validatePassword();
 			this.validatePasswordConfirm();
@@ -169,7 +177,12 @@ export default {
 				this.passwordConfirmValid;
 
 			if (isValid) {
-				console.log('회원가입 성공!!');
+				const userCredentail = await this.signUp({
+					email: this.userEmail.trim(),
+					password: this.userPw.trim(),
+				});
+
+				console.log(userCredentail);
 			}
 		},
 	},
