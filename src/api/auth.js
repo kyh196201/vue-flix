@@ -1,5 +1,9 @@
 // Firebase Auth관련 로직
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+	getAuth,
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 const auth = getAuth();
 
@@ -12,7 +16,6 @@ const signUpWithEmail = async (email, password) => {
 			email,
 			password,
 		);
-		console.log('signup user', userCredential.user);
 
 		return {
 			data: userCredential,
@@ -32,4 +35,29 @@ const signUpWithEmail = async (email, password) => {
 	}
 };
 
-export default { signUpWithEmail };
+const signInWithEmail = async (email, password) => {
+	try {
+		const userCredential = await signInWithEmailAndPassword(
+			auth,
+			email,
+			password,
+		);
+
+		return {
+			data: userCredential,
+			isError: false,
+		};
+	} catch (error) {
+		const { code, message } = error;
+
+		return {
+			isError: true,
+			errorData: {
+				message,
+				statusCode: code,
+			},
+		};
+	}
+};
+
+export default { signUpWithEmail, signInWithEmail };

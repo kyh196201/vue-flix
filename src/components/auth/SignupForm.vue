@@ -99,6 +99,10 @@ export default {
 				userPw: [],
 				userPwConfirm: [],
 			},
+
+			// 패스워드 최소/최대 길이
+			passwordMinLength: 6,
+			passwordMaxLength: 60,
 		};
 	},
 
@@ -150,9 +154,12 @@ export default {
 
 			this.errorBag.userPw = [];
 
-			if (passwordLength < 4 || passwordLength > 60) {
+			if (
+				passwordLength < this.passwordMinLength ||
+				passwordLength > this.passwordMaxLength
+			) {
 				this.errorBag.userPw.push(
-					'비밀번호는 4 ~ 60자 사이여야 합니다.',
+					'비밀번호는 6 ~ 60자 사이여야 합니다.',
 				);
 			}
 		},
@@ -167,22 +174,29 @@ export default {
 		},
 
 		async handleSignup() {
-			this.validateEmail();
-			this.validatePassword();
-			this.validatePasswordConfirm();
+			try {
+				this.validateEmail();
+				this.validatePassword();
+				this.validatePasswordConfirm();
 
-			const isValid =
-				this.emailValid &&
-				this.passwordValid &&
-				this.passwordConfirmValid;
+				const isValid =
+					this.emailValid &&
+					this.passwordValid &&
+					this.passwordConfirmValid;
 
-			if (isValid) {
-				const userCredentail = await this.signUp({
-					email: this.userEmail.trim(),
-					password: this.userPw.trim(),
-				});
+				if (isValid) {
+					const userCredentail = await this.signUp({
+						email: this.userEmail.trim(),
+						password: this.userPw.trim(),
+					});
 
-				console.log(userCredentail);
+					console.log(userCredentail);
+
+					//  회원가입 성공하셨습니다. 메시지 띄우고
+					//  로그인 페이지로 리다이렉트
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		},
 	},

@@ -96,7 +96,13 @@
 </template>
 
 <script>
+// Vuex
+import { createNamespacedHelpers } from 'vuex';
+
+// 유틸
 import { isValidEmail } from '@/utils/validate';
+
+const authModule = createNamespacedHelpers('auth');
 
 export default {
 	name: 'login-form',
@@ -111,6 +117,10 @@ export default {
 				userEmail: [],
 				userPw: [],
 			},
+
+			// 비밀번호 최소/최대 길이
+			passwordMinLength: 6,
+			passwordMaxLength: 60,
 		};
 	},
 
@@ -133,6 +143,8 @@ export default {
 	},
 
 	methods: {
+		...authModule.mapActions(['signIn']),
+
 		// 이메일 validation 검사
 		validateEmail() {
 			const email = this.userEmail.trim();
@@ -152,21 +164,33 @@ export default {
 
 			this.errorBag.userPw = [];
 
-			if (passwordLength < 4 || passwordLength > 60) {
+			if (
+				passwordLength < this.passwordMinLength ||
+				passwordLength > this.passwordMaxLength
+			) {
 				this.errorBag.userPw.push(
-					'비밀번호는 4 ~ 60자 사이여야 합니다.',
+					'비밀번호는 6 ~ 60자 사이여야 합니다.',
 				);
 			}
 		},
 
-		handleLogin() {
-			this.validateEmail();
-			this.validatePassword();
+		async handleLogin() {
+			try {
+				this.validateEmail();
+				this.validatePassword();
 
-			const isValid = this.emailValid && this.passwordValid;
+				const isValid = this.emailValid && this.passwordValid;
 
-			if (isValid) {
-				console.log('로그인!!');
+				if (isValid) {
+					const result = await this.signIn({
+						email: this.userEmail.trim(),
+						password: this.userPw.trim(),
+					});
+
+					console.log(result);
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		},
 	},
