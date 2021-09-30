@@ -35,6 +35,7 @@ const signUpWithEmail = async (email, password) => {
 	}
 };
 
+// 사용자 로그인
 const signInWithEmail = async (email, password) => {
 	try {
 		const userCredential = await signInWithEmailAndPassword(

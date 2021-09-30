@@ -2,7 +2,7 @@
 	<div class="login-form">
 		<h3 class="login-form__title">로그인</h3>
 
-		<form class="form" @submit.prevent="handleLogin">
+		<form class="form" @submit.prevent="handleSubmit">
 			<div class="form__row">
 				<!-- 이메일 -->
 				<div class="form-field" :class="{ 'is-error': !emailValid }">
@@ -174,7 +174,7 @@ export default {
 			}
 		},
 
-		async handleLogin() {
+		async handleSubmit() {
 			try {
 				this.validateEmail();
 				this.validatePassword();
@@ -182,12 +182,20 @@ export default {
 				const isValid = this.emailValid && this.passwordValid;
 
 				if (isValid) {
-					const result = await this.signIn({
+					const userCredentail = await this.signIn({
 						email: this.userEmail.trim(),
 						password: this.userPw.trim(),
 					});
 
-					console.log(result);
+					// 로그인 성공
+					if (userCredentail) {
+						alert('로그인 성공!!!');
+						console.log('userCredentail', userCredentail);
+
+						this.$router.push({
+							name: 'HomePage',
+						});
+					}
 				}
 			} catch (error) {
 				console.error(error);

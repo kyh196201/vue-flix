@@ -2,7 +2,7 @@
 	<div class="signup-form">
 		<h3 class="signup-form__title">회원가입</h3>
 
-		<form class="form" @submit.prevent="handleSignup">
+		<form class="form" @submit.prevent="handleSubmit">
 			<div class="form__row">
 				<!-- 이메일 -->
 				<div class="form-field" :class="{ 'is-error': !emailValid }">
@@ -130,6 +130,14 @@ export default {
 		passwordConfirmValid() {
 			return !this.errorBag.userPwConfirm.length;
 		},
+
+		isValidateSuccess() {
+			return (
+				this.emailValid &&
+				this.passwordValid &&
+				this.passwordConfirmValid
+			);
+		},
 	},
 
 	methods: {
@@ -173,18 +181,13 @@ export default {
 			}
 		},
 
-		async handleSignup() {
+		async handleSubmit() {
 			try {
 				this.validateEmail();
 				this.validatePassword();
 				this.validatePasswordConfirm();
 
-				const isValid =
-					this.emailValid &&
-					this.passwordValid &&
-					this.passwordConfirmValid;
-
-				if (isValid) {
+				if (this.isValidateSuccess) {
 					const userCredentail = await this.signUp({
 						email: this.userEmail.trim(),
 						password: this.userPw.trim(),
@@ -194,6 +197,11 @@ export default {
 
 					//  회원가입 성공하셨습니다. 메시지 띄우고
 					//  로그인 페이지로 리다이렉트
+					alert('회원가입이 완료되었습니다.');
+
+					this.$router.push({
+						name: 'LoginPage',
+					});
 				}
 			} catch (error) {
 				console.error(error);
