@@ -1,7 +1,22 @@
 // vue-router
 import { createWebHistory, createRouter } from 'vue-router';
 
+// 컴포넌트
 import MovieModal from '@/components/movie/MovieModal.vue';
+
+// 스토어
+import store from '@/store';
+
+// 로그인 체크
+const requireAuth = (to, from, next) => {
+	const isAuth = store.getters['auth/isAuth'];
+
+	if (isAuth) {
+		next();
+	} else {
+		next('/login');
+	}
+};
 
 const routes = [
 	{
@@ -17,6 +32,8 @@ const routes = [
 				props: true,
 			},
 		],
+
+		beforeEnter: requireAuth,
 	},
 	{
 		path: '/login',
@@ -32,6 +49,8 @@ const routes = [
 		path: '/movie',
 		name: 'MoviePage',
 		component: () => import('@/views/MoviePage.vue'),
+
+		beforeEnter: requireAuth,
 	},
 	{
 		path: '/search',
@@ -46,6 +65,8 @@ const routes = [
 				props: true,
 			},
 		],
+
+		beforeEnter: requireAuth,
 	},
 	{
 		path: '/:catchAll(.*)',

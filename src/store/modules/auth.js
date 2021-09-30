@@ -12,9 +12,22 @@ export default {
 	},
 
 	getters: {
-		// 에러 여부
+		/**
+		 * 에러 여부
+		 * @param {object} state
+		 * @returns {boolean}
+		 */
 		isError: state => {
 			return !!state.errorData;
+		},
+
+		/**
+		 * 로그인 여부
+		 * @param {object} state
+		 * @returns {boolean}
+		 */
+		isAuth: state => {
+			return !!state.user;
 		},
 	},
 
