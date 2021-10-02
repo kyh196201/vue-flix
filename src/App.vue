@@ -1,10 +1,10 @@
 <template>
 	<div class="app">
-		<AppHeader v-if="isAuth" />
+		<AppHeader v-if="isAuthenticated" />
 		<main class="app-main">
 			<router-view></router-view>
 		</main>
-		<AppFooter v-if="isAuth" />
+		<AppFooter v-if="isAuthenticated" />
 
 		<!-- FIXME 모바일 경고 페이지 -->
 		<div class="warn-mobile">
@@ -17,8 +17,13 @@
 </template>
 
 <script>
+// 컴포넌트
 import AppHeader from '@/components/common/AppHeader.vue';
 import AppFooter from '@/components/common/AppFooter.vue';
+
+// Vuex
+import { createNamespacedHelpers } from 'vuex';
+const authModule = createNamespacedHelpers('auth');
 
 export default {
 	name: 'App',
@@ -28,12 +33,16 @@ export default {
 	},
 
 	computed: {
-		// FIXME 로그인 페이지인지 체크
-		isAuth() {
-			const { name } = this.$route;
+		...authModule.mapGetters(['isAuthenticated']),
+	},
 
-			return !(name === 'LoginPage' || name === 'SignupPage');
-		},
+	created() {
+		// 세션 확인
+		this.tryOutLogin();
+	},
+
+	methods: {
+		...authModule.mapActions(['tryOutLogin']),
 	},
 };
 </script>

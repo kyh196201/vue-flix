@@ -44,6 +44,8 @@ const signInWithEmail = async (email, password) => {
 			password,
 		);
 
+		console.log('userCredential', userCredential);
+
 		return {
 			data: userCredential,
 			isError: false,
