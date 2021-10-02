@@ -189,7 +189,6 @@ export default {
 
 					// 로그인 성공
 					if (userCredentail) {
-						alert('로그인 성공!!!');
 						console.log('userCredentail', userCredentail);
 
 						this.$router.push({

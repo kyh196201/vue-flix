@@ -4,8 +4,14 @@ export default {
 	namespaced: true,
 
 	state: {
-		// 유저 정보
-		user: null,
+		// 유저 아이디
+		userId: '',
+
+		// 유저 토큰
+		userToken: '',
+
+		// 유저 프로필
+		userProfile: {},
 
 		// 에러 메시지, 코드
 		errorData: null,
@@ -22,18 +28,42 @@ export default {
 		},
 
 		/**
-		 * 로그인 여부
+		 * 로그인/인증 여부
 		 * @param {object} state
 		 * @returns {boolean}
 		 */
-		isAuth: state => {
-			return !!state.user;
+		isAuthenticated: state => {
+			return !!state.userToken;
 		},
 	},
 
 	mutations: {
-		signIn(state, user) {
-			state.user = user;
+		/**
+		 * 유저 아이디, 토큰 설정
+		 * @param {object} state : store state
+		 * @param {object} user : firebase auth object
+		 */
+		setUserAuth(state, user) {
+			const { uid, accessToken } = user;
+
+			state.userId = uid;
+			state.userToken = accessToken;
+		},
+
+		/**
+		 * 유저 프로필 설정
+		 * @param {object} state : store state
+		 * @param {object} user : firebase auth object
+		 */
+		setUserProfile(state, user) {
+			const { displayName, email, emailVerified, photoURL } = user;
+
+			state.userProfile = {
+				displayName,
+				email,
+				emailVerified,
+				photoURL,
+			};
 		},
 
 		setErrorData(state, errorData) {
@@ -71,7 +101,10 @@ export default {
 				throw errorData;
 			}
 
-			commit('signIn', result.data.user);
+			console.log(result.data.user);
+
+			commit('setUserAuth', result.data.user);
+			commit('setUserProfile', result.data.user);
 
 			if (getters.isError) {
 				commit('setErrorData', null);

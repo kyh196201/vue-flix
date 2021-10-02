@@ -9,9 +9,9 @@ import store from '@/store';
 
 // 로그인 체크
 const requireAuth = (to, from, next) => {
-	const isAuth = store.getters['auth/isAuth'];
+	const isAuthenticated = store.getters['auth/isAuthenticated'];
 
-	if (isAuth) {
+	if (isAuthenticated) {
 		next();
 	} else {
 		next('/login');
