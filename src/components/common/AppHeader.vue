@@ -127,7 +127,9 @@
 									<a href="#">고객 센터</a>
 								</li>
 								<li class="config-menu__item">
-									<a href="#">뷰플릭스에서 로그아웃</a>
+									<a href="#" @click.prevent="handleSignOut"
+										>뷰플릭스에서 로그아웃</a
+									>
 								</li>
 							</ul>
 						</template>
@@ -139,18 +141,20 @@
 </template>
 
 <script>
-// Images
+// 이미지
 import headerLogo from '@/assets/images/common/logo-small.svg';
 import profileAvatar from '@/assets/images/common/profile.jpg';
 
 import { routerLinks } from '@/utils/common/constants';
 
-// Components
+// 컴포넌트
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
 import SearchInput from '@/components/common/SearchInput.vue';
 
 // Vuex
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, createNamespacedHelpers } from 'vuex';
+
+const authModule = createNamespacedHelpers('auth');
 
 export default {
 	name: 'app-header',
@@ -200,6 +204,7 @@ export default {
 
 	methods: {
 		...mapMutations(['openSearchForm']),
+		...authModule.mapActions(['signOut']),
 
 		toggleNavDropdown(toggle) {
 			this.dropdowns.nav.isOpen = toggle;
@@ -207,6 +212,21 @@ export default {
 
 		toggleAccountDropdown(toggle) {
 			this.dropdowns.account.isOpen = toggle;
+		},
+
+		// 로그아웃 클릭 이벤트
+		async handleSignOut() {
+			try {
+				await this.signOut();
+
+				alert('로그아웃 되었습니다. 로그인 페이지로 이동합니다.');
+
+				this.$router.push({
+					name: 'LoginPage',
+				});
+			} catch (error) {
+				console.error(error.message);
+			}
 		},
 	},
 };

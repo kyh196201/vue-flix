@@ -50,7 +50,7 @@ export default {
 		expireDate: '',
 
 		// 유저 프로필
-		userProfile: {},
+		userProfile: null,
 
 		// 에러 메시지, 코드
 		errorData: null,
@@ -78,7 +78,7 @@ export default {
 
 	mutations: {
 		/**
-		 * 유저 아이디, 토큰 설정
+		 * 유저 인증 정보 설정
 		 * @param {object} state : store state
 		 * @param {object} tokenResponse : firebase tokenResponse object
 		 */
@@ -105,6 +105,19 @@ export default {
 				emailVerified,
 				photoURL,
 			};
+		},
+
+		/**
+		 * 유저 인증 정보, 프로필 초기화
+		 * @param {object} state : store state
+		 */
+		clearUserData(state) {
+			state.userId = '';
+			state.idToken = '';
+			state.refreshToken = '';
+			state.expireDate = '';
+
+			state.userProfile = null;
 		},
 
 		setErrorData(state, errorData) {
@@ -167,6 +180,22 @@ export default {
 		},
 
 		/**
+		 * 사용자 로그아웃
+		 */
+		async signOut({ commit }) {
+			const result = await firebaseAuth.signOutUser();
+
+			if (result.isError) {
+				throw result.errorData;
+			}
+
+			commit('clearUserData');
+			clearUserSession();
+
+			return true;
+		},
+
+		/**
 		 * 로그인 세션 확인
 		 */
 		tryOutLogin({ commit }) {
@@ -189,6 +218,8 @@ export default {
 					refreshToken,
 				});
 			}
+
+			return true;
 		},
 	},
 };
