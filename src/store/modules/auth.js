@@ -21,6 +21,18 @@ function getUserSession() {
 	};
 }
 
+function clearUserSession() {
+	const keys = ['idToken', 'refreshToken', 'userId', 'expireDate'];
+
+	keys.forEach(key => {
+		localStorage.removeItem(key);
+	});
+}
+
+function getExpireDate(expireIn = '3600') {
+	return Date.now() + expireIn * 1000;
+}
+
 export default {
 	namespaced: true,
 
@@ -71,19 +83,12 @@ export default {
 		 * @param {object} tokenResponse : firebase tokenResponse object
 		 */
 		setUserAuth(state, tokenResponse) {
-			const { localId, idToken, refreshToken, expiresIn } = tokenResponse;
+			const { userId, idToken, refreshToken, expireDate } = tokenResponse;
 
-			// 세션 만료일
-			const expireDate =
-				Date.now() + new Date(expiresIn * 1000).getTime();
-
-			state.userId = localId;
+			state.userId = userId;
 			state.idToken = idToken;
 			state.refreshToken = refreshToken;
 			state.expireDate = expireDate;
-
-			// 로그인 세션 유지를 위해 로컬스토리지에 유저 정보를 저장
-			setUserSession(idToken, refreshToken, localId, expireDate);
 		},
 
 		/**
@@ -139,8 +144,19 @@ export default {
 			}
 
 			const { user, _tokenResponse } = result.data;
+			const { localId, idToken, refreshToken, expireIn } = _tokenResponse;
+			const expireDate = getExpireDate(expireIn);
 
-			commit('setUserAuth', _tokenResponse);
+			commit('setUserAuth', {
+				userId: localId,
+				idToken,
+				refreshToken,
+				expireDate,
+			});
+
+			// 로그인 세션 유지를 위해 로컬스토리지에 유저 정보를 저장
+			setUserSession(idToken, refreshToken, localId, expireDate);
+
 			commit('setUserProfile', user);
 
 			if (getters.isError) {
@@ -157,12 +173,22 @@ export default {
 			const { idToken, userId, expireDate, refreshToken } =
 				getUserSession();
 
-			commit('setUserAuth', {
-				idToken,
-				localId: userId,
-				expireDate,
-				refreshToken,
-			});
+			// idToken이 있는지 확인
+			if (!idToken) return;
+
+			// 토큰이 유효한지 확인
+			if (Date.now() > expireDate) {
+				// 토큰이 유효하지 않은 경우
+				clearUserSession();
+			} else {
+				// 토큰이 유효한 경우
+				commit('setUserAuth', {
+					idToken,
+					userId,
+					expireDate,
+					refreshToken,
+				});
+			}
 		},
 	},
 };
