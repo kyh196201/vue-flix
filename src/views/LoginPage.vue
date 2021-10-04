@@ -30,6 +30,8 @@
 		<div class="login-page__form">
 			<LoginForm />
 		</div>
+
+		<Dialog v-if="dialogData.open"></Dialog>
 	</section>
 </template>
 
@@ -39,12 +41,14 @@ import logo from '@/assets/images/common/logo-small.svg';
 
 // 컴포넌트
 import LoginForm from '@/components/auth/LoginForm.vue';
+import Dialog from '@/components/common/dialog/Dialog.vue';
 
 export default {
 	name: 'LoginPage',
 
 	components: {
 		LoginForm,
+		Dialog,
 	},
 
 	data() {
@@ -55,6 +59,12 @@ export default {
 				small: require('../assets/images/common/login-bg_small.jpg'),
 				medium: require('../assets/images/common/login-bg_medium.jpg'),
 				large: require('../assets/images/common/login-bg_large.jpg'),
+			},
+
+			dialogData: {
+				open: true,
+				title: '로그인에 실패했습니다.',
+				message: '',
 			},
 		};
 	},

@@ -63,6 +63,13 @@
         }
     }
 
+    // dialog 스타일
+    .dialog {
+        &__footer {
+            text-align: center;
+        }
+    }
+
     @media (max-width: 2000px) {
         &__background {
             .background {
