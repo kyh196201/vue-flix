@@ -219,6 +219,8 @@ export default {
 				});
 			}
 
+			console.log('tryOutLogin');
+
 			return true;
 		},
 	},
