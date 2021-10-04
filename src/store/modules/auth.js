@@ -11,13 +11,13 @@ function getUserSession() {
 	const idToken = localStorage.getItem('idToken') ?? '';
 	const refreshToken = localStorage.getItem('refreshToken') ?? '';
 	const userId = localStorage.getItem('userId') ?? '';
-	const expireDate = localStorage.getItem('expireDate');
+	const expireDate = localStorage.getItem('expireDate') ?? 0;
 
 	return {
 		idToken,
 		refreshToken,
 		userId,
-		expireDate: expireDate ? Number(expireDate) : '',
+		expireDate: Number(expireDate),
 	};
 }
 
@@ -218,8 +218,6 @@ export default {
 					refreshToken,
 				});
 			}
-
-			console.log('tryOutLogin');
 
 			return true;
 		},
