@@ -61,6 +61,7 @@ const signInWithEmail = async (email, password) => {
 	}
 };
 
+// 사용자 로그아웃
 const signOutUser = async () => {
 	try {
 		await signOut(auth);

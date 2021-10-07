@@ -11,11 +11,3 @@ export const TMDB_LANGUAGE = 'ko-KR';
 // TODO: '/configuration'을 통해서 기본 세팅하기
 // TMDB API 이미지 base url
 export const baseImageUrl = 'https://image.tmdb.org/t/p/';
-
-// TODO page route 정보
-export const pageInfo = {
-	login: {
-		path: '/login',
-		name: 'LoginPage',
-	},
-};

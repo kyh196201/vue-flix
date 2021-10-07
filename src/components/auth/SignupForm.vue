@@ -127,6 +127,7 @@ export default {
 			return !this.errorBag.userPw.length;
 		},
 
+		// FIXME 수정
 		passwordConfirmValid() {
 			return !this.errorBag.userPwConfirm.length;
 		},
@@ -181,6 +182,7 @@ export default {
 			}
 		},
 
+		// 폼 Submit
 		async handleSubmit() {
 			try {
 				this.validateEmail();
@@ -204,8 +206,16 @@ export default {
 					});
 				}
 			} catch (error) {
-				console.error(error);
+				this.handleError(error);
 			}
+		},
+
+		// 폼 에러 핸들링
+		handleError(error) {
+			this.$emit('auth-error', {
+				error,
+				from: 'login',
+			});
 		},
 	},
 };

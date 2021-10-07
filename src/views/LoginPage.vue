@@ -28,45 +28,33 @@
 
 		<!-- 로그인 폼 -->
 		<div class="login-page__form">
-			<LoginForm />
+			<LoginForm @auth-error="handleAuthError" />
 		</div>
 
-		<Dialog v-if="dialogData.open"></Dialog>
+		<!-- 로그인 실패 메시지 -->
+		<Dialog
+			v-if="dialogs.auth.open"
+			:title="dialogs.auth.title"
+			:message="dialogs.auth.message"
+			@close="closeDialog('auth')"
+		></Dialog>
 	</section>
 </template>
 
 <script>
-// 이미지
-import logo from '@/assets/images/common/logo-small.svg';
-
 // 컴포넌트
 import LoginForm from '@/components/auth/LoginForm.vue';
-import Dialog from '@/components/common/dialog/Dialog.vue';
+
+// 믹스인
+import authMixin from '@/mixins/auth';
 
 export default {
 	name: 'LoginPage',
 
+	mixins: [authMixin],
+
 	components: {
 		LoginForm,
-		Dialog,
-	},
-
-	data() {
-		return {
-			logo,
-
-			backgroundImages: {
-				small: require('../assets/images/common/login-bg_small.jpg'),
-				medium: require('../assets/images/common/login-bg_medium.jpg'),
-				large: require('../assets/images/common/login-bg_large.jpg'),
-			},
-
-			dialogData: {
-				open: true,
-				title: '로그인에 실패했습니다.',
-				message: '',
-			},
-		};
 	},
 };
 </script>

@@ -1,5 +1,10 @@
+/**
+ * 로그인, 회원가입 스토어
+ */
+// Firebase Auth API
 import firebaseAuth from '@/api/auth';
 
+// 로컬스토리지 유저 세션 세팅
 function setUserSession(idToken, refreshToken, userId, expireDate) {
 	localStorage.setItem('idToken', idToken);
 	localStorage.setItem('refreshToken', refreshToken);
@@ -7,6 +12,7 @@ function setUserSession(idToken, refreshToken, userId, expireDate) {
 	localStorage.setItem('expireDate', String(expireDate));
 }
 
+// 로컬 스토리지 유저 세션 정보 가져오기
 function getUserSession() {
 	const idToken = localStorage.getItem('idToken') ?? '';
 	const refreshToken = localStorage.getItem('refreshToken') ?? '';
@@ -21,6 +27,7 @@ function getUserSession() {
 	};
 }
 
+// 로컬 스토리지 유저 세션 정보 삭제하기
 function clearUserSession() {
 	const keys = ['idToken', 'refreshToken', 'userId', 'expireDate'];
 
@@ -29,6 +36,7 @@ function clearUserSession() {
 	});
 }
 
+// 토큰 만료일 계산
 function getExpireDate(expireIn = '3600') {
 	return Date.now() + expireIn * 1000;
 }
@@ -111,7 +119,7 @@ export default {
 		 * 유저 인증 정보, 프로필 초기화
 		 * @param {object} state : store state
 		 */
-		clearUserData(state) {
+		initUserData(state) {
 			state.userId = '';
 			state.idToken = '';
 			state.refreshToken = '';
@@ -120,7 +128,7 @@ export default {
 			state.userProfile = null;
 		},
 
-		setErrorData(state, errorData) {
+		setAuthError(state, errorData) {
 			state.errorData = errorData;
 		},
 	},
@@ -133,13 +141,13 @@ export default {
 			if (result.isError) {
 				const { errorData } = result;
 
-				commit('setErrorData', errorData);
+				commit('setAuthError', errorData);
 				throw errorData;
 			}
 
 			// API 요청 성공했으므로 error 데이터 삭제
 			if (getters.isError) {
-				commit('setErrorData', null);
+				commit('setAuthError', null);
 			}
 
 			return result.data;
@@ -152,7 +160,7 @@ export default {
 			if (result.isError) {
 				const { errorData } = result;
 
-				commit('setErrorData', errorData);
+				commit('setAuthError', errorData);
 				throw errorData;
 			}
 
@@ -173,7 +181,7 @@ export default {
 			commit('setUserProfile', user);
 
 			if (getters.isError) {
-				commit('setErrorData', null);
+				commit('setAuthError', null);
 			}
 
 			return result.data;
@@ -186,17 +194,18 @@ export default {
 			const result = await firebaseAuth.signOutUser();
 
 			if (result.isError) {
+				commit('setAuthError', result.errorData);
 				throw result.errorData;
 			}
 
-			commit('clearUserData');
+			commit('initUserData');
 			clearUserSession();
 
 			return true;
 		},
 
 		/**
-		 * 로그인 세션 확인
+		 * 로그인 세션 있을 경우 재 로그인
 		 */
 		tryOutLogin({ commit }) {
 			const { idToken, userId, expireDate, refreshToken } =

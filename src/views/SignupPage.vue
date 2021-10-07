@@ -28,35 +28,37 @@
 
 		<!-- 회원가입 폼 -->
 		<div class="signup-page__form">
-			<SignupForm />
+			<SignupForm @auth-error="handleAuthError" />
 		</div>
+
+		<!-- 회원가입 실패 메시지 -->
+		<Dialog
+			v-if="dialogs.auth.open"
+			:title="dialogs.auth.title"
+			:message="dialogs.auth.message"
+			@close="closeDialog('auth')"
+		></Dialog>
 	</section>
 </template>
 
 <script>
-// 이미지
-import logo from '@/assets/images/common/logo-small.svg';
-
 // 컴포넌트
 import SignupForm from '@/components/auth/SignupForm.vue';
 
+// 믹스인
+import authMixin from '@/mixins/auth';
+
 export default {
 	name: 'SignupPage',
+
+	mixins: [authMixin],
 
 	components: {
 		SignupForm,
 	},
 
 	data() {
-		return {
-			logo,
-
-			backgroundImages: {
-				small: require('../assets/images/common/login-bg_small.jpg'),
-				medium: require('../assets/images/common/login-bg_medium.jpg'),
-				large: require('../assets/images/common/login-bg_large.jpg'),
-			},
-		};
+		return {};
 	},
 };
 </script>

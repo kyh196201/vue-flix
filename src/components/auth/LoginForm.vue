@@ -102,6 +102,7 @@ import { createNamespacedHelpers } from 'vuex';
 // 유틸
 import { isValidEmail } from '@/utils/validate';
 
+// AUTH 스토어 모듈
 const authModule = createNamespacedHelpers('auth');
 
 export default {
@@ -140,6 +141,10 @@ export default {
 		passwordValid() {
 			return !this.errorBag.userPw.length;
 		},
+
+		isValidateSuccess() {
+			return this.emailValid && this.passwordValid;
+		},
 	},
 
 	methods: {
@@ -174,14 +179,13 @@ export default {
 			}
 		},
 
+		// 폼 Submit
 		async handleSubmit() {
 			try {
 				this.validateEmail();
 				this.validatePassword();
 
-				const isValid = this.emailValid && this.passwordValid;
-
-				if (isValid) {
+				if (this.isValidateSuccess) {
 					const userCredentail = await this.signIn({
 						email: this.userEmail.trim(),
 						password: this.userPw.trim(),
@@ -189,16 +193,23 @@ export default {
 
 					// 로그인 성공
 					if (userCredentail) {
-						console.log('userCredentail', userCredentail);
-
+						// 메인 페이지로 이동
 						this.$router.push({
 							name: 'HomePage',
 						});
 					}
 				}
 			} catch (error) {
-				console.error(error);
+				this.handleError(error);
 			}
+		},
+
+		// 폼 에러 핸들링
+		handleError(error) {
+			this.$emit('auth-error', {
+				error,
+				from: 'login',
+			});
 		},
 	},
 };
