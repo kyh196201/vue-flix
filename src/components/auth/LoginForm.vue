@@ -45,8 +45,12 @@
 				</p>
 			</div>
 			<!-- 로그인 버튼 -->
-			<button type="submit" class="form__btn form__btn--login">
-				로그인
+			<button
+				type="submit"
+				class="form__btn form__btn--login"
+				:class="{ loading: isLoading }"
+			>
+				<span> 로그인 </span>
 			</button>
 		</form>
 
@@ -126,6 +130,16 @@ export default {
 	},
 
 	computed: {
+		...authModule.mapState(['loading']),
+
+		/**
+		 * 로그인 API 실행 중 여부
+		 * @returns {boolean}
+		 */
+		isLoading() {
+			return this.loading.signIn;
+		},
+
 		emailClass() {
 			return this.userEmail.trim().length ? 'has-text' : '';
 		},

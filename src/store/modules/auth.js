@@ -62,6 +62,12 @@ export default {
 
 		// 에러 메시지, 코드
 		errorData: null,
+
+		// 로딩
+		loading: {
+			signIn: false,
+			signUp: false,
+		},
 	},
 
 	getters: {
@@ -131,17 +137,37 @@ export default {
 		setAuthError(state, errorData) {
 			state.errorData = errorData;
 		},
+
+		/**
+		 * 유저 인증 정보, 프로필 초기화
+		 * @param {object} state : store state
+		 * @param {string} key : state.loading 키 값
+		 * @param {boolean} loading : true/false 값
+		 */
+		setLoading(state, { key, loading }) {
+			state.loading[key] = loading;
+		},
 	},
 
 	actions: {
 		// 이메일 비밀번호를 이용한 회원가입
 		async signUp({ commit, getters }, { email, password }) {
+			commit('setLoading', {
+				key: 'signUp',
+				loading: true,
+			});
+
 			const result = await firebaseAuth.signUpWithEmail(email, password);
 
 			if (result.isError) {
 				const { errorData } = result;
 
 				commit('setAuthError', errorData);
+
+				commit('setLoading', {
+					key: 'signUp',
+					loading: false,
+				});
 				throw errorData;
 			}
 
@@ -150,17 +176,31 @@ export default {
 				commit('setAuthError', null);
 			}
 
+			commit('setLoading', {
+				key: 'signUp',
+				loading: false,
+			});
+
 			return result.data;
 		},
 
 		// 이메일 비밀번호를 이용한 로그인
 		async signIn({ commit, getters }, { email, password }) {
+			commit('setLoading', {
+				key: 'signIn',
+				loading: true,
+			});
+
 			const result = await firebaseAuth.signInWithEmail(email, password);
 
 			if (result.isError) {
 				const { errorData } = result;
 
 				commit('setAuthError', errorData);
+				commit('setLoading', {
+					key: 'signIn',
+					loading: false,
+				});
 				throw errorData;
 			}
 
@@ -175,10 +215,15 @@ export default {
 				expireDate,
 			});
 
+			commit('setUserProfile', user);
+
+			commit('setLoading', {
+				key: 'signIn',
+				loading: false,
+			});
+
 			// 로그인 세션 유지를 위해 로컬스토리지에 유저 정보를 저장
 			setUserSession(idToken, refreshToken, localId, expireDate);
-
-			commit('setUserProfile', user);
 
 			if (getters.isError) {
 				commit('setAuthError', null);

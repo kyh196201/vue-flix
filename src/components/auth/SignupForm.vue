@@ -68,8 +68,12 @@
 				</p>
 			</div>
 			<!-- 회원가입 버튼 -->
-			<button type="submit" class="form__btn form__btn--signup">
-				회원가입
+			<button
+				type="submit"
+				class="form__btn form__btn--signup"
+				:class="{ loading: isLoading }"
+			>
+				<span> 회원가입 </span>
 			</button>
 		</form>
 	</div>
@@ -107,6 +111,16 @@ export default {
 	},
 
 	computed: {
+		...authModule.mapState(['loading']),
+
+		/**
+		 * 회원가입 API 실행 중 여부
+		 * @returns {boolean}
+		 */
+		isLoading() {
+			return this.loading.signUp;
+		},
+
 		emailClass() {
 			return this.userEmail.trim().length ? 'has-text' : '';
 		},
