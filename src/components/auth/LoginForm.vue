@@ -1,6 +1,6 @@
 <template>
-	<div class="login-form">
-		<h3 class="login-form__title">로그인</h3>
+	<div class="auth-form">
+		<h3 class="auth-form__title">로그인</h3>
 
 		<form class="form" @submit.prevent="handleSubmit">
 			<div class="form__row">
@@ -50,8 +50,8 @@
 			</button>
 		</form>
 
-		<div class="login-form__info">
-			<div class="login-form__options">
+		<div class="auth-form__info">
+			<div class="auth-form__options">
 				<div class="checkbox">
 					<label class="checkbox__label">
 						<input type="checkbox" class="checkbox__input" />
@@ -60,7 +60,7 @@
 				</div>
 			</div>
 
-			<div class="login-form__sns">
+			<div class="auth-form__sns">
 				<ul class="sns__list">
 					<li class="sns__item" v-if="false">
 						<button
@@ -85,7 +85,7 @@
 				</ul>
 			</div>
 
-			<div class="login-form__signup-link">
+			<div class="auth-form__signup-link">
 				Vueflix 회원이 아니신가요?
 				<router-link to="/signup" class="signup-link"
 					>지금 가입하세요</router-link
@@ -216,123 +216,5 @@ export default {
 </script>
 
 <style lang="scss">
-.login-form {
-	width: 100%;
-	padding: 60px 68px;
-	background-color: rgba(0, 0, 0, 0.9);
-
-	&__title {
-		margin-bottom: 28px;
-		font-size: 32px;
-		font-weight: bold;
-		color: $white;
-	}
-
-	.form-field {
-		position: relative;
-		height: 50px;
-		padding: 16px 20px 0;
-		background-color: #333;
-		border-radius: 4px;
-
-		&.is-error {
-			border-bottom: 2px solid $form-warn-color;
-		}
-
-		&__input {
-			display: block;
-			width: 100%;
-			height: 100%;
-			color: $white;
-			font-size: 16px;
-
-			&:focus + label,
-			&.has-text + label {
-				font-size: 11px;
-				top: 4px;
-				transform: translateY(0);
-			}
-		}
-
-		&__label {
-			position: absolute;
-			top: 50%;
-			left: 20px;
-			font-size: 16px;
-			color: #8c8c8c;
-			transform: translateY(-50%);
-			transition: all 0.15s ease;
-		}
-	}
-
-	.form {
-		margin-bottom: 10px;
-
-		&__row {
-			position: relative;
-			margin-bottom: 20px;
-		}
-
-		&__error {
-			margin-top: 8px;
-			font-size: 14px;
-			color: $form-warn-color;
-		}
-
-		&__btn {
-			display: flex;
-			width: 100%;
-			height: 50px;
-			margin-top: 24px;
-			align-items: center;
-			justify-content: center;
-			border-radius: 4px;
-
-			&--login {
-				background-color: #e50914;
-				color: $white;
-				font-size: 16px;
-				font-weight: bold;
-			}
-
-			&:hover {
-				opacity: 0.7;
-			}
-		}
-	}
-
-	&__options {
-		margin-bottom: 10px;
-		font-size: 13px;
-	}
-
-	&__sns {
-		margin-bottom: 10px;
-
-		.sns {
-			&__item {
-				&:not(:last-child) {
-					margin-bottom: 4px;
-				}
-			}
-
-			&-login {
-				font-size: 13px;
-				color: #737373;
-			}
-		}
-	}
-
-	&__signup-link {
-		color: #737373;
-
-		.signup-link {
-			color: $white;
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	}
-}
+@import '@/assets/scss/components/auth/form.scss';
 </style>

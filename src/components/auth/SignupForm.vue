@@ -1,6 +1,6 @@
 <template>
-	<div class="signup-form">
-		<h3 class="signup-form__title">회원가입</h3>
+	<div class="auth-form">
+		<h3 class="auth-form__title">회원가입</h3>
 
 		<form class="form" @submit.prevent="handleSubmit">
 			<div class="form__row">
@@ -68,7 +68,7 @@
 				</p>
 			</div>
 			<!-- 회원가입 버튼 -->
-			<button type="submit" class="form__btn form__btn--login">
+			<button type="submit" class="form__btn form__btn--signup">
 				회원가입
 			</button>
 		</form>
@@ -222,123 +222,5 @@ export default {
 </script>
 
 <style lang="scss">
-.signup-form {
-	width: 100%;
-	padding: 60px 68px;
-	background-color: rgba(0, 0, 0, 0.9);
-
-	&__title {
-		margin-bottom: 28px;
-		font-size: 32px;
-		font-weight: bold;
-		color: $white;
-	}
-
-	.form-field {
-		position: relative;
-		height: 50px;
-		padding: 16px 20px 0;
-		background-color: #333;
-		border-radius: 4px;
-
-		&.is-error {
-			border-bottom: 2px solid $form-warn-color;
-		}
-
-		&__input {
-			display: block;
-			width: 100%;
-			height: 100%;
-			color: $white;
-			font-size: 16px;
-
-			&:focus + label,
-			&.has-text + label {
-				font-size: 11px;
-				top: 4px;
-				transform: translateY(0);
-			}
-		}
-
-		&__label {
-			position: absolute;
-			top: 50%;
-			left: 20px;
-			font-size: 16px;
-			color: #8c8c8c;
-			transform: translateY(-50%);
-			transition: all 0.15s ease;
-		}
-	}
-
-	.form {
-		margin-bottom: 10px;
-
-		&__row {
-			position: relative;
-			margin-bottom: 20px;
-		}
-
-		&__error {
-			margin-top: 8px;
-			font-size: 14px;
-			color: $form-warn-color;
-		}
-
-		&__btn {
-			display: flex;
-			width: 100%;
-			height: 50px;
-			margin-top: 24px;
-			align-items: center;
-			justify-content: center;
-			border-radius: 4px;
-
-			&--login {
-				background-color: #e50914;
-				color: $white;
-				font-size: 16px;
-				font-weight: bold;
-			}
-
-			&:hover {
-				opacity: 0.7;
-			}
-		}
-	}
-
-	&__options {
-		margin-bottom: 10px;
-		font-size: 13px;
-	}
-
-	&__sns {
-		margin-bottom: 10px;
-
-		.sns {
-			&__item {
-				&:not(:last-child) {
-					margin-bottom: 4px;
-				}
-			}
-
-			&-login {
-				font-size: 13px;
-				color: #737373;
-			}
-		}
-	}
-
-	&__signup-link {
-		color: #737373;
-
-		.signup-link {
-			color: $white;
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	}
-}
+@import '@/assets/scss/components/auth/form.scss';
 </style>
