@@ -1,45 +1,17 @@
 /**
  * 로그인, 회원가입 스토어
  */
+
 // Firebase Auth API
 import firebaseAuth from '@/api/auth';
 
-// 로컬스토리지 유저 세션 세팅
-function setUserSession(idToken, refreshToken, userId, expireDate) {
-	localStorage.setItem('idToken', idToken);
-	localStorage.setItem('refreshToken', refreshToken);
-	localStorage.setItem('userId', userId);
-	localStorage.setItem('expireDate', String(expireDate));
-}
-
-// 로컬 스토리지 유저 세션 정보 가져오기
-function getUserSession() {
-	const idToken = localStorage.getItem('idToken') ?? '';
-	const refreshToken = localStorage.getItem('refreshToken') ?? '';
-	const userId = localStorage.getItem('userId') ?? '';
-	const expireDate = localStorage.getItem('expireDate') ?? 0;
-
-	return {
-		idToken,
-		refreshToken,
-		userId,
-		expireDate: Number(expireDate),
-	};
-}
-
-// 로컬 스토리지 유저 세션 정보 삭제하기
-function clearUserSession() {
-	const keys = ['idToken', 'refreshToken', 'userId', 'expireDate'];
-
-	keys.forEach(key => {
-		localStorage.removeItem(key);
-	});
-}
+// Utils
+import { setUserSession, getUserSession, clearUserSession } from '@/utils/auth';
 
 // 토큰 만료일 계산
-function getExpireDate(expireIn = '3600') {
+const getExpireDate = (expireIn = '3600') => {
 	return Date.now() + expireIn * 1000;
-}
+};
 
 export default {
 	namespaced: true,
