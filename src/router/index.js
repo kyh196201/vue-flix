@@ -7,14 +7,15 @@ import MovieModal from '@/components/movie/MovieModal.vue';
 // 스토어
 import store from '@/store';
 
-// 로그인 체크
-const requireAuth = (to, from, next) => {
+// 로그인 시 리다이렉트
+const checkIsAuth = (to, from, next) => {
 	const isAuthenticated = store.getters['auth/isAuthenticated'];
 
+	// 로그인되어있을 경우 메인 페이지로 리다이렉트
 	if (isAuthenticated) {
-		next();
+		next('/');
 	} else {
-		next('/login');
+		next();
 	}
 };
 
@@ -33,24 +34,32 @@ const routes = [
 			},
 		],
 
-		beforeEnter: requireAuth,
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: '/login',
 		name: 'LoginPage',
 		component: () => import('@/views/LoginPage.vue'),
+
+		beforeEnter: checkIsAuth,
 	},
 	{
 		path: '/signup',
 		name: 'SignupPage',
 		component: () => import('@/views/SignupPage.vue'),
+
+		beforeEnter: checkIsAuth,
 	},
 	{
 		path: '/movie',
 		name: 'MoviePage',
 		component: () => import('@/views/MoviePage.vue'),
 
-		beforeEnter: requireAuth,
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: '/search',
@@ -66,7 +75,9 @@ const routes = [
 			},
 		],
 
-		beforeEnter: requireAuth,
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: '/:catchAll(.*)',
@@ -79,6 +90,24 @@ const router = createRouter({
 	// window history 모드 사용
 	history: createWebHistory(),
 	routes,
+});
+
+// 라우터 글로벌 내비게이션 가드
+router.beforeEach((to, from, next) => {
+	// 로그인이 필요한 경우
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+		const isAuthenticated = store.getters['auth/isAuthenticated'];
+
+		// 로그인 한 경우
+		if (isAuthenticated) {
+			next();
+		} else {
+			// 로그인 하지 않은 경우 로그인 페이지로 리다이렉트
+			next('/login');
+		}
+	} else {
+		next();
+	}
 });
 
 export default router;
