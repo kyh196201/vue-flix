@@ -58,7 +58,11 @@
 			<div class="auth-form__options">
 				<div class="checkbox">
 					<label class="checkbox__label">
-						<input type="checkbox" class="checkbox__input" />
+						<input
+							type="checkbox"
+							class="checkbox__input"
+							v-model="keepUserInfo"
+						/>
 						<span class="checkbox__title">로그인 정보 저장</span>
 					</label>
 				</div>
@@ -105,6 +109,11 @@ import { createNamespacedHelpers } from 'vuex';
 
 // 유틸
 import { isValidEmail } from '@/utils/validate';
+import {
+	saveUserEmailToCookie,
+	getUserEmailFromCookie,
+	removeUserEmailFromCookie,
+} from '@/utils/auth';
 
 // AUTH 스토어 모듈
 const authModule = createNamespacedHelpers('auth');
@@ -126,6 +135,9 @@ export default {
 			// 비밀번호 최소/최대 길이
 			passwordMinLength: 6,
 			passwordMaxLength: 60,
+
+			// 사용자 로그인 정보 저장
+			keepUserInfo: false,
 		};
 	},
 
@@ -159,6 +171,30 @@ export default {
 		isValidateSuccess() {
 			return this.emailValid && this.passwordValid;
 		},
+	},
+
+	watch: {
+		keepUserInfo: {
+			handler(newValue) {
+				// 체크 해제될 경우 쿠키에 저장된 이메일 삭제
+				if (!newValue) {
+					removeUserEmailFromCookie();
+				}
+			},
+
+			immediate: false,
+		},
+	},
+
+	created() {
+		// 로그인 정보 저장 체크박스
+		const userEmail = getUserEmailFromCookie();
+
+		this.keepUserInfo = isValidEmail(userEmail);
+
+		if (this.keepUserInfo) {
+			this.userEmail = userEmail;
+		}
 	},
 
 	methods: {
@@ -200,13 +236,21 @@ export default {
 				this.validatePassword();
 
 				if (this.isValidateSuccess) {
+					const email = this.userEmail.trim();
+					const password = this.userPw.trim();
+
 					const userCredentail = await this.signIn({
-						email: this.userEmail.trim(),
-						password: this.userPw.trim(),
+						email,
+						password,
 					});
 
 					// 로그인 성공
 					if (userCredentail) {
+						if (this.keepUserInfo) {
+							// 한달간 사용자 이메일을 쿠키에 저장
+							saveUserEmailToCookie(email);
+						}
+
 						// 메인 페이지로 이동
 						this.$router.push({
 							name: 'HomePage',
