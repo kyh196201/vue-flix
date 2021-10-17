@@ -1,5 +1,5 @@
 <template>
-	<header class="header">
+	<header class="header sticky">
 		<div class="header__inner">
 			<!-- left -->
 			<section class="header__left">
