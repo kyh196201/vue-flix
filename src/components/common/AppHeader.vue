@@ -25,7 +25,6 @@
 					<!-- Mobile Menu -->
 					<DropdownMenu
 						class="header__nav-dropdown"
-						@toggle="toggleNavDropdown"
 						v-bind="dropdowns.nav"
 					>
 						<template v-slot:button>
@@ -83,7 +82,6 @@
 					<DropdownMenu
 						class="header__account-dropdown"
 						v-bind="dropdowns.account"
-						@toggle="toggleAccountDropdown"
 					>
 						<template v-slot:button>
 							<div class="account-dropdown__btn">
@@ -205,14 +203,6 @@ export default {
 	methods: {
 		...mapMutations(['openSearchForm']),
 		...authModule.mapActions(['signOut']),
-
-		toggleNavDropdown(toggle) {
-			this.dropdowns.nav.isOpen = toggle;
-		},
-
-		toggleAccountDropdown(toggle) {
-			this.dropdowns.account.isOpen = toggle;
-		},
 
 		// 로그아웃 클릭 이벤트
 		async handleSignOut() {

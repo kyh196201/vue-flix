@@ -1,3 +1,40 @@
 .movie-page {
-    min-height: 50vh;
+    padding: 70px 4% 0;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 0;
+
+        &__inner {
+            display: flex;
+            align-items: center;
+        }
+
+    }
+
+    &__title {
+        margin-right: 45px;
+        font-size: 38px;
+        font-weight: bold;
+    }
+
+    &__home-link {
+        margin-right: 10px;
+        color: grey;
+        font-size: 18px;
+        
+        &::after {
+            content: '>';
+            margin-left: 10px;
+            font-size: 18px;
+        }
+    }
+
+    &__current-genre {
+        margin-left: 10px;
+        font-size: 38px;
+        font-weight: bold;
+    }
 }

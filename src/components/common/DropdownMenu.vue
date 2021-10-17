@@ -46,12 +46,18 @@ export default {
 		},
 	},
 
+	data() {
+		return {
+			open: false,
+		};
+	},
+
 	computed: {
 		// style
 		computedStyle() {
 			const style = {
-				visibility: this.isOpen ? 'visible' : 'hidden',
-				opacity: this.isOpen ? 1 : 0,
+				visibility: this.open ? 'visible' : 'hidden',
+				opacity: this.open ? 1 : 0,
 			};
 
 			return { ...this.style, ...style };
@@ -62,9 +68,15 @@ export default {
 			return this.$refs.activator;
 		},
 
+		// wrapper ref
 		$wrapper() {
 			return this.$refs.wrapper;
 		},
+	},
+
+	// TODO setup으로 변경하기
+	created() {
+		this.open = this.isOpen;
 	},
 
 	mounted() {
@@ -72,22 +84,18 @@ export default {
 	},
 
 	methods: {
-		toggle(toggle) {
-			this.$emit('toggle', toggle);
-		},
-
 		bindEvents() {
 			if (this.activator === 'hover') {
 				this.$wrapper.addEventListener('mouseenter', () => {
-					this.toggle(true);
+					this.open = true;
 				});
 
 				this.$wrapper.addEventListener('mouseleave', () => {
-					this.toggle(false);
+					this.open = false;
 				});
 			} else if (this.activator === 'click') {
 				this.$activator.addEventListener(this.activator, () => {
-					this.toggle(!this.isOpen);
+					this.open = !this.open;
 				});
 			}
 		},
