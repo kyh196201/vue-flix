@@ -43,7 +43,7 @@ export default {
 		margin: 0;
 	}
 
-	/deep/ &-box {
+	::v-deep &-box {
 		&:not(:last-child) {
 			margin-bottom: 0.5rem;
 		}

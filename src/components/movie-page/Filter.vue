@@ -45,7 +45,7 @@ export default {
 
 <style lang="scss" scoped>
 .filter {
-	/deep/ .dropdown-menu {
+	::v-deep .dropdown-menu {
 		&__content {
 			left: 0;
 			min-width: 100%;
