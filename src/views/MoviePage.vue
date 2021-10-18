@@ -5,11 +5,15 @@
 		<!-- header -->
 		<header class="movie-page__header">
 			<div class="movie-page__header__inner">
-				<template v-if="false">
+				<template v-if="true">
 					<h2 class="movie-page__title">영화</h2>
 
 					<!-- 장르 선택 -->
-					<GenreList></GenreList>
+					<GenreList
+						:list="genres"
+						:selectedId="selectedGenreId"
+						@select-genre="selectGenre($event)"
+					></GenreList>
 				</template>
 				<template v-else>
 					<a href="#" class="movie-page__home-link">
@@ -30,6 +34,9 @@
 </template>
 
 <script>
+// Composable
+import genreListComposable from '@/composable/movie-page/genreList';
+
 // Components
 import GenreList from '@/components/movie-page/GenreList.vue';
 import Filter from '@/components/movie-page/Filter.vue';
@@ -42,14 +49,17 @@ export default {
 		Filter,
 	},
 
-	data() {
-		return {
-			message: 'This is Movie page.',
-		};
-	},
+	setup() {
+		const { genres, selectedGenreId, selectGenre, fetchGenres } =
+			genreListComposable();
 
-	created() {
-		console.log('MoviePage.vue created!', this.message);
+		fetchGenres();
+
+		return {
+			genres,
+			selectedGenreId,
+			selectGenre,
+		};
 	},
 };
 </script>

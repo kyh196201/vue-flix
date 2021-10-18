@@ -2,7 +2,12 @@
 	<DropdownMenu v-bind="options" class="genre-list">
 		<template v-slot:button>
 			<button type="button" class="genre-list__selected">
-				<span> 장르 </span>
+				<span>
+					<template v-if="selectedGenre">
+						{{ selectedGenre.name }}
+					</template>
+					<template v-else>장르</template>
+				</span>
 			</button>
 		</template>
 
@@ -12,8 +17,9 @@
 					v-for="(genre, index) in genres"
 					:key="index"
 					class="genre-list__item"
+					@click.self="selectGenre(genre.id)"
 				>
-					{{ genre }}
+					{{ genre.name }}
 				</li>
 			</ul>
 		</template>
@@ -21,6 +27,9 @@
 </template>
 
 <script>
+import { toRefs, ref } from 'vue';
+
+// Components
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
 
 export default {
@@ -29,16 +38,58 @@ export default {
 		DropdownMenu,
 	},
 
+	props: {
+		// 장르 리스트
+		list: {
+			type: Array,
+			default: () => [],
+		},
+
+		// 선택된 장르 Id
+		selectedId: {
+			default: null,
+		},
+	},
+
+	setup(props) {
+		const { list } = toRefs(props);
+
+		const genres = ref(list);
+
+		const findGenre = id => {
+			return genres.value.find(genre => genre.id === id);
+		};
+
+		return {
+			genres,
+			findGenre,
+		};
+	},
+
 	data() {
 		return {
 			// dropdown menu options
 			options: {
-				isOpen: true,
+				isOpen: false,
 				activator: 'click',
 			},
-
-			genres: ['미국 영화'],
 		};
+	},
+
+	computed: {
+		/**
+		 * 선택된 장르
+		 * @returns {object}
+		 */
+		selectedGenre() {
+			return this.findGenre(this.selectedId);
+		},
+	},
+
+	methods: {
+		selectGenre(id) {
+			this.$emit('select-genre', id);
+		},
 	},
 };
 </script>
@@ -54,8 +105,10 @@ export default {
 
 	&__selected {
 		position: relative;
+		width: 130px;
 		padding: 5px 50px 5px 10px;
 		border: 1px solid $white;
+		text-align: left;
 
 		&::after {
 			content: '';
