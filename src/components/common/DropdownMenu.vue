@@ -1,5 +1,5 @@
 <template>
-	<article class="dropdown-menu" ref="wrapper">
+	<div class="dropdown-menu" ref="wrapper">
 		<div class="dropdown-menu__activator" ref="activator">
 			<slot name="button">
 				<button class="dropdown-menu__btn">dropdown</button>
@@ -12,7 +12,7 @@
 		>
 			<slot name="content">menu content</slot>
 		</div>
-	</article>
+	</div>
 </template>
 
 <script>
@@ -21,6 +21,7 @@
  * 2. activator: click, hover
  * 3. isOpen props
  */
+import { toRefs, computed, ref } from 'vue';
 
 export default {
 	name: 'dropdown-menu',
@@ -46,23 +47,26 @@ export default {
 		},
 	},
 
-	data() {
+	setup(props) {
+		const { style } = toRefs(props);
+
+		const open = ref(props.isOpen);
+
+		const computedStyle = computed(() => {
+			return {
+				...style,
+				visibility: open.value ? 'visible' : 'hidden',
+				opacity: open.value ? 1 : 0,
+			};
+		});
+
 		return {
-			open: false,
+			computedStyle,
+			open,
 		};
 	},
 
 	computed: {
-		// style
-		computedStyle() {
-			const style = {
-				visibility: this.open ? 'visible' : 'hidden',
-				opacity: this.open ? 1 : 0,
-			};
-
-			return { ...this.style, ...style };
-		},
-
 		// activator ref
 		$activator() {
 			return this.$refs.activator;
@@ -72,11 +76,6 @@ export default {
 		$wrapper() {
 			return this.$refs.wrapper;
 		},
-	},
-
-	// TODO setup으로 변경하기
-	created() {
-		this.open = this.isOpen;
 	},
 
 	mounted() {
