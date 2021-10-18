@@ -86,17 +86,25 @@ export default {
 		bindEvents() {
 			if (this.activator === 'hover') {
 				this.$wrapper.addEventListener('mouseenter', () => {
-					this.open = true;
+					this.openMenu();
 				});
 
 				this.$wrapper.addEventListener('mouseleave', () => {
-					this.open = false;
+					this.closeMenu();
 				});
 			} else if (this.activator === 'click') {
 				this.$activator.addEventListener(this.activator, () => {
 					this.open = !this.open;
 				});
 			}
+		},
+
+		closeMenu() {
+			this.open = false;
+		},
+
+		openMenu() {
+			this.open = true;
 		},
 	},
 };

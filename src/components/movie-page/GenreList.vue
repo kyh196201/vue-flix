@@ -1,5 +1,5 @@
 <template>
-	<DropdownMenu v-bind="options" class="genre-list">
+	<DropdownMenu v-bind="options" class="genre-list" ref="menu">
 		<template v-slot:button>
 			<button type="button" class="genre-list__selected">
 				<span>
@@ -89,6 +89,8 @@ export default {
 	methods: {
 		selectGenre(id) {
 			this.$emit('select-genre', id);
+
+			this.$refs.menu.closeMenu();
 		},
 	},
 };
