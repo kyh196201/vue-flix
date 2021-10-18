@@ -5,7 +5,19 @@
 		<!-- header -->
 		<header class="movie-page__header">
 			<div class="movie-page__header__inner">
-				<template v-if="true">
+				<template v-if="selectedGenre">
+					<a
+						href="#"
+						class="movie-page__home-link"
+						@click.prevent="selectGenre(null)"
+					>
+						<span> 영화 </span>
+					</a>
+					<strong class="movie-page__current-genre">
+						{{ selectedGenre.name }}
+					</strong>
+				</template>
+				<template v-else>
 					<h2 class="movie-page__title">영화</h2>
 
 					<!-- 장르 선택 -->
@@ -14,14 +26,6 @@
 						:selectedId="selectedGenreId"
 						@select-genre="selectGenre($event)"
 					></GenreList>
-				</template>
-				<template v-else>
-					<a href="#" class="movie-page__home-link">
-						<span> 영화 </span>
-					</a>
-					<strong class="movie-page__current-genre">
-						미국 영화
-					</strong>
 				</template>
 			</div>
 
@@ -34,6 +38,8 @@
 </template>
 
 <script>
+import { watch } from 'vue';
+
 // Composable
 import genreListComposable from '@/composable/movie-page/genreList';
 
@@ -50,14 +56,27 @@ export default {
 	},
 
 	setup() {
-		const { genres, selectedGenreId, selectGenre, fetchGenres } =
-			genreListComposable();
+		const {
+			genres,
+			selectedGenreId,
+			selectedGenre,
+			selectGenre,
+			fetchGenres,
+		} = genreListComposable();
 
 		fetchGenres();
+
+		watch(selectedGenreId, () => {
+			// 여기서 url 변경
+			// https://next.router.vuejs.org/guide/advanced/composition-api.html
+			// 여기서 데이터 fetch
+			console.log(selectedGenreId.value);
+		});
 
 		return {
 			genres,
 			selectedGenreId,
+			selectedGenre,
 			selectGenre,
 		};
 	},

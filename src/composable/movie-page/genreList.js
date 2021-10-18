@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import getGenres from '@/api/genres';
 
 /**
@@ -14,7 +14,7 @@ export default function genreListComposable(type = 'movie') {
 		const result = await getGenres(type);
 
 		if (result.isError) {
-			throw result.errorData;
+			console.error(result.errorData);
 		}
 
 		genres.value = result.data.genres;
@@ -24,9 +24,16 @@ export default function genreListComposable(type = 'movie') {
 		selectedGenreId.value = id;
 	};
 
+	const selectedGenre = computed(() => {
+		return genres.value.length
+			? genres.value.find(({ id }) => id === selectedGenreId.value)
+			: null;
+	});
+
 	return {
 		genres,
 		selectedGenreId,
+		selectedGenre,
 		fetchGenres,
 		selectGenre,
 	};
