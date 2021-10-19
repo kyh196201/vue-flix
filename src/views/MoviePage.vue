@@ -29,7 +29,11 @@
 				</template>
 			</div>
 
-			<Filter></Filter>
+			<Filter
+				:filters="filters"
+				:selectedId="selectedFilterId"
+				@select-filter="selectFilter($event)"
+			></Filter>
 		</header>
 
 		<!-- content -->
@@ -51,12 +55,13 @@
 </template>
 
 <script>
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 // Composable
 import genreListComposable from '@/composable/movie-page/genreList';
 import discoverComposable from '@/composable/movie-page/discover';
+import filterComposable from '@/composable/movie-page/filter';
 
 // Components
 import MovieItem from '@/components/movie/MovieItem.vue';
@@ -79,7 +84,7 @@ export default {
 		const route = useRoute();
 		const router = useRouter();
 
-		const { genre } = route.query;
+		const { genre, filter } = route.query;
 
 		// Genre Composable
 		const {
@@ -89,6 +94,10 @@ export default {
 			selectGenre,
 			fetchGenres,
 		} = genreListComposable(programType, Number(genre));
+
+		// Filter Composable
+		const { filters, selectedFilter, selectedFilterId, selectFilter } =
+			filterComposable(filter);
 
 		// Discover Composable
 		const {
@@ -101,6 +110,13 @@ export default {
 			discoverPrograms,
 			discoverMorePrograms,
 		} = discoverComposable(programType);
+
+		const queries = computed(() => {
+			return {
+				genre: selectedGenreId.value,
+				filter: selectedFilter.value.queryValue,
+			};
+		});
 
 		// Watch Genre Id Update
 		watch(selectedGenreId, () => {
@@ -121,19 +137,34 @@ export default {
 				query,
 			});
 
-			discoverPrograms(query, page.value);
+			discoverPrograms(queries.value, page.value);
 		});
 
-		// Watch Page Update
-		// watch(page, () => {
-		// 	const { query } = route;
+		// Watch Filter Id Update
+		watch(selectedFilterId, () => {
+			const filter = selectedFilter.value?.id;
+			const query = Object.assign({}, route.query);
 
-		// 	discoverPrograms(query, page.value);
-		// });
+			if (filter) {
+				query.filter = filter;
+			} else {
+				delete query.filter;
+			}
+
+			page.value = 1;
+
+			router.replace({
+				query,
+			});
+
+			discoverPrograms(queries.value, page.value);
+		});
 
 		fetchGenres();
 
 		return {
+			queries,
+
 			// Movie/Tv Data
 			loadingDiscover,
 			movieList,
@@ -146,24 +177,30 @@ export default {
 			selectedGenreId,
 			selectedGenre,
 
+			// Filter Data
+			filters,
+			selectedFilter,
+			selectedFilterId,
+
 			// Functions
 			selectGenre,
+			selectFilter,
 			discoverPrograms,
 			discoverMorePrograms,
 		};
 	},
 
 	created() {
-		const { query } = this.$route;
-
-		this.discoverPrograms(query, this.page);
+		this.discoverPrograms(this.queries, this.page);
 	},
 
 	methods: {
 		async infiniteHandler(state) {
-			const { query } = this.$route;
 			this.page += 1;
-			const results = await this.discoverMorePrograms(query, this.page);
+			const results = await this.discoverMorePrograms(
+				this.queries,
+				this.page,
+			);
 
 			if (results.length) {
 				state.loaded();

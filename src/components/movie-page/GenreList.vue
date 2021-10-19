@@ -1,5 +1,10 @@
 <template>
-	<DropdownMenu v-bind="options" class="genre-list" ref="menu">
+	<DropdownMenu
+		:isOpen="isOpen"
+		:activator="activator"
+		class="genre-list"
+		ref="menu"
+	>
 		<template v-slot:button>
 			<button type="button" class="genre-list__selected">
 				<span>
@@ -69,10 +74,8 @@ export default {
 	data() {
 		return {
 			// dropdown menu options
-			options: {
-				isOpen: false,
-				activator: 'click',
-			},
+			isOpen: false,
+			activator: 'click',
 		};
 	},
 
@@ -102,6 +105,7 @@ export default {
 		&__content {
 			left: 0;
 			min-width: 100%;
+			z-index: 1;
 		}
 	}
 
@@ -125,6 +129,7 @@ export default {
 		}
 
 		span {
+			padding: 5px;
 			color: $white;
 			font-size: 1.25rem;
 		}
@@ -140,8 +145,14 @@ export default {
 	}
 
 	&__item {
+		padding: 5px;
 		line-height: 1.2;
 		font-size: 14px;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }
 </style>

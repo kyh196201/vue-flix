@@ -14,6 +14,7 @@ export default function discoverComposable(type = 'movie') {
 		const params = {};
 		const keyMap = {
 			genre: 'with_genres',
+			filter: 'sort_by',
 		};
 
 		for (const [key, paramsKey] of Object.entries(keyMap)) {
