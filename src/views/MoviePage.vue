@@ -37,7 +37,7 @@
 		</header>
 
 		<!-- content -->
-		<SkeletonLoader v-if="loadingDiscover" />
+		<Spinner v-if="loadingDiscover" class="movie-page__spinner" />
 		<div class="movie-page__content" v-else>
 			<template v-if="isMovieList">
 				<ul class="movie-list">
@@ -53,6 +53,13 @@
 			</template>
 		</div>
 	</section>
+
+	<!-- router-view -->
+	<router-view v-slot="{ Component }">
+		<transition name="modal" mode="out-in">
+			<component :is="Component"></component>
+		</transition>
+	</router-view>
 </template>
 
 <script>
@@ -65,7 +72,7 @@ import discoverComposable from '@/composable/movie-page/discover';
 import filterComposable from '@/composable/movie-page/filter';
 
 // Components
-import SkeletonLoader from '@/components/common/loading/SkeletonLoader.vue';
+import Spinner from '@/components/common/loading/Spinner.vue';
 import MovieItem from '@/components/movie/MovieItem.vue';
 import InfiniteScroll from '@/components/common/InfiniteScroll.vue';
 import GenreList from '@/components/movie-page/GenreList.vue';
@@ -75,7 +82,7 @@ export default {
 	name: 'movie-page',
 
 	components: {
-		SkeletonLoader,
+		Spinner,
 		MovieItem,
 		InfiniteScroll,
 		GenreList,

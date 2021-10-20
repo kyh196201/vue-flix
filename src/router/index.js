@@ -56,6 +56,15 @@ const routes = [
 		path: '/movie',
 		name: 'MoviePage',
 		component: () => import('@/views/MoviePage.vue'),
+		children: [
+			{
+				path: 'detail/:movieId',
+				name: 'MoviePageModal',
+				component: MovieModal,
+				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
+				props: true,
+			},
+		],
 
 		meta: {
 			requiresAuth: true,
