@@ -4,17 +4,14 @@
 			<figure class="movie-item__image" :data-movie-title="movieTitle">
 				<img
 					v-if="useLazy"
-					:data-src="posterImage"
+					v-lazy-image="posterImage"
 					:alt="movieTitle"
-					class="lazy"
-					@error="onImageError"
-					ref="lazy-img"
 				/>
 				<img
+					v-else
 					:src="posterImage"
 					:alt="movieTitle"
 					@error="onImageError"
-					v-else
 				/>
 			</figure>
 		</a>
@@ -27,9 +24,6 @@ import movieItemComposable from '@/composable/movieItem';
 
 // Utils
 import { IMAGE_TYPES } from '@/utils/common/constants';
-
-// Observer
-import MyObserver from '@/utils/observer';
 
 export default {
 	name: 'movie-item',
@@ -60,24 +54,6 @@ export default {
 		},
 	},
 
-	data() {
-		return {
-			$observer: null,
-		};
-	},
-
-	created() {
-		if (this.useLazy) {
-			this.createObserver();
-		}
-	},
-
-	mounted() {
-		if (this.$observer instanceof MyObserver) {
-			this.$observer.observe(this.$el);
-		}
-	},
-
 	setup(props) {
 		const { isMovieData, posterImage, movieTitle } =
 			movieItemComposable(props);
@@ -92,25 +68,6 @@ export default {
 	methods: {
 		onImageError() {
 			this.$el.classList.add('error');
-		},
-
-		createObserver() {
-			this.$observer = new MyObserver(this.handleIntersect.bind(this));
-		},
-
-		// observe 핸들러
-
-		handleIntersect(entries, observer) {
-			const [entry] = entries;
-			const { isIntersecting, target } = entry;
-
-			if (isIntersecting) {
-				const $lazyImg = this.$refs['lazy-img'];
-				const imageUrl = $lazyImg.dataset.src;
-				$lazyImg.setAttribute('src', imageUrl);
-				$lazyImg.classList.remove('lazy');
-				observer.unobserve(target);
-			}
 		},
 
 		// click event handler
@@ -151,11 +108,12 @@ export default {
 			border: none;
 
 			&.lazy {
+				opacity: 0;
 				text-indent: -9999px;
-				background-image: linear-gradient(
-					$skeleton-color 100%,
-					transparent 0
-				);
+				// background-image: linear-gradient(
+				// 	$skeleton-color 100%,
+				// 	transparent 0
+				// );
 			}
 		}
 	}
