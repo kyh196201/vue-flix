@@ -247,8 +247,8 @@ import movieDetailMixin from '@/mixins/movie';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
-import SkeletonBox from '@/components/common/SkeletonBox.vue';
-import SkeletonList from '@/components/common/SkeletonList.vue';
+import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
+import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MovieCard from '@/components/movie/MovieCard.vue';
 
 export default {

@@ -6,7 +6,7 @@
 
 <script>
 // Components
-import SkeletonBox from '@/components/common/SkeletonBox.vue';
+import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 
 export default {
 	name: 'skeleton-list',

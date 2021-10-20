@@ -20,8 +20,6 @@ const discover = async (type = 'movie', params) => {
 			params,
 		});
 
-		console.log(`discover ${type} data`, data);
-
 		return {
 			isError: false,
 			data,

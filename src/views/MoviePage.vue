@@ -37,7 +37,8 @@
 		</header>
 
 		<!-- content -->
-		<div class="movie-page__content">
+		<SkeletonLoader v-if="loadingDiscover" />
+		<div class="movie-page__content" v-else>
 			<template v-if="isMovieList">
 				<ul class="movie-list">
 					<li
@@ -64,6 +65,7 @@ import discoverComposable from '@/composable/movie-page/discover';
 import filterComposable from '@/composable/movie-page/filter';
 
 // Components
+import SkeletonLoader from '@/components/common/loading/SkeletonLoader.vue';
 import MovieItem from '@/components/movie/MovieItem.vue';
 import InfiniteScroll from '@/components/common/InfiniteScroll.vue';
 import GenreList from '@/components/movie-page/GenreList.vue';
@@ -73,6 +75,7 @@ export default {
 	name: 'movie-page',
 
 	components: {
+		SkeletonLoader,
 		MovieItem,
 		InfiniteScroll,
 		GenreList,
