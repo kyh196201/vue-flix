@@ -35,12 +35,17 @@ const lazyImage = {
 		el.onload = function () {
 			el.removeAttribute('data-src');
 			el.classList.remove('lazy');
+			el.closest('.movie-item')?.classList.remove('error');
+
 			el.observer.disconnect();
 		};
 
-		el.onerror = function () {
+		el.onerror = function (event) {
+			console.log('image load error', event);
+
 			// FIXME 임시 error 처리
 			el.closest('.movie-item')?.classList.add('error');
+			el.classList.remove('lazy');
 			el.observer.disconnect();
 		};
 
