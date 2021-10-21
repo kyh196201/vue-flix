@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 
 // 컴포넌트
 import MovieModal from '@/components/movie/MovieModal.vue';
+import TvModal from '@/components/tv/TvModal.vue';
 
 // 스토어
 import store from '@/store';
@@ -74,15 +75,15 @@ const routes = [
 		path: '/tv',
 		name: 'TvPage',
 		component: () => import('@/views/ProgramPage.vue'),
-		// children: [
-		// 	{
-		// 		path: 'detail/:tvId',
-		// 		name: 'TvPageModal',
-		// 		component: MovieModal,
-		// 		// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
-		// 		props: true,
-		// 	},
-		// ],
+		children: [
+			{
+				path: 'detail/:tvId',
+				name: 'TvPageModal',
+				component: TvModal,
+				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
+				props: true,
+			},
+		],
 
 		meta: {
 			requiresAuth: true,
