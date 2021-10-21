@@ -39,6 +39,10 @@ export const routerLinks = [
 		name: '영화',
 	},
 	{
+		path: '/tv?filter=pd',
+		name: 'TV 프로그램',
+	},
+	{
 		path: 'favorite',
 		name: '내가 찜한 콘텐츠',
 	},

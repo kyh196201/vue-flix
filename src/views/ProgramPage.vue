@@ -90,9 +90,9 @@ export default {
 	},
 
 	setup() {
-		const programType = 'movie';
 		const route = useRoute();
 		const router = useRouter();
+		const programType = route.meta.programType || 'movie';
 
 		const { genre, filter } = route.query;
 

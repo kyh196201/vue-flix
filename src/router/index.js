@@ -55,7 +55,7 @@ const routes = [
 	{
 		path: '/movie',
 		name: 'MoviePage',
-		component: () => import('@/views/MoviePage.vue'),
+		component: () => import('@/views/ProgramPage.vue'),
 		children: [
 			{
 				path: 'detail/:movieId',
@@ -68,6 +68,25 @@ const routes = [
 
 		meta: {
 			requiresAuth: true,
+		},
+	},
+	{
+		path: '/tv',
+		name: 'TvPage',
+		component: () => import('@/views/ProgramPage.vue'),
+		// children: [
+		// 	{
+		// 		path: 'detail/:tvId',
+		// 		name: 'TvPageModal',
+		// 		component: MovieModal,
+		// 		// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
+		// 		props: true,
+		// 	},
+		// ],
+
+		meta: {
+			requiresAuth: true,
+			programType: 'tv',
 		},
 	},
 	{
