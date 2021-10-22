@@ -45,6 +45,11 @@ export default {
 			type: String,
 			default: 'click',
 		},
+
+		useClickOutside: {
+			type: Boolean,
+			default: true,
+		},
 	},
 
 	setup(props) {
@@ -78,6 +83,26 @@ export default {
 		},
 	},
 
+	watch: {
+		open: {
+			handler(value) {
+				if (this.activator === 'click') {
+					if (value) {
+						document.addEventListener(
+							'click',
+							this.handleClickOutside,
+						);
+					} else {
+						document.removeEventListener(
+							'click',
+							this.handleClickOutside,
+						);
+					}
+				}
+			},
+		},
+	},
+
 	mounted() {
 		this.bindEvents();
 	},
@@ -93,9 +118,23 @@ export default {
 					this.closeMenu();
 				});
 			} else if (this.activator === 'click') {
-				this.$activator.addEventListener(this.activator, () => {
+				this.$activator.addEventListener('click', () => {
 					this.open = !this.open;
 				});
+			}
+		},
+
+		handleClickOutside(event) {
+			event.stopPropagation();
+
+			const $target = event.target;
+
+			const isInside = this.$el.contains($target);
+
+			if (isInside) return false;
+
+			if (this.open) {
+				this.closeMenu();
 			}
 		},
 
