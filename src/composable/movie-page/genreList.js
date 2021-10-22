@@ -3,7 +3,7 @@ import getGenres from '@/api/genres';
 
 /**
  * 영화, TV 장르 composition api
- * @param {string} type : movie|tv
+ * @param {string} type : media type -> movie|tv
  */
 export default function genreListComposable(type = 'movie', genreId = null) {
 	const genres = ref([]);

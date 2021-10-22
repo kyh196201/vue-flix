@@ -56,7 +56,7 @@ const routes = [
 	{
 		path: '/movie',
 		name: 'MoviePage',
-		component: () => import('@/views/ProgramPage.vue'),
+		component: () => import('@/views/MediaPage.vue'),
 		children: [
 			{
 				path: 'detail/:movieId',
@@ -74,7 +74,7 @@ const routes = [
 	{
 		path: '/tv',
 		name: 'TvPage',
-		component: () => import('@/views/ProgramPage.vue'),
+		component: () => import('@/views/MediaPage.vue'),
 		children: [
 			{
 				path: 'detail/:tvId',
@@ -87,7 +87,7 @@ const routes = [
 
 		meta: {
 			requiresAuth: true,
-			programType: 'tv',
+			mediaType: 'tv',
 		},
 	},
 	{

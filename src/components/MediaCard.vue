@@ -1,21 +1,21 @@
 <template>
-	<article class="movie-card">
+	<article class="media-card" :class="cardClassName">
 		<a href="#">
-			<div class="movie-card__inner">
+			<div class="media-card__inner">
 				<!-- backdrop-image -->
-				<section class="movie-card__backdrop-image">
+				<section class="media-card__backdrop-image">
 					<figure class="backdrop-image">
 						<img :src="posterImage" :alt="title" />
 					</figure>
-					<p class="run-time">
+					<p class="run-time" v-if="runTime">
 						{{ runTime }}
 					</p>
-					<p class="movie-title">
+					<p class="media-title">
 						{{ title }}
 					</p>
 				</section>
-				<section class="movie-card__info">
-					<div class="movie-card__info__top">
+				<section class="media-card__info">
+					<div class="media-card__info__top">
 						<span class="age-badge"></span>
 						<span class="release-date">
 							{{ releaseDate }}
@@ -38,22 +38,28 @@
 </template>
 
 <script>
-import { toRefs } from 'vue';
+import { toRefs, computed } from 'vue';
 
 // Composable
 import movieItemComposable from '@/composable/movie/movieItem';
+import tvItemComposable from '@/composable/tv/tvItem';
 
 // Utils
 import { IMAGE_TYPES } from '@/utils/common/constants';
 
 export default {
-	name: 'movie-card',
+	name: 'media-card',
 
 	props: {
+		mediaType: {
+			type: String,
+			default: 'movie',
+		},
+
 		/**
 		 * 영화 데이터
 		 */
-		movieData: {
+		mediaData: {
 			type: Object,
 			required: true,
 		},
@@ -76,31 +82,50 @@ export default {
 	},
 
 	setup(props) {
-		const { movieData, imageType } = toRefs(props);
+		const { mediaData, imageType, mediaType } = toRefs(props);
 
-		const {
-			isMovieData,
-			title,
-			posterImage,
-			overview,
-			releaseDate,
-			runTime,
-		} = movieItemComposable(movieData.value, imageType.value);
+		let state = {};
+
+		if (mediaType.value === 'movie') {
+			const { title, posterImage, overview, releaseDate, runTime } =
+				movieItemComposable(mediaData.value, imageType.value);
+
+			state = {
+				...state,
+				title,
+				posterImage,
+				overview,
+				releaseDate,
+				runTime,
+			};
+		} else if (mediaType.value === 'tv') {
+			const { title, posterImage, overview, firstAirDate, runTime } =
+				tvItemComposable(mediaData.value, imageType.value);
+
+			state = {
+				...state,
+				title,
+				posterImage,
+				overview,
+				runTime,
+				releaseDate: firstAirDate,
+			};
+		}
+
+		const cardClassName = computed(() => {
+			return mediaType.value;
+		});
 
 		return {
-			isMovieData,
-			title,
-			posterImage,
-			overview,
-			releaseDate,
-			runTime,
+			...state,
+			cardClassName,
 		};
 	},
 };
 </script>
 
 <style lang="scss">
-.movie-card {
+.media-card {
 	// inner
 	&__inner {
 		overflow: hidden;
@@ -113,6 +138,7 @@ export default {
 
 		.backdrop-image {
 			padding-top: 56.25%;
+			background-color: $media-item-background-color;
 
 			// img
 			img {
@@ -122,12 +148,17 @@ export default {
 				width: 100%;
 				height: auto;
 				max-height: 100%;
+
+				&.lazy {
+					opacity: 0;
+					text-indent: -9999px;
+				}
 			}
 		}
 
 		// run-time
 		.run-time,
-		.movie-title {
+		.media-title {
 			position: absolute;
 		}
 
@@ -137,8 +168,8 @@ export default {
 			letter-spacing: 0.1rem;
 		}
 
-		// movie-title
-		.movie-title {
+		// media-title
+		.media-title {
 			overflow: hidden;
 			bottom: 1rem;
 			left: 0;

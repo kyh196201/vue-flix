@@ -210,10 +210,13 @@
 								>
 									<li
 										class="similar-contents__item"
-										v-for="tv in similarContents"
-										:key="`similar-${tv.id}`"
+										v-for="media in similarContents"
+										:key="`similar-${media.id}`"
 									>
-										<MovieCard :movieData="tv"></MovieCard>
+										<MediaCard
+											mediaType="tv"
+											:mediaData="media"
+										></MediaCard>
 									</li>
 								</ul>
 							</div>
@@ -250,7 +253,7 @@ import tvSimilarContentsComposable from '@/composable/tv/similarContents';
 import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
-import MovieCard from '@/components/movie/MovieCard.vue';
+import MediaCard from '@/components/MediaCard.vue';
 import { toRefs } from 'vue';
 
 export default {
@@ -260,7 +263,7 @@ export default {
 		Modal,
 		SkeletonBox,
 		SkeletonList,
-		MovieCard,
+		MediaCard,
 	},
 
 	props: {
@@ -432,7 +435,7 @@ $modal-padding: 48px;
 			&__poster {
 				width: 100%;
 				height: 100%;
-				background-color: $movie-item-background-color;
+				background-color: $media-item-background-color;
 
 				img {
 					display: block;
@@ -650,7 +653,7 @@ $modal-padding: 48px;
 					border-radius: 4px;
 				}
 
-				.movie-card {
+				.media-card {
 					height: 100%;
 
 					&__inner {

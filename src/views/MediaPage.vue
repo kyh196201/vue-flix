@@ -11,14 +11,14 @@
 						class="movie-page__home-link"
 						@click.prevent="selectGenre(null)"
 					>
-						<span> 영화 </span>
+						<span> {{ pageTitle }} </span>
 					</a>
 					<strong class="movie-page__current-genre">
 						{{ selectedGenre.name }}
 					</strong>
 				</template>
 				<template v-else>
-					<h2 class="movie-page__title">영화</h2>
+					<h2 class="movie-page__title">{{ pageTitle }}</h2>
 
 					<!-- 장르 선택 -->
 					<GenreList
@@ -45,7 +45,10 @@
 						v-for="(movie, index) in movieList"
 						:key="`${index}-${movie.id}`"
 					>
-						<MovieItem :movieData="movie"></MovieItem>
+						<MediaItem
+							:mediaType="mediaType"
+							:mediaData="movie"
+						></MediaItem>
 					</li>
 				</ul>
 
@@ -63,7 +66,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 // Composable
@@ -73,17 +76,17 @@ import filterComposable from '@/composable/movie-page/filter';
 
 // Components
 import Spinner from '@/components/common/loading/Spinner.vue';
-import MovieItem from '@/components/movie/MovieItem.vue';
+import MediaItem from '@/components/MediaItem.vue';
 import InfiniteScroll from '@/components/common/InfiniteScroll.vue';
 import GenreList from '@/components/movie-page/GenreList.vue';
 import Filter from '@/components/movie-page/Filter.vue';
 
 export default {
-	name: 'movie-page',
+	name: 'media-page',
 
 	components: {
 		Spinner,
-		MovieItem,
+		MediaItem,
 		InfiniteScroll,
 		GenreList,
 		Filter,
@@ -92,7 +95,7 @@ export default {
 	setup() {
 		const route = useRoute();
 		const router = useRouter();
-		const programType = route.meta.programType || 'movie';
+		const mediaType = ref(route.meta.mediaType || 'movie');
 
 		const { genre, filter } = route.query;
 
@@ -103,7 +106,7 @@ export default {
 			selectedGenre,
 			selectGenre,
 			fetchGenres,
-		} = genreListComposable(programType, Number(genre));
+		} = genreListComposable(mediaType.value, Number(genre));
 
 		// Filter Composable
 		const { filters, selectedFilter, selectedFilterId, selectFilter } =
@@ -119,7 +122,7 @@ export default {
 
 			discoverPrograms,
 			discoverMorePrograms,
-		} = discoverComposable(programType);
+		} = discoverComposable(mediaType.value);
 
 		const queries = computed(() => {
 			return {
@@ -173,6 +176,7 @@ export default {
 		fetchGenres();
 
 		return {
+			mediaType,
 			queries,
 
 			// Movie/Tv Data
@@ -198,6 +202,12 @@ export default {
 			discoverPrograms,
 			discoverMorePrograms,
 		};
+	},
+
+	computed: {
+		pageTitle() {
+			return this.mediaType === 'movie' ? '영화' : 'TV';
+		},
 	},
 
 	created() {
