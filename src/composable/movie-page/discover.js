@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 // Api
 import discover from '@/api/discover';
 
-export default function discoverComposable(type = 'movie') {
+export default function discoverComposable() {
 	const movieList = ref([]);
 	const loadingDiscover = ref(false);
 	const page = ref(1);
@@ -27,11 +27,15 @@ export default function discoverComposable(type = 'movie') {
 	};
 
 	// Discover tv or movie programs
-	const discoverPrograms = async (query = {}, page = 1) => {
+	const discoverPrograms = async (
+		query = {},
+		page = 1,
+		mediaType = 'movie',
+	) => {
 		const params = queryToParams(query);
 
 		loadingDiscover.value = true;
-		const result = await discover(type, { ...params, page });
+		const result = await discover(mediaType, { ...params, page });
 
 		// NOTE composition api 에러 핸들링 찾아보기
 		if (result.isError) {
@@ -49,11 +53,15 @@ export default function discoverComposable(type = 'movie') {
 	};
 
 	// Discover more tv or movie programs
-	const discoverMorePrograms = async (query = {}, page = 1) => {
+	const discoverMorePrograms = async (
+		query = {},
+		page = 1,
+		mediaType = 'movie',
+	) => {
 		try {
 			const params = queryToParams(query);
 
-			const result = await discover(type, { ...params, page });
+			const result = await discover(mediaType, { ...params, page });
 
 			if (result.isError) {
 				throw new Error(result.errorData);

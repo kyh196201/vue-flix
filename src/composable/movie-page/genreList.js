@@ -5,7 +5,7 @@ import getGenres from '@/api/genres';
  * 영화, TV 장르 composition api
  * @param {string} type : media type -> movie|tv
  */
-export default function genreListComposable(type = 'movie', genreId = null) {
+export default function genreListComposable(genreId = null) {
 	const genres = ref([]);
 
 	const selectedGenreId = ref(null);
@@ -14,7 +14,7 @@ export default function genreListComposable(type = 'movie', genreId = null) {
 		selectedGenreId.value = genreId;
 	}
 
-	const fetchGenres = async () => {
+	const fetchGenres = async (type = 'movie') => {
 		const result = await getGenres(type);
 
 		if (result.isError) {

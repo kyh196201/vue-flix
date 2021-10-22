@@ -95,7 +95,12 @@ export default {
 	setup() {
 		const route = useRoute();
 		const router = useRouter();
-		const mediaType = ref(route.meta.mediaType || 'movie');
+		const mediaType = computed(() => {
+			return route.meta.mediaType || 'movie';
+		});
+
+		// 페이지 재설정중 여부
+		const isReSetting = ref(false);
 
 		const { genre, filter } = route.query;
 
@@ -106,7 +111,7 @@ export default {
 			selectedGenre,
 			selectGenre,
 			fetchGenres,
-		} = genreListComposable(mediaType.value, Number(genre));
+		} = genreListComposable(Number(genre));
 
 		// Filter Composable
 		const { filters, selectedFilter, selectedFilterId, selectFilter } =
@@ -122,7 +127,7 @@ export default {
 
 			discoverPrograms,
 			discoverMorePrograms,
-		} = discoverComposable(mediaType.value);
+		} = discoverComposable();
 
 		const queries = computed(() => {
 			return {
@@ -133,6 +138,8 @@ export default {
 
 		// Watch Genre Id Update
 		watch(selectedGenreId, () => {
+			if (isReSetting.value) return;
+
 			// genreId null값일 경우 예외처리
 			const genre = selectedGenreId.value;
 			const query = Object.assign({}, route.query);
@@ -150,11 +157,13 @@ export default {
 				query,
 			});
 
-			discoverPrograms(queries.value, page.value);
+			discoverPrograms(queries.value, page.value, mediaType.value);
 		});
 
 		// Watch Filter Id Update
 		watch(selectedFilterId, () => {
+			if (isReSetting.value) return;
+
 			const filter = selectedFilter.value?.id;
 			const query = Object.assign({}, route.query);
 
@@ -170,12 +179,13 @@ export default {
 				query,
 			});
 
-			discoverPrograms(queries.value, page.value);
+			discoverPrograms(queries.value, page.value, mediaType.value);
 		});
 
-		fetchGenres();
+		fetchGenres(mediaType.value);
 
 		return {
+			isReSetting,
 			mediaType,
 			queries,
 
@@ -197,6 +207,7 @@ export default {
 			selectedFilterId,
 
 			// Functions
+			fetchGenres,
 			selectGenre,
 			selectFilter,
 			discoverPrograms,
@@ -210,8 +221,47 @@ export default {
 		},
 	},
 
+	watch: {
+		$route: {
+			async handler(newRoute, oldRoute) {
+				const newRouteName = newRoute?.name;
+
+				const oldRouteName = oldRoute?.name;
+
+				if (!oldRouteName) return;
+
+				/* 
+					NOTE Tv Page <-> Movie Page로 이동할 때 같은 컴포넌트를 사용해서 컴포넌트의 라이프 사이클 훅이 실행되지 않는다. 
+				*/
+				if (
+					(newRouteName === 'MoviePage' &&
+						oldRouteName === 'TvPage') ||
+					(newRouteName === 'TvPage' && oldRouteName === 'MoviePage')
+				) {
+					const { genre, filter } = newRoute.query;
+
+					this.isReSetting = true;
+
+					this.selectedGenreId = genre ? Number(genre) : null;
+					this.selectedFilterId = filter ? filter : null;
+
+					this.fetchGenres(this.mediaType);
+
+					this.page = 1;
+					await this.discoverPrograms(
+						this.queries,
+						this.page,
+						this.mediaType,
+					);
+
+					this.isReSetting = false;
+				}
+			},
+		},
+	},
+
 	created() {
-		this.discoverPrograms(this.queries, this.page);
+		this.discoverPrograms(this.queries, this.page, this.mediaType);
 	},
 
 	methods: {
@@ -220,6 +270,7 @@ export default {
 			const results = await this.discoverMorePrograms(
 				this.queries,
 				this.page,
+				this.mediaType,
 			);
 
 			if (results.length) {
