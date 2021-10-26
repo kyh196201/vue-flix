@@ -1,14 +1,16 @@
 import { createStore } from 'vuex';
-import state from './state';
-import mutations from './mutations';
+import rootState from './state';
+import rootGetters from './getters';
+import rootMutations from './mutations';
 
 // Modules
 import search from './modules/search';
 import auth from './modules/auth';
 
 const store = createStore({
-	state,
-	mutations,
+	state: rootState,
+	mutations: rootMutations,
+	getters: rootGetters,
 
 	modules: {
 		search,

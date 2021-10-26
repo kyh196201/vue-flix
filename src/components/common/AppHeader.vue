@@ -1,5 +1,5 @@
 <template>
-	<header class="header sticky">
+	<header class="header" :class="headerClass">
 		<div class="header__inner">
 			<!-- left -->
 			<section class="header__left">
@@ -150,7 +150,7 @@ import DropdownMenu from '@/components/common/DropdownMenu.vue';
 import SearchInput from '@/components/common/SearchInput.vue';
 
 // Vuex
-import { mapMutations, mapState, createNamespacedHelpers } from 'vuex';
+import { mapMutations, createNamespacedHelpers, mapGetters } from 'vuex';
 
 const authModule = createNamespacedHelpers('auth');
 
@@ -185,23 +185,59 @@ export default {
 	},
 
 	computed: {
-		...mapState(['isSearchForm']),
+		...mapGetters(['isSearchForm', 'isHeaderSticky', 'isHeaderScroll']),
+
+		//  Header Class
+		headerClass() {
+			return {
+				sticky: this.isHeaderSticky,
+				'is-scroll': this.isHeaderScroll,
+			};
+		},
 	},
 
 	watch: {
 		$route: {
-			handler() {
+			handler(newRoute) {
 				const { nav } = this.dropdowns;
 
 				if (nav.isOpen) {
 					nav.isOpen = false;
 				}
+
+				const { noStickyHeader } = newRoute?.meta;
+
+				if (noStickyHeader) {
+					this.setIsHeaderSticky(false);
+				} else {
+					this.setIsHeaderSticky(true);
+				}
 			},
 		},
 	},
 
+	mounted() {
+		window.addEventListener('scroll', () => {
+			if (!this.isHeaderSticky) return false;
+
+			if (window.scrollY > 0) {
+				if (!this.isHeaderScroll) {
+					this.setIsHeaderScroll(true);
+				}
+			} else {
+				if (this.isHeaderScroll) {
+					this.setIsHeaderScroll(false);
+				}
+			}
+		});
+	},
+
 	methods: {
-		...mapMutations(['openSearchForm']),
+		...mapMutations([
+			'openSearchForm',
+			'setIsHeaderScroll',
+			'setIsHeaderSticky',
+		]),
 		...authModule.mapActions(['signOut']),
 
 		// 로그아웃 클릭 이벤트

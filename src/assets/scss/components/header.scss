@@ -11,11 +11,9 @@ $sidePadding: 4%;
 				z-index: 10;
 			}
 		}
-	}
 
-	&.is-scroll {
-		.header {
-			&__inner {
+		&.is-scroll {
+			.header__inner {
 				background-color: $main-color;
 			}
 		}
@@ -35,6 +33,9 @@ $sidePadding: 4%;
 			rgba(0, 0, 0, 0.7) 10%,
 			rgba(0, 0, 0, 0)
 		);
+
+		transition: background-color 0.3s linear;
+		will-change: background-color;
 	}
 
 	// left

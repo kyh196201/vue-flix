@@ -69,6 +69,7 @@ const routes = [
 
 		meta: {
 			requiresAuth: true,
+			noStickyHeader: true,
 		},
 	},
 	{
@@ -87,6 +88,7 @@ const routes = [
 
 		meta: {
 			requiresAuth: true,
+			noStickyHeader: true,
 			mediaType: 'tv',
 		},
 	},
