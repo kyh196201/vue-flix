@@ -47,3 +47,7 @@ export const routerLinks = [
 		name: '내가 찜한 콘텐츠',
 	},
 ];
+
+export const KEYS = {
+	ESC: 'Escape',
+};

@@ -1,5 +1,5 @@
 <template>
-	<div class="modal-mask" @click.self="handleClickMask">
+	<div class="modal-mask" @click.self="handleClickMask" v-if="open">
 		<div class="modal-container">
 			<div class="modal">
 				<slot name="close">
@@ -23,13 +23,45 @@
 </template>
 
 <script>
+import { toRefs, ref } from 'vue';
+
+import { KEYS } from '@/utils/common/constants';
+
 export default {
+	props: {
+		// Default modal status
+		isOpen: {
+			type: Boolean,
+			default: false,
+		},
+
+		// Close modal when keypress ESC
+		closeOnKeypress: {
+			type: Boolean,
+			default: true,
+		},
+	},
+
+	setup(props) {
+		const { isOpen } = toRefs(props);
+
+		const open = ref(isOpen.value);
+
+		return {
+			open,
+		};
+	},
+
 	mounted() {
 		this.scrollLock(true);
+
+		document.addEventListener('keydown', this.handleKeypress);
 	},
 
 	unmounted() {
 		this.scrollLock(false);
+
+		document.removeEventListener('keydown', this.handleKeypress);
 	},
 
 	methods: {
@@ -41,8 +73,21 @@ export default {
 			}
 		},
 
-		handleClickMask() {
+		close() {
+			this.open = false;
 			this.$emit('close');
+		},
+
+		handleClickMask() {
+			this.close();
+		},
+
+		handleKeypress(event) {
+			event.stopPropagation();
+
+			if (event.key === KEYS.ESC) {
+				this.close();
+			}
 		},
 	},
 };
