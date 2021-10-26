@@ -1,5 +1,5 @@
 <template>
-	<Modal class="tv-modal" @close="handleClose">
+	<Modal class="tv-modal" @close="handleClose" v-bind="modalOption">
 		<template v-slot:body>
 			<section class="tv-modal__body">
 				<h2 class="visually-hidden">TV 상세 모달</h2>
@@ -338,6 +338,10 @@ export default {
 	data() {
 		return {
 			isSimilarContentsOpened: false,
+
+			modalOption: {
+				isOpen: true,
+			},
 		};
 	},
 
