@@ -6,6 +6,8 @@
  * 2. image load error 처리
  */
 
+import placeholderImage from '@/assets/images/common/placeholder-image.jpg';
+
 const lazyImage = {
 	beforeMount(el, binding) {
 		const { value } = binding;
@@ -40,11 +42,10 @@ const lazyImage = {
 			el.observer.disconnect();
 		};
 
-		el.onerror = function (event) {
-			console.log('image load error', event);
-
+		el.onerror = function () {
 			// FIXME 임시 error 처리
-			el.closest('.media-item')?.classList.add('error');
+			el.setAttribute('src', placeholderImage);
+			el.classList.add('error');
 			el.classList.remove('lazy');
 			el.observer.disconnect();
 		};

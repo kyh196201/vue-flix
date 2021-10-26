@@ -5,7 +5,7 @@
 				<!-- backdrop-image -->
 				<section class="media-card__backdrop-image">
 					<figure class="backdrop-image">
-						<img :src="posterImage" :alt="title" />
+						<img v-lazy-image="posterImage" :alt="title" />
 					</figure>
 					<p class="run-time" v-if="runTime">
 						{{ runTime }}
@@ -152,6 +152,11 @@ export default {
 				&.lazy {
 					opacity: 0;
 					text-indent: -9999px;
+				}
+
+				&.error {
+					object-fit: cover;
+					filter: brightness(0.5);
 				}
 			}
 		}

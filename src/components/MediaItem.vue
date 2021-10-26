@@ -147,6 +147,11 @@ export default {
 				// 	transparent 0
 				// );
 			}
+
+			&.error {
+				object-fit: cover;
+				filter: brightness(0.5);
+			}
 		}
 	}
 
