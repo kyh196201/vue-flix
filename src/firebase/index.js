@@ -1,5 +1,13 @@
 // Firebase 앱 초기화
 import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {
+	getFirestore,
+	collection,
+	getDocs,
+	doc,
+	setDoc,
+} from 'firebase/firestore';
 
 const {
 	VUE_APP_FIREBASE_API_KEY,
@@ -23,4 +31,42 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export default app;
+const db = getFirestore();
+
+const auth = getAuth();
+
+onAuthStateChanged(auth, async user => {
+	try {
+		if (user) {
+			let isUserExists = false;
+			// User is signed in, see docs for a list of available properties
+			// https://firebase.google.com/docs/reference/js/firebase.User
+			const { uid, email } = user.toJSON();
+
+			const querySnapshot = await getDocs(collection(db, 'users'));
+			querySnapshot.forEach(({ id }) => {
+				if (id === uid) {
+					isUserExists = true;
+				}
+			});
+
+			if (!isUserExists) {
+				const userData = {
+					id: uid,
+					email,
+					favorites: [],
+					likes: [],
+					hates: [],
+				};
+
+				await setDoc(doc(db, 'users', uid), userData);
+
+				console.log(`new user document created !! uid: ${uid}`);
+			}
+		}
+	} catch (error) {
+		console.error(error);
+	}
+});
+
+export { app, auth, db };

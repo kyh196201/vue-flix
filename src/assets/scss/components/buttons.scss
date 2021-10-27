@@ -71,6 +71,11 @@ button {
                 font-size: 0;
             }
         }
+
+        &.active {
+            border-color: $white;
+            color: $white;
+        }
     }
 
     &--dislike,

@@ -1,12 +1,11 @@
 // Firebase Auth관련 로직
 import {
-	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
 } from 'firebase/auth';
 
-const auth = getAuth();
+import { auth } from '@/firebase';
 
 // 신규 사용자 가입
 // https://firebase.google.com/docs/auth/web/start?authuser=0#sign_up_new_users

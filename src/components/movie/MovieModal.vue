@@ -45,14 +45,30 @@
 										<button
 											type="button"
 											class="btn btn--user"
+											@click="handleRemoveFavorite"
+											v-if="isFavoriteItem"
+										>
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'check']"
+											></font-awesome-icon>
+											<span class="btn__title">
+												찜하기 해제
+											</span>
+										</button>
+										<button
+											type="button"
+											class="btn btn--user"
+											@click="handleAddFavorite"
+											v-else
 										>
 											<font-awesome-icon
 												class="btn__icon"
 												:icon="['fas', 'plus']"
 											></font-awesome-icon>
-											<span class="btn__title"
-												>찜하기</span
-											>
+											<span class="btn__title">
+												찜하기
+											</span>
 										</button>
 									</li>
 									<li>
@@ -251,6 +267,11 @@ import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 
+// Vuex Module
+import { createNamespacedHelpers } from 'vuex';
+
+const authModule = createNamespacedHelpers('auth');
+
 export default {
 	name: 'MovieModal',
 
@@ -274,6 +295,17 @@ export default {
 	},
 
 	computed: {
+		...authModule.mapGetters(['favoriteList']),
+
+		isFavoriteItem() {
+			if (!this.favoriteList.length) return false;
+
+			return (
+				this.favoriteList.filter(item => item.id === +this.movieId)
+					.length > 0
+			);
+		},
+
 		/**
 		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
 		 * @returns array
@@ -288,6 +320,26 @@ export default {
 	},
 
 	methods: {
+		...authModule.mapActions(['addFavoriteItem', 'removeFavoriteItem']),
+
+		// 찜하기 목록에 추가
+		async handleAddFavorite() {
+			try {
+				await this.addFavoriteItem(this.movieData);
+			} catch (error) {
+				console.error('handleAddFavorite', error);
+			}
+		},
+
+		// 찜하기 목록에서 제거
+		async handleRemoveFavorite() {
+			try {
+				await this.removeFavoriteItem(+this.movieId);
+			} catch (error) {
+				console.error('handleRemoveFavorite', error);
+			}
+		},
+
 		// close 이벤트 emit
 		handleClose() {
 			this.$router.back();
@@ -431,6 +483,7 @@ $modal-padding: 48px;
 
 						&:hover {
 							border-color: $white;
+							color: $white;
 						}
 
 						@include labtop {
