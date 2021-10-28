@@ -72,7 +72,7 @@ onAuthStateChanged(auth, async user => {
 		} else {
 			// 유저 로그아웃
 			if (store.state.auth.idToken) {
-				store.dispatch('auth/initUserData');
+				store.commit('auth/initUserData');
 			}
 		}
 	} catch (error) {
