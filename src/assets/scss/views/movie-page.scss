@@ -49,37 +49,6 @@
     &__content {
         padding: 60px 4% 0;
 
-        .movie-list {
-            display: flex;
-            flex-wrap: wrap;
-
-            li {
-                width: calc(100% / 6);
-                padding: 0 2.5px;
-                margin-bottom: 2%;
-
-                @include labtop {
-                    width: calc(100% / 5);
-                }
-
-                @include labtop-small {
-                    width: calc(100% / 4);
-                }
-
-                @include tablet {
-                    width: calc(100% / 3);
-                }
-
-                @include mobile {
-                    width: calc(100% / 2);
-                }
-
-                @include mobile-small {
-                    width: 100%;
-                }
-            }
-        }
-
         .spinner {
             margin: 0 auto;
         }
