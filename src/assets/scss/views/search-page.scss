@@ -5,6 +5,10 @@
     // movie-list
     &__movie-list {
         padding: 60px 4% 0;
+
+        @include labtop-small {
+			padding-top: 0;
+		}
     }
 
 

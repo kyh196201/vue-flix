@@ -3,7 +3,11 @@
     padding-top: 70px;
 
 	&__movie-list {
-		padding: 0 4%;
+		padding: 6rem 4% 0;
+
+		@include labtop-small {
+			padding-top: 0;
+		}
 	}
 
 	&__empty {
