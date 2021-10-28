@@ -134,8 +134,10 @@ export default {
 			state.idToken = '';
 			state.refreshToken = '';
 			state.expireDate = '';
-
 			state.userProfile = null;
+			state.favoriteList = [];
+			state.likeList = [];
+			state.hateList = [];
 		},
 
 		setAuthError(state, errorData) {

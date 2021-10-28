@@ -9,6 +9,8 @@ import {
 	setDoc,
 } from 'firebase/firestore';
 
+import store from '@/store/';
+
 const {
 	VUE_APP_FIREBASE_API_KEY,
 	VUE_APP_FIREBASE_AUTH_DOMAIN,
@@ -37,6 +39,7 @@ const auth = getAuth();
 
 onAuthStateChanged(auth, async user => {
 	try {
+		// 유저 로그인
 		if (user) {
 			let isUserExists = false;
 			// User is signed in, see docs for a list of available properties
@@ -60,8 +63,11 @@ onAuthStateChanged(auth, async user => {
 				};
 
 				await setDoc(doc(db, 'users', uid), userData);
+				await store.dispatch('auth/getUserData');
 
 				console.log(`new user document created !! uid: ${uid}`);
+			} else {
+				await store.dispatch('auth/getUserData');
 			}
 		}
 	} catch (error) {

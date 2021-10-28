@@ -18,13 +18,14 @@ const store = createStore({
 	},
 });
 
-store.subscribe((mutation, state) => {
-	const { type } = mutation;
+// store.subscribe((mutation, state) => {
+// 	const { type } = mutation;
 
-	// 로그인 되었을 경우
-	if (type === 'auth/setUserAuth' && !!state.auth.idToken) {
-		store.dispatch('auth/getUserData');
-	}
-});
+// 	// 로그인 되었을 경우
+// 	if (type === 'auth/setUserAuth' && !!state.auth.idToken) {
+
+// 		store.dispatch('auth/getUserData');
+// 	}
+// });
 
 export default store;
