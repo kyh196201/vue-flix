@@ -53,7 +53,7 @@
 												:icon="['fas', 'check']"
 											></font-awesome-icon>
 											<span class="btn__title">
-												찜하기 해제
+												찜하기 목록에서 제거
 											</span>
 										</button>
 										<button
@@ -67,7 +67,7 @@
 												:icon="['fas', 'plus']"
 											></font-awesome-icon>
 											<span class="btn__title">
-												찜하기
+												찜하기 목록에 추가
 											</span>
 										</button>
 									</li>
@@ -83,7 +83,7 @@
 												:icon="['fas', 'thumbs-up']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>좋아요</span
+												>좋아요 목록에 추가/제거</span
 											>
 										</button>
 									</li>
@@ -99,7 +99,7 @@
 												:icon="['fas', 'thumbs-down']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>마음에 안들어요</span
+												>싫어요 목록에 추가/제거</span
 											>
 										</button>
 									</li>

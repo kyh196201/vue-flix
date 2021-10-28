@@ -24,12 +24,29 @@
 					<div class="synopsis">
 						{{ overview }}
 					</div>
-					<button type="button" class="btn btn--user">
+					<button
+						type="button"
+						class="btn btn--user active"
+						@click="handleRemoveFavorite"
+						v-if="isFavoriteItem"
+					>
+						<font-awesome-icon
+							class="btn__icon"
+							:icon="['fas', 'check']"
+						></font-awesome-icon>
+						<span class="btn__title">찜하기 목록에서 제거</span>
+					</button>
+					<button
+						type="button"
+						class="btn btn--user"
+						@click="handleAddFavorite"
+						v-else
+					>
 						<font-awesome-icon
 							class="btn__icon"
 							:icon="['fas', 'plus']"
 						></font-awesome-icon>
-						<span class="btn__title">찜하기</span>
+						<span class="btn__title">찜하기 목록에 추가</span>
 					</button>
 				</section>
 			</div>
@@ -46,6 +63,11 @@ import tvItemComposable from '@/composable/tv/tvItem';
 
 // Utils
 import { IMAGE_TYPES } from '@/utils/common/constants';
+
+// Vuex Module
+import { createNamespacedHelpers } from 'vuex';
+
+const authModule = createNamespacedHelpers('auth');
 
 export default {
 	name: 'media-card',
@@ -120,6 +142,41 @@ export default {
 			...state,
 			cardClassName,
 		};
+	},
+
+	computed: {
+		...authModule.mapGetters(['favoriteList']),
+
+		isFavoriteItem() {
+			if (!this.favoriteList.length) return false;
+
+			return (
+				this.favoriteList.filter(item => item.id === +this.mediaData.id)
+					.length > 0
+			);
+		},
+	},
+
+	methods: {
+		...authModule.mapActions(['addFavoriteItem', 'removeFavoriteItem']),
+
+		// 찜하기 목록에 추가 클릭 이벤트
+		async handleAddFavorite() {
+			try {
+				await this.addFavoriteItem(this.mediaData);
+			} catch (error) {
+				console.error('handleAddFavorite', error);
+			}
+		},
+
+		// 찜하기 목록에서 제거 클릭 이벤트
+		async handleRemoveFavorite() {
+			try {
+				await this.removeFavoriteItem(Number(this.mediaData.id));
+			} catch (error) {
+				console.error('handleRemoveFavorite', error);
+			}
+		},
 	},
 };
 </script>
