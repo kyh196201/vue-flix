@@ -44,7 +44,7 @@
 									<li>
 										<button
 											type="button"
-											class="btn btn--user"
+											class="btn btn--user active"
 											@click="handleRemoveFavorite"
 											v-if="isFavoriteItem"
 										>
@@ -75,6 +75,8 @@
 										<button
 											type="button"
 											class="btn btn--user btn--like"
+											:class="{ active: isLikeItem }"
+											@click="handleClickLike"
 										>
 											<font-awesome-icon
 												class="btn__icon"
@@ -89,6 +91,8 @@
 										<button
 											type="button"
 											class="btn btn--user btn--dislike"
+											:class="{ active: isHateItem }"
+											@click="handleClickHate"
 										>
 											<font-awesome-icon
 												class="btn__icon"
@@ -295,7 +299,7 @@ export default {
 	},
 
 	computed: {
-		...authModule.mapGetters(['favoriteList']),
+		...authModule.mapGetters(['favoriteList', 'likeList', 'hateList']),
 
 		isFavoriteItem() {
 			if (!this.favoriteList.length) return false;
@@ -304,6 +308,18 @@ export default {
 				this.favoriteList.filter(item => item.id === +this.movieId)
 					.length > 0
 			);
+		},
+
+		isLikeItem() {
+			if (!this.likeList.length) return false;
+
+			return this.likeList.indexOf(Number(this.movieId)) > -1;
+		},
+
+		isHateItem() {
+			if (!this.hateList.length) return false;
+
+			return this.hateList.indexOf(Number(this.movieId)) > -1;
 		},
 
 		/**
@@ -320,9 +336,16 @@ export default {
 	},
 
 	methods: {
-		...authModule.mapActions(['addFavoriteItem', 'removeFavoriteItem']),
+		...authModule.mapActions([
+			'addFavoriteItem',
+			'removeFavoriteItem',
+			'addLikeItem',
+			'removeLikeItem',
+			'addHateItem',
+			'removeHateItem',
+		]),
 
-		// 찜하기 목록에 추가
+		// 찜하기 목록에 추가 클릭 이벤트
 		async handleAddFavorite() {
 			try {
 				await this.addFavoriteItem(this.movieData);
@@ -331,12 +354,42 @@ export default {
 			}
 		},
 
-		// 찜하기 목록에서 제거
+		// 찜하기 목록에서 제거 클릭 이벤트
 		async handleRemoveFavorite() {
 			try {
-				await this.removeFavoriteItem(+this.movieId);
+				await this.removeFavoriteItem(Number(this.movieId));
 			} catch (error) {
 				console.error('handleRemoveFavorite', error);
+			}
+		},
+
+		// 좋아요 버튼 클릭 이벤트
+		async handleClickLike() {
+			try {
+				const movieId = Number(this.movieId);
+
+				if (this.isLikeItem) {
+					await this.removeLikeItem(movieId);
+				} else {
+					await this.addLikeItem(movieId);
+				}
+			} catch (error) {
+				console.error('handleClickLike', error);
+			}
+		},
+
+		// 싫어요 버튼 클릭 이벤트
+		async handleClickHate() {
+			try {
+				const movieId = Number(this.movieId);
+
+				if (this.isHateItem) {
+					await this.removeHateItem(movieId);
+				} else {
+					await this.addHateItem(movieId);
+				}
+			} catch (error) {
+				console.error('handleClickHate', error);
 			}
 		},
 

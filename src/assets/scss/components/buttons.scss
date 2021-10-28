@@ -15,7 +15,7 @@ button {
 .btn {
     padding: 0.4rem 0.8rem;
     border-radius: 4px;
-    font-size: 24px;
+    font-size: 0;
     font-weight: 500;
     cursor: pointer;
 
@@ -28,11 +28,11 @@ button {
     }
 
     &__icon {
-        font-size: 1em;
+        font-size: 1.6rem;
     }
 
     &__title {
-        font-size: 1em;
+        font-size: 1.6rem;
     }
 
     // 재생 버튼

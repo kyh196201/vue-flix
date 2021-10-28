@@ -10,6 +10,10 @@ import {
 	fetchUserData,
 	addToFavorites,
 	removeFromFavorites,
+	addToLikes,
+	removeFromLikes,
+	addToHates,
+	removeFromHates,
 } from '@/api/firebase';
 
 // Utils
@@ -368,13 +372,109 @@ export default {
 		/**
 		 * 찜한 목록에서 제거하기
 		 * @param {object} context :vuex context
-		 * @param {object} media : movie or tv data
+		 * @param {string} id : movie or tv id
 		 * @returns
 		 */
 		async removeFavoriteItem({ dispatch, getters }, id) {
 			try {
 				const userId = getters.userId;
 				const result = await removeFromFavorites(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 좋아요 목록에 추가하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async addLikeItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await addToLikes(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 찜한 목록에서 제거하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async removeLikeItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await removeFromLikes(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 싫어요 목록에 추가하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async addHateItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await addToHates(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 싫어요 목록에서 제거하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async removeHateItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await removeFromHates(userId, id);
 
 				if (result.isError) {
 					throw result.errorData;
