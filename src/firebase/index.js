@@ -69,6 +69,11 @@ onAuthStateChanged(auth, async user => {
 			} else {
 				await store.dispatch('auth/getUserData');
 			}
+		} else {
+			// 유저 로그아웃
+			if (store.state.auth.idToken) {
+				store.dispatch('auth/initUserData');
+			}
 		}
 	} catch (error) {
 		console.error(error);
