@@ -1,56 +1,56 @@
 <template>
 	<article class="media-card" :class="cardClassName">
-		<a href="#">
-			<div class="media-card__inner">
-				<!-- backdrop-image -->
-				<section class="media-card__backdrop-image">
-					<figure class="backdrop-image">
-						<img v-lazy-image="posterImage" :alt="title" />
-					</figure>
-					<p class="run-time" v-if="runTime">
-						{{ runTime }}
-					</p>
-					<p class="media-title">
-						{{ title }}
-					</p>
-				</section>
-				<section class="media-card__info">
-					<div class="media-card__info__top">
-						<span class="age-badge"></span>
-						<span class="release-date">
-							{{ releaseDate }}
-						</span>
-					</div>
-					<div class="synopsis">
-						{{ overview }}
-					</div>
-					<button
-						type="button"
-						class="btn btn--user active"
-						@click="handleRemoveFavorite"
-						v-if="isFavoriteItem"
-					>
-						<font-awesome-icon
-							class="btn__icon"
-							:icon="['fas', 'check']"
-						></font-awesome-icon>
-						<span class="btn__title">찜하기 목록에서 제거</span>
-					</button>
-					<button
-						type="button"
-						class="btn btn--user"
-						@click="handleAddFavorite"
-						v-else
-					>
-						<font-awesome-icon
-							class="btn__icon"
-							:icon="['fas', 'plus']"
-						></font-awesome-icon>
-						<span class="btn__title">찜하기 목록에 추가</span>
-					</button>
-				</section>
-			</div>
-		</a>
+		<!-- <a href="#"> -->
+		<div class="media-card__inner">
+			<!-- backdrop-image -->
+			<section class="media-card__backdrop-image">
+				<figure class="backdrop-image">
+					<img v-lazy-image="posterImage" :alt="title" />
+				</figure>
+				<p class="run-time" v-if="runTime">
+					{{ runTime }}
+				</p>
+				<p class="media-title">
+					{{ title }}
+				</p>
+			</section>
+			<section class="media-card__info">
+				<div class="media-card__info__top">
+					<span class="age-badge"></span>
+					<span class="release-date">
+						{{ releaseDate }}
+					</span>
+				</div>
+				<div class="synopsis">
+					{{ overview }}
+				</div>
+				<button
+					type="button"
+					class="btn btn--user active"
+					@click.stop="handleRemoveFavorite"
+					v-if="isFavoriteItem"
+				>
+					<font-awesome-icon
+						class="btn__icon"
+						:icon="['fas', 'check']"
+					></font-awesome-icon>
+					<span class="btn__title">찜하기 목록에서 제거</span>
+				</button>
+				<button
+					type="button"
+					class="btn btn--user"
+					@click.stop="handleAddFavorite"
+					v-else
+				>
+					<font-awesome-icon
+						class="btn__icon"
+						:icon="['fas', 'plus']"
+					></font-awesome-icon>
+					<span class="btn__title">찜하기 목록에 추가</span>
+				</button>
+			</section>
+		</div>
+		<!-- </a> -->
 	</article>
 </template>
 
