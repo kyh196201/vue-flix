@@ -56,6 +56,14 @@ export default {
 			type: String,
 			default: IMAGE_TYPES.backdrop,
 		},
+
+		/**
+		 * 클릭시 이동할 커스텀 경로
+		 */
+		targetPath: {
+			type: String,
+			default: '',
+		},
 	},
 
 	setup(props) {
@@ -109,7 +117,9 @@ export default {
 
 			const { path, query } = this.$route;
 			const url = path === '/' ? `detail/${id}` : `/detail/${id}`;
-			const targetPath = path + url;
+			const targetPath = this.targetPath
+				? path + this.targetPath
+				: path + url;
 
 			this.$router.push({
 				path: targetPath,
