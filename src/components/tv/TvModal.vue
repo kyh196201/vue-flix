@@ -75,6 +75,8 @@
 										<button
 											type="button"
 											class="btn btn--user btn--like"
+											:class="{ active: isLikeItem }"
+											@click="handleClickLike"
 										>
 											<font-awesome-icon
 												class="btn__icon"
@@ -89,6 +91,8 @@
 										<button
 											type="button"
 											class="btn btn--user btn--dislike"
+											:class="{ active: isHateItem }"
+											@click="handleClickHate"
 										>
 											<font-awesome-icon
 												class="btn__icon"
@@ -271,7 +275,7 @@ import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 
-import { toRefs } from 'vue';
+import { ref } from 'vue';
 
 // Vuex Module
 import { createNamespacedHelpers } from 'vuex';
@@ -296,7 +300,7 @@ export default {
 	},
 
 	setup(props) {
-		const { tvId } = toRefs(props);
+		const tvId = ref(props.tvId);
 
 		if (typeof tvId.value === 'string') {
 			tvId.value = Number(tvId.value);
