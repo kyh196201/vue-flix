@@ -44,15 +44,31 @@
 									<li>
 										<button
 											type="button"
+											class="btn btn--user active"
+											@click="handleRemoveFavorite"
+											v-if="isFavoriteItem"
+										>
+											<font-awesome-icon
+												class="btn__icon"
+												:icon="['fas', 'check']"
+											></font-awesome-icon>
+											<span class="btn__title">
+												찜하기 목록에서 제거
+											</span>
+										</button>
+										<button
+											type="button"
 											class="btn btn--user"
+											@click="handleAddFavorite"
+											v-else
 										>
 											<font-awesome-icon
 												class="btn__icon"
 												:icon="['fas', 'plus']"
 											></font-awesome-icon>
-											<span class="btn__title"
-												>찜하기</span
-											>
+											<span class="btn__title">
+												찜하기 목록에 추가
+											</span>
 										</button>
 									</li>
 									<li>
@@ -254,7 +270,13 @@ import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
+
 import { toRefs } from 'vue';
+
+// Vuex Module
+import { createNamespacedHelpers } from 'vuex';
+
+const authModule = createNamespacedHelpers('auth');
 
 export default {
 	name: 'TvModal',
@@ -346,6 +368,8 @@ export default {
 	},
 
 	computed: {
+		...authModule.mapGetters(['favoriteList', 'likeList', 'hateList']),
+
 		/**
 		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
 		 * @returns array
@@ -365,6 +389,27 @@ export default {
 				this.loadingSimilarContents
 			);
 		},
+
+		isFavoriteItem() {
+			if (!this.favoriteList.length) return false;
+
+			return (
+				this.favoriteList.filter(item => item.id === +this.tvId)
+					.length > 0
+			);
+		},
+
+		isLikeItem() {
+			if (!this.likeList.length) return false;
+
+			return this.likeList.indexOf(Number(this.tvId)) > -1;
+		},
+
+		isHateItem() {
+			if (!this.hateList.length) return false;
+
+			return this.hateList.indexOf(Number(this.tvId)) > -1;
+		},
 	},
 
 	created() {
@@ -374,6 +419,15 @@ export default {
 	},
 
 	methods: {
+		...authModule.mapActions([
+			'addFavoriteItem',
+			'removeFavoriteItem',
+			'addLikeItem',
+			'removeLikeItem',
+			'addHateItem',
+			'removeHateItem',
+		]),
+
 		// close 이벤트 emit
 		handleClose() {
 			this.$router.back();
@@ -382,6 +436,59 @@ export default {
 		// 이미지 로드 에러
 		onImageError(event) {
 			event.target.style.visibility = 'hidden';
+		},
+
+		// 찜하기 목록에 추가 클릭 이벤트
+		async handleAddFavorite() {
+			try {
+				const newTvData = {
+					...this.detail,
+					mediaType: 'tv',
+				};
+
+				await this.addFavoriteItem(newTvData);
+			} catch (error) {
+				console.error('handleAddFavorite', error);
+			}
+		},
+
+		// 찜하기 목록에서 제거 클릭 이벤트
+		async handleRemoveFavorite() {
+			try {
+				await this.removeFavoriteItem(Number(this.tvId));
+			} catch (error) {
+				console.error('handleRemoveFavorite', error);
+			}
+		},
+
+		// 좋아요 버튼 클릭 이벤트
+		async handleClickLike() {
+			try {
+				const tvId = Number(this.tvId);
+
+				if (this.isLikeItem) {
+					await this.removeLikeItem(tvId);
+				} else {
+					await this.addLikeItem(tvId);
+				}
+			} catch (error) {
+				console.error('handleClickLike', error);
+			}
+		},
+
+		// 싫어요 버튼 클릭 이벤트
+		async handleClickHate() {
+			try {
+				const tvId = Number(this.tvId);
+
+				if (this.isHateItem) {
+					await this.removeHateItem(tvId);
+				} else {
+					await this.addHateItem(tvId);
+				}
+			} catch (error) {
+				console.error('handleClickHate', error);
+			}
 		},
 	},
 };

@@ -348,7 +348,12 @@ export default {
 		// 찜하기 목록에 추가 클릭 이벤트
 		async handleAddFavorite() {
 			try {
-				await this.addFavoriteItem(this.movieData);
+				const newMovieData = {
+					...this.movieData,
+					mediaType: 'movie',
+				};
+
+				await this.addFavoriteItem(newMovieData);
 			} catch (error) {
 				console.error('handleAddFavorite', error);
 			}

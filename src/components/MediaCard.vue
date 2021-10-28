@@ -163,7 +163,12 @@ export default {
 		// 찜하기 목록에 추가 클릭 이벤트
 		async handleAddFavorite() {
 			try {
-				await this.addFavoriteItem(this.mediaData);
+				const newMediaData = {
+					...this.mediaData,
+					mediaType: this.mediaType,
+				};
+
+				await this.addFavoriteItem(newMediaData);
 			} catch (error) {
 				console.error('handleAddFavorite', error);
 			}
