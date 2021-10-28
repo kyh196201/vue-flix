@@ -111,6 +111,29 @@ const routes = [
 		},
 	},
 	{
+		path: '/favorite',
+		name: 'FavoritePage',
+		component: () => import('@/views/FavoritePage.vue'),
+		children: [
+			{
+				path: 'detail/movie/:movieId',
+				name: 'FavoriteMovieModal',
+				component: MovieModal,
+				props: true,
+			},
+			{
+				path: 'detail/tv/:tvId',
+				name: 'FavoriteTvModal',
+				component: TvModal,
+				props: true,
+			},
+		],
+
+		meta: {
+			requiresAuth: true,
+		},
+	},
+	{
 		path: '/:catchAll(.*)',
 		name: 'NotFound',
 		component: () => import('@/views/NotFound.vue'),

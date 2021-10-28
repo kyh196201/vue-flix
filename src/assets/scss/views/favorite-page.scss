@@ -1,0 +1,16 @@
+.favorite-page {
+	min-height: 100vh;
+    padding-top: 70px;
+
+	&__movie-list {
+		padding: 0 4%;
+	}
+
+	&__empty {
+		h3 {
+			padding: 5rem 0;
+			text-align: center;
+			font-size: 2.4rem;
+		}
+	}
+}
