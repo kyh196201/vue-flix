@@ -9,7 +9,11 @@
 				</h2>
 
 				<!-- 기본 닫기 버튼 -->
-				<button class="dialog__close-btn" v-if="useCloseBtn">
+				<button
+					class="dialog__close-btn"
+					@click="close"
+					v-if="useCloseBtn"
+				>
 					<span>닫기</span>
 					<font-awesome-icon
 						:icon="['fas', 'times']"
@@ -35,6 +39,8 @@
 					class="dialog__confirm-btn"
 					@click="close"
 					v-if="useConfirmBtn"
+					tabindex="1"
+					ref="confirm-btn"
 				>
 					{{ confirmBtnTitle }}
 				</button>
@@ -79,9 +85,17 @@ export default {
 		},
 	},
 
+	mounted() {
+		this.focusToConfirm();
+	},
+
 	methods: {
 		close() {
 			this.$emit('close');
+		},
+
+		focusToConfirm() {
+			this.$refs['confirm-btn'].focus();
 		},
 	},
 };
@@ -135,7 +149,8 @@ export default {
 			font-size: 0;
 		}
 
-		&:hover {
+		&:hover,
+		&:focus {
 			opacity: 0.7;
 		}
 	}
@@ -165,7 +180,8 @@ export default {
 		transition: background-color 0.2s;
 		will-change: background-color;
 
-		&:hover {
+		&:hover,
+		&:focus {
 			background-color: #00c471;
 		}
 	}
