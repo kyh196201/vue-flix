@@ -32,12 +32,12 @@
 		</div>
 
 		<!-- 로그인 실패 메시지 -->
-		<Dialog
-			v-if="dialogs.auth.open"
-			:title="dialogs.auth.title"
-			:message="dialogs.auth.message"
-			@close="closeDialog('auth')"
-		></Dialog>
+		<Dialog v-bind="dialog" @close="closeDialog">
+			<template #title>
+				<h2>로그인에 실패했습니다.</h2>
+			</template>
+			<p>{{ dialog.message }}</p>
+		</Dialog>
 	</section>
 </template>
 

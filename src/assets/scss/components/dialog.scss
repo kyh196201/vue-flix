@@ -1,0 +1,90 @@
+$transition-delay: 0.3s;
+
+.dialog-mask {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(33, 33, 33, 0.46);
+	visibility: hidden;
+	transition: background-color $transition-delay;
+
+	&.active {
+		visibility: visible;
+
+		.dialog {
+			&.from-bottom,
+			&.from-top {
+				opacity: 1;
+				transform: translate3d(0, 0, 0);
+			}
+
+			&.scale {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
+	}
+}
+
+.dialog {
+	overflow: hidden;
+	min-width: 20rem;
+	background-color: $white;
+	border-radius: 0.4rem;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	color: $black;
+
+	&__header {
+		padding: 1.5rem 2rem;
+		background-color: #e0e0e0;
+		font-weight: 500;
+		font-size: 2rem;
+	}
+
+	&__body {
+		padding: 1rem 2rem;
+		font-size: 1.4rem;
+	}
+
+	&__footer {
+		padding: 1.5rem 2rem;
+	}
+
+	&__confirm-btn {
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.2rem;
+		font-size: 1.4rem;
+		color: #1867c0;
+		transition: background-color $transition-delay;
+
+		&:hover,
+		&:focus {
+			background-color: rgba(24, 103, 192, 0.4);
+		}
+	}
+
+	// Transition
+	&.animate {
+		transition: all $transition-delay;
+	}
+
+	&.from-bottom {
+		opacity: 0.2;
+		transform: translate3d(0, 3rem, 0);
+	}
+
+	&.from-top {
+		opacity: 0.2;
+		transform: translate3d(0, -3rem, 0);
+	}
+
+	&.scale {
+		opacity: 0.2;
+		transform: scale(0.4);
+	}
+}

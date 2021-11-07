@@ -23,19 +23,16 @@ const authMixin = {
 				large: require('../../assets/images/common/login-bg_large.jpg'),
 			},
 
-			dialogs: {
-				auth: {
-					open: false,
-					title: '',
-					message: '',
-				},
+			dialog: {
+				open: false,
+				transition: 'from-bottom', // from-top, from-bottom, scale
 			},
 		};
 	},
 
 	methods: {
 		// 로그인, 회원가입 실패 에러 처리
-		handleAuthError({ error, from }) {
+		handleAuthError({ error }) {
 			const { AUTH } = codes;
 			const { statusCode, message } = error;
 
@@ -68,39 +65,16 @@ const authMixin = {
 					break;
 			}
 
-			this.openDialog('auth', {
-				title:
-					from === 'login'
-						? '로그인에 실패했습니다.'
-						: '회원가입에 실패했습니다.',
-				message: errorMessage,
+			this.dialog.message = errorMessage;
+			this.dialog.open = true;
+		},
+
+		closeDialog() {
+			this.dialog.open = false;
+
+			this.$nextTick(() => {
+				document.getElementById('user-email')?.focus();
 			});
-		},
-
-		// Dialog 열기
-		// TODO Composition API
-		openDialog(id, options = {}) {
-			if (!this.dialogs[id]) {
-				return;
-			}
-
-			this.dialogs[id] = {
-				...this.dialogs[id],
-				...options,
-			};
-
-			this.dialogs[id].open = true;
-		},
-
-		// Dialog 닫기
-		// TODO Composition API
-		closeDialog(id) {
-			if (!this.dialogs[id]) {
-				return;
-			}
-
-			this.dialogs[id].open = false;
-			this.dialogs[id].message = '';
 		},
 	},
 };
