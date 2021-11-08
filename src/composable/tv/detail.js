@@ -81,6 +81,7 @@ export default function detailComposable(id) {
 	});
 
 	// Functions
+	// 상세 정보 조회
 	const fetchDetail = async () => {
 		try {
 			loading.value = true;
@@ -99,6 +100,7 @@ export default function detailComposable(id) {
 		}
 	};
 
+	// 비디오 리스트 조회
 	const fetchVideos = async () => {
 		const result = await getVideos(id);
 
@@ -108,11 +110,15 @@ export default function detailComposable(id) {
 		}
 
 		const { results } = result.data;
-
-		videos.value = results.length ? results : [];
-
-		console.log('fetchVideos results', results);
+		videos.value = results;
 	};
+
+	// youtube video 필터링
+	const filteredVideos = computed(() => {
+		return videos.value.length
+			? videos.value.filter(v => v.site.toLowerCase() === 'youtube')
+			: [];
+	});
 
 	return {
 		detail,
@@ -127,6 +133,7 @@ export default function detailComposable(id) {
 		overview,
 		seasonLength,
 		isGenres,
+		videos: filteredVideos,
 
 		// Functions
 		fetchDetail,

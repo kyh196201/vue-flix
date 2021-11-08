@@ -102,7 +102,6 @@ const getSimilarTvPrograms = async (id, page = 1) => {
 const getVideos = async id => {
 	try {
 		const url = `${id}/videos`;
-
 		const { data } = await tvInstance.get(url);
 
 		return {

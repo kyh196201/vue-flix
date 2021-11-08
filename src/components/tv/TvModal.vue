@@ -17,6 +17,9 @@
 						</figure>
 
 						<!-- 비디오 -->
+						<div class="billboard__trailer" v-if="videos.length">
+							<VideoPlayer :video="videos[0]" />
+						</div>
 					</div>
 					<div class="billboard__front">
 						<div class="billboard__info" v-if="isDetail">
@@ -274,6 +277,7 @@ import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
+import VideoPlayer from '@/components/common/VideoPlayer.vue';
 
 import { ref } from 'vue';
 
@@ -290,6 +294,7 @@ export default {
 		SkeletonBox,
 		SkeletonList,
 		MediaCard,
+		VideoPlayer,
 	},
 
 	props: {
@@ -318,6 +323,8 @@ export default {
 			isGenres,
 			isDetail,
 			isDetailLoaded,
+			videos,
+
 			fetchDetail,
 			fetchVideos,
 		} = tvDetailComposable(tvId.value);
@@ -350,6 +357,7 @@ export default {
 			isGenres,
 			isDetail,
 			isDetailLoaded,
+			videos,
 
 			// Tv Credits
 			castList,
@@ -563,6 +571,16 @@ $modal-padding: 48px;
 					width: 100%;
 					height: auto;
 				}
+			}
+
+			// trailer
+			&__trailer {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
 			}
 
 			// front
