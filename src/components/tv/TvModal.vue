@@ -319,6 +319,7 @@ export default {
 			isDetail,
 			isDetailLoaded,
 			fetchDetail,
+			fetchVideos,
 		} = tvDetailComposable(tvId.value);
 
 		// Credits Composable
@@ -331,6 +332,11 @@ export default {
 			loadingSimilarContents,
 			fetchSimilarContents,
 		} = tvSimilarContentsComposable(tvId.value);
+
+		fetchDetail();
+		fetchVideos();
+		fetchTvCredits();
+		fetchSimilarContents();
 
 		return {
 			// Tv Detail
@@ -417,9 +423,9 @@ export default {
 	},
 
 	created() {
-		this.fetchDetail();
-		this.fetchTvCredits();
-		this.fetchSimilarContents();
+		// this.fetchDetail();
+		// this.fetchTvCredits();
+		// this.fetchSimilarContents();
 	},
 
 	methods: {

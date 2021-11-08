@@ -1,17 +1,19 @@
 import { ref, computed } from 'vue';
 
 // Api
-import { getTvDetail } from '@/api/tv';
+import { getTvDetail, getVideos } from '@/api/tv';
 
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl';
 import { getReleaseYear } from '@/utils/movie';
 
 export default function detailComposable(id) {
+	// Data
 	const detail = ref(null);
-
 	const loading = ref(false);
+	const videos = ref([]);
 
+	// Computed
 	const isDetail = computed(() => {
 		return detail.value && !!Object.keys(detail.value).length;
 	});
@@ -78,6 +80,7 @@ export default function detailComposable(id) {
 		return !!detail.value?.genres?.length;
 	});
 
+	// Functions
 	const fetchDetail = async () => {
 		try {
 			loading.value = true;
@@ -96,6 +99,21 @@ export default function detailComposable(id) {
 		}
 	};
 
+	const fetchVideos = async () => {
+		const result = await getVideos(id);
+
+		if (result.isError) {
+			// FIXME 에러 처리 어떻게할지 생각해보기
+			throw result.errorData;
+		}
+
+		const { results } = result.data;
+
+		videos.value = results.length ? results : [];
+
+		console.log('fetchVideos results', results);
+	};
+
 	return {
 		detail,
 		loadingDetail: loading,
@@ -112,5 +130,6 @@ export default function detailComposable(id) {
 
 		// Functions
 		fetchDetail,
+		fetchVideos,
 	};
 }

@@ -66,6 +66,7 @@ const getTvCredits = async id => {
 	}
 };
 
+// 티비 비슷한 컨텐츠 조회
 const getSimilarTvPrograms = async (id, page = 1) => {
 	try {
 		const url = `${id}/similar`;
@@ -93,4 +94,33 @@ const getSimilarTvPrograms = async (id, page = 1) => {
 	}
 };
 
-export { getTvDetail, getTvCredits, getSimilarTvPrograms };
+/**
+ *
+ * @param {number} id : tv id
+ * @returns
+ */
+const getVideos = async id => {
+	try {
+		const url = `${id}/videos`;
+
+		const { data } = await tvInstance.get(url);
+
+		return {
+			isError: false,
+			data,
+		};
+	} catch (error) {
+		console.error('getVideos error...', error);
+		const { response } = error;
+
+		return {
+			isError: true,
+			errorData: {
+				message: response?.data?.status_message || error.message,
+				statusCode: response?.data?.status_code || null,
+			},
+		};
+	}
+};
+
+export { getTvDetail, getTvCredits, getSimilarTvPrograms, getVideos };
