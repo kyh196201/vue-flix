@@ -10,7 +10,8 @@
 						v-for="(movie, index) in searchResult"
 						:key="`${index}-${movie.id}`"
 					>
-						<MovieItem :movieData="movie"></MovieItem>
+						<!-- FIXME multi-search mediaType 추가 -->
+						<MediaItem :mediaData="movie"></MediaItem>
 					</li>
 				</ul>
 				<InfiniteScroll @infinite="infiniteHandler" />
@@ -58,7 +59,7 @@ import { isString } from '@/utils/validate';
 import debounce from '@/utils/common/debounce';
 
 // Components
-import MovieItem from '@/components/movie/MovieItem.vue';
+import MediaItem from '@/components/MediaItem.vue';
 import InfiniteScroll from '@/components/common/InfiniteScroll.vue';
 
 // Vuex
@@ -70,7 +71,7 @@ export default {
 	name: 'search-page',
 
 	components: {
-		MovieItem,
+		MediaItem,
 		InfiniteScroll,
 	},
 

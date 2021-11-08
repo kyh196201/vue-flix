@@ -15,4 +15,16 @@ const isValidEmail = email => {
 	return re.test(String(email).toLowerCase());
 };
 
-export { isString, isValidEmail };
+const isObject = value => {
+	return typeof value === 'object' && value !== null;
+};
+
+const isArray = value => {
+	return Array.isArray(value);
+};
+
+const isEmptyArray = value => {
+	return isArray(value) && !!value.length;
+};
+
+export { isString, isValidEmail, isObject, isArray, isEmptyArray };

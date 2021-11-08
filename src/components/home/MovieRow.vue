@@ -25,7 +25,7 @@
 								v-for="(movie, index) in movies"
 								:key="`${movie.id}-${index}`"
 							>
-								<MovieItem :movieData="movie"></MovieItem>
+								<MediaItem :mediaData="movie"></MediaItem>
 							</swiper-slide>
 						</swiper>
 					</template>
@@ -40,7 +40,7 @@
 import { movieAPI } from '@/api/';
 
 // Components
-import MovieItem from '@/components/movie/MovieItem.vue';
+import MediaItem from '@/components/MediaItem.vue';
 
 import SwiperCore, { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -56,7 +56,7 @@ export default {
 	components: {
 		Swiper,
 		SwiperSlide,
-		MovieItem,
+		MediaItem,
 	},
 
 	props: {

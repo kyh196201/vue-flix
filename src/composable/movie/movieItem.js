@@ -1,16 +1,16 @@
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl.js';
 import { getReleaseYear, formatRuntime } from '@/utils/movie';
 
-const movieItem = props => {
-	const { movieData, imageType } = props;
+const movieItem = (data, imageType = 'poster') => {
+	const movieData = ref(data);
 
-	const isMovieData = computed(() => !!movieData);
+	const isMovieData = computed(() => !!movieData.value);
 
 	// movie title
-	const movieTitle = computed(() => movieData?.title);
+	const title = computed(() => movieData.value?.title);
 
 	// movie image
 	const posterImage = computed(() => {
@@ -20,31 +20,31 @@ const movieItem = props => {
 			return '';
 		}
 
-		const imageSrc = movieData[type];
+		const imageSrc = movieData.value[type];
 		return getImageUrl(imageSrc, 2, imageType);
 	});
 
 	// movie overview
-	const overview = computed(() => movieData?.overview);
+	const overview = computed(() => movieData.value?.overview);
 
 	// movie releaseDate
 	const releaseDate = computed(() => {
-		if (!movieData?.release_date) return '';
+		if (!movieData.value?.release_date) return '';
 
-		return getReleaseYear(movieData.release_date);
+		return getReleaseYear(movieData.value.release_date);
 	});
 
 	// movie runTime
 	const runTime = computed(() => {
-		if (!movieData?.runtime) return '';
+		if (!movieData.value?.runtime) return '';
 
-		return formatRuntime(movieData.runtime);
+		return formatRuntime(movieData.value.runtime);
 	});
 
 	return {
 		// Computed
 		isMovieData,
-		movieTitle,
+		title,
 		posterImage,
 		overview,
 		releaseDate,

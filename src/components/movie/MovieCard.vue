@@ -5,13 +5,13 @@
 				<!-- backdrop-image -->
 				<section class="movie-card__backdrop-image">
 					<figure class="backdrop-image">
-						<img :src="posterImage" :alt="movieTitle" />
+						<img :src="posterImage" :alt="title" />
 					</figure>
 					<p class="run-time">
 						{{ runTime }}
 					</p>
 					<p class="movie-title">
-						{{ movieTitle }}
+						{{ title }}
 					</p>
 				</section>
 				<section class="movie-card__info">
@@ -38,8 +38,10 @@
 </template>
 
 <script>
+import { toRefs } from 'vue';
+
 // Composable
-import movieItemComposable from '@/composable/movieItem';
+import movieItemComposable from '@/composable/movie/movieItem';
 
 // Utils
 import { IMAGE_TYPES } from '@/utils/common/constants';
@@ -74,18 +76,20 @@ export default {
 	},
 
 	setup(props) {
+		const { movieData, imageType } = toRefs(props);
+
 		const {
 			isMovieData,
-			movieTitle,
+			title,
 			posterImage,
 			overview,
 			releaseDate,
 			runTime,
-		} = movieItemComposable(props);
+		} = movieItemComposable(movieData.value, imageType.value);
 
 		return {
 			isMovieData,
-			movieTitle,
+			title,
 			posterImage,
 			overview,
 			releaseDate,
@@ -150,7 +154,7 @@ export default {
 	// info
 	&__info {
 		position: relative;
-		background-color: $movie-card-background-color;
+		background-color: $media-card-background-color;
 		padding: 2rem 1rem;
 
 		// info__top
@@ -170,7 +174,7 @@ export default {
 		// synopsis
 		.synopsis {
 			font-size: 1.4rem;
-			color: $movie-card-synopsis-color;
+			color: $media-card-synopsis-color;
 
 			@include ellipsis(10);
 		}

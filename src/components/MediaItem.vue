@@ -1,16 +1,12 @@
 <template>
-	<div class="movie-item">
-		<a href="#" class="movie-item__link" @click.prevent="handleClick">
-			<figure class="movie-item__image" :data-movie-title="movieTitle">
-				<img
-					v-if="useLazy"
-					v-lazy-image="posterImage"
-					:alt="movieTitle"
-				/>
+	<div class="media-item" :class="className">
+		<a href="#" class="media-item__link" @click.prevent="handleClick">
+			<figure class="media-item__image" :data-media-title="title">
+				<img v-if="useLazy" v-lazy-image="posterImage" :alt="title" />
 				<img
 					v-else
 					:src="posterImage"
-					:alt="movieTitle"
+					:alt="title"
 					@error="onImageError"
 				/>
 			</figure>
@@ -19,16 +15,17 @@
 </template>
 
 <script>
-import { toRefs } from 'vue';
+import { toRefs, computed } from 'vue';
 
 // Composable
 import movieItemComposable from '@/composable/movie/movieItem';
+import tvItemComposable from '@/composable/tv/tvItem';
 
 // Utils
 import { IMAGE_TYPES } from '@/utils/common/constants';
 
 export default {
-	name: 'movie-item',
+	name: 'media-item',
 
 	props: {
 		mediaType: {
@@ -39,7 +36,7 @@ export default {
 		/**
 		 * 영화 데이터
 		 */
-		movieData: {
+		mediaData: {
 			type: Object,
 			required: true,
 		},
@@ -59,20 +56,52 @@ export default {
 			type: String,
 			default: IMAGE_TYPES.backdrop,
 		},
+
+		/**
+		 * 클릭시 이동할 커스텀 경로
+		 */
+		targetPath: {
+			type: String,
+			default: '',
+		},
 	},
 
 	setup(props) {
-		const { movieData, imageType } = toRefs(props);
+		const { mediaData, imageType, mediaType } = toRefs(props);
 
-		const { isMovieData, posterImage, movieTitle } = movieItemComposable(
-			movieData.value,
-			imageType.value,
-		);
+		let state = {};
+
+		if (mediaType.value === 'movie') {
+			const { posterImage, title } = movieItemComposable(
+				mediaData.value,
+				imageType.value,
+			);
+
+			state = {
+				...state,
+				posterImage,
+				title,
+			};
+		} else if (mediaType.value === 'tv') {
+			const { posterImage, title } = tvItemComposable(
+				mediaData.value,
+				imageType.value,
+			);
+
+			state = {
+				...state,
+				posterImage,
+				title,
+			};
+		}
+
+		const className = computed(() => {
+			return mediaType.value;
+		});
 
 		return {
-			isMovieData,
-			posterImage,
-			movieTitle,
+			...state,
+			className,
 		};
 	},
 
@@ -84,11 +113,13 @@ export default {
 		// click event handler
 		// FIXME 추후에 다른 url에서 사용할 경우 에러 발생할 우려 있음
 		handleClick() {
-			const { id } = this.movieData;
+			const { id } = this.mediaData;
 
 			const { path, query } = this.$route;
 			const url = path === '/' ? `detail/${id}` : `/detail/${id}`;
-			const targetPath = path + url;
+			const targetPath = this.targetPath
+				? path + this.targetPath
+				: path + url;
 
 			this.$router.push({
 				path: targetPath,
@@ -100,7 +131,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.movie-item {
+.media-item {
 	&__image {
 		overflow: hidden;
 		position: relative;
@@ -126,15 +157,20 @@ export default {
 				// 	transparent 0
 				// );
 			}
+
+			&.error {
+				object-fit: cover;
+				filter: brightness(0.5);
+			}
 		}
 	}
 
 	// 이미지 로딩 에러
 	&.error {
-		.movie-item {
+		.media-item {
 			&__image {
 				&::after {
-					content: attr(data-movie-title);
+					content: attr(data-media-title);
 					position: absolute;
 					top: 50%;
 					left: 50%;

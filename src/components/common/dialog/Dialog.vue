@@ -102,6 +102,16 @@ export default {
 			}
 		},
 	},
+
+	methods: {
+		close() {
+			this.$emit('close');
+		},
+
+		focusToConfirm() {
+			this.$refs['confirm-btn'].focus();
+		},
+	},
 };
 </script>
 

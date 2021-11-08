@@ -1,19 +1,30 @@
 $sidePadding: 4%;
 
 .header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 70px;
-	z-index: 1001;
+	&.sticky {
+		.header {
+			&__inner {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				z-index: 10;
+			}
+		}
+
+		&.is-scroll {
+			.header__inner {
+				background-color: $main-color;
+			}
+		}
+	}
 
 	&__inner {
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 100%;
+		height: 70px;
 		padding: 0 $sidePadding;
 
 		// Reference: netflix 스타일
@@ -22,6 +33,9 @@ $sidePadding: 4%;
 			rgba(0, 0, 0, 0.7) 10%,
 			rgba(0, 0, 0, 0)
 		);
+
+		transition: background-color 0.3s linear;
+		will-change: background-color;
 	}
 
 	// left
@@ -160,6 +174,7 @@ $sidePadding: 4%;
 			&__content {
 				right: 0;
 				width: 200px;
+				z-index: 11;
 			}
 		}
 
@@ -227,6 +242,7 @@ $sidePadding: 4%;
 
 		&__inner {
 			background: $header-color;
+			height: 41px;
 		}
 
 		&__logo {
@@ -268,6 +284,7 @@ $sidePadding: 4%;
 					left: 50%;
 					margin-left: -100px;
 					width: 200px;
+					z-index: 11;
 				}
 			}
 

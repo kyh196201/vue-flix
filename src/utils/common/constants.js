@@ -35,8 +35,12 @@ export const routerLinks = [
 		name: '홈',
 	},
 	{
-		path: '/movie',
+		path: '/movie?filter=pd',
 		name: '영화',
+	},
+	{
+		path: '/tv?filter=pd',
+		name: 'TV 프로그램',
 	},
 	{
 		path: 'favorite',

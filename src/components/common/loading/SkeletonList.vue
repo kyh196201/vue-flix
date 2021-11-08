@@ -6,7 +6,7 @@
 
 <script>
 // Components
-import SkeletonBox from '@/components/common/SkeletonBox.vue';
+import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 
 export default {
 	name: 'skeleton-list',
@@ -43,7 +43,7 @@ export default {
 		margin: 0;
 	}
 
-	/deep/ &-box {
+	::v-deep &-box {
 		&:not(:last-child) {
 			margin-bottom: 0.5rem;
 		}

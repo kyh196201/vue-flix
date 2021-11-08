@@ -1,5 +1,5 @@
 <template>
-	<article class="dropdown-menu" ref="wrapper">
+	<div class="dropdown-menu" ref="wrapper">
 		<div class="dropdown-menu__activator" ref="activator">
 			<slot name="button">
 				<button class="dropdown-menu__btn">dropdown</button>
@@ -12,7 +12,7 @@
 		>
 			<slot name="content">menu content</slot>
 		</div>
-	</article>
+	</div>
 </template>
 
 <script>
@@ -21,6 +21,7 @@
  * 2. activator: click, hover
  * 3. isOpen props
  */
+import { toRefs, computed, ref } from 'vue';
 
 export default {
 	name: 'dropdown-menu',
@@ -44,26 +45,61 @@ export default {
 			type: String,
 			default: 'click',
 		},
+
+		useClickOutside: {
+			type: Boolean,
+			default: true,
+		},
+	},
+
+	setup(props) {
+		const { style } = toRefs(props);
+
+		const open = ref(props.isOpen);
+
+		const computedStyle = computed(() => {
+			return {
+				...style,
+				visibility: open.value ? 'visible' : 'hidden',
+				opacity: open.value ? 1 : 0,
+			};
+		});
+
+		return {
+			computedStyle,
+			open,
+		};
 	},
 
 	computed: {
-		// style
-		computedStyle() {
-			const style = {
-				visibility: this.isOpen ? 'visible' : 'hidden',
-				opacity: this.isOpen ? 1 : 0,
-			};
-
-			return { ...this.style, ...style };
-		},
-
 		// activator ref
 		$activator() {
 			return this.$refs.activator;
 		},
 
+		// wrapper ref
 		$wrapper() {
 			return this.$refs.wrapper;
+		},
+	},
+
+	watch: {
+		open: {
+			handler(value) {
+				if (this.activator === 'click') {
+					if (value) {
+						document.addEventListener(
+							'click',
+							this.handleClickOutside,
+						);
+					} else {
+						document.removeEventListener(
+							'click',
+							this.handleClickOutside,
+						);
+					}
+				}
+			},
 		},
 	},
 
@@ -72,24 +108,42 @@ export default {
 	},
 
 	methods: {
-		toggle(toggle) {
-			this.$emit('toggle', toggle);
-		},
-
 		bindEvents() {
 			if (this.activator === 'hover') {
 				this.$wrapper.addEventListener('mouseenter', () => {
-					this.toggle(true);
+					this.openMenu();
 				});
 
 				this.$wrapper.addEventListener('mouseleave', () => {
-					this.toggle(false);
+					this.closeMenu();
 				});
 			} else if (this.activator === 'click') {
-				this.$activator.addEventListener(this.activator, () => {
-					this.toggle(!this.isOpen);
+				this.$activator.addEventListener('click', () => {
+					this.open = !this.open;
 				});
 			}
+		},
+
+		handleClickOutside(event) {
+			event.stopPropagation();
+
+			const $target = event.target;
+
+			const isInside = this.$el.contains($target);
+
+			if (isInside) return false;
+
+			if (this.open) {
+				this.closeMenu();
+			}
+		},
+
+		closeMenu() {
+			this.open = false;
+		},
+
+		openMenu() {
+			this.open = true;
 		},
 	},
 };

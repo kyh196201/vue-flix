@@ -1,17 +1,17 @@
 <template>
-	<Modal class="movie-modal" @close="handleClose" v-bind="modalOption">
+	<Modal class="tv-modal" @close="handleClose" v-bind="modalOption">
 		<template v-slot:body>
-			<section class="movie-modal__body">
-				<h2 class="visually-hidden">영화 상세 모달</h2>
+			<section class="tv-modal__body">
+				<h2 class="visually-hidden">TV 상세 모달</h2>
 				<!-- billboard -->
-				<section class="movie-modal__billboard">
+				<section class="tv-modal__billboard">
 					<div class="billboard__back">
 						<!-- 포스터 -->
 						<figure class="billboard__poster">
 							<img
-								v-if="movieData"
+								v-if="backdropImage"
 								:src="backdropImage"
-								:alt="movieData.title"
+								:alt="tvTitle"
 								@error="onImageError"
 							/>
 						</figure>
@@ -19,10 +19,10 @@
 						<!-- 비디오 -->
 					</div>
 					<div class="billboard__front">
-						<div class="billboard__info" v-if="movieData">
+						<div class="billboard__info" v-if="isDetail">
 							<!-- 제목 -->
 							<div class="billboard__title">
-								{{ movieData.title }}
+								{{ tvTitle }}
 							</div>
 
 							<!-- 버튼 -->
@@ -83,7 +83,7 @@
 												:icon="['fas', 'thumbs-up']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>좋아요 목록에 추가/제거</span
+												>좋아요</span
 											>
 										</button>
 									</li>
@@ -99,7 +99,7 @@
 												:icon="['fas', 'thumbs-down']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>싫어요 목록에 추가/제거</span
+												>마음에 안들어요</span
 											>
 										</button>
 									</li>
@@ -116,20 +116,21 @@
 				</section>
 
 				<!-- main -->
-				<section class="movie-modal__main">
-					<h3 class="visually-hidden">영화 상세 메인 영역</h3>
+				<section class="tv-modal__main">
+					<h3 class="visually-hidden">TV 상세 메인 영역</h3>
 					<!-- main > info -->
-					<section class="movie-modal__movie-info">
+					<section class="tv-modal__movie-info">
 						<div class="movie-info__left">
 							<div class="movie-info__basic">
 								<SkeletonBox :width="'50%'" v-if="isLoading" />
-								<template v-else-if="isMovieDataLoaded">
+								<template v-else-if="isDetailLoaded">
 									<span class="release-date">{{
-										releaseDate
+										firstAirDate
 									}}</span>
 									<span class="age-badge"></span>
+									<!-- FIXME 클래스 명 수정 -->
 									<span class="run-time">
-										{{ runTime }}
+										시즌 {{ seasonLength }}개
 									</span>
 								</template>
 							</div>
@@ -186,7 +187,7 @@
 									<ul class="info-row__list">
 										<li
 											class="info-row__item"
-											v-for="genre in movieData.genres"
+											v-for="genre in detail.genres"
 											:key="`genre-${genre.id}`"
 										>
 											<span>{{ genre.name }}</span>
@@ -198,7 +199,7 @@
 					</section>
 
 					<!-- main > similar -->
-					<section class="movie-modal__similar-contents">
+					<section class="tv-modal__similar-contents">
 						<h3>비슷한 콘텐츠</h3>
 
 						<section
@@ -208,7 +209,7 @@
 							<div class="similar-contents__inner">
 								<ul
 									class="similar-contents__list"
-									v-if="!isSimilarContentsLoaded"
+									v-if="loadingSimilarContents"
 								>
 									<li
 										class="similar-contents__item"
@@ -223,7 +224,7 @@
 								<ul
 									class="similar-contents__list"
 									v-else-if="
-										isSimilarContentsLoaded &&
+										!loadingSimilarContents &&
 										isSimilarContents
 									"
 								>
@@ -233,6 +234,7 @@
 										:key="`similar-${media.id}`"
 									>
 										<MediaCard
+											mediaType="tv"
 											:mediaData="media"
 										></MediaCard>
 									</li>
@@ -254,7 +256,7 @@
 					</section>
 
 					<!-- main > detail -->
-					<!-- <section class="movie-modal__detail">detail</section> -->
+					<!-- <section class="tv-modal__detail">detail</section> -->
 				</section>
 			</section>
 		</template>
@@ -262,8 +264,10 @@
 </template>
 
 <script>
-// Mixin
-import movieDetailMixin from '@/mixins/movie';
+// Composable
+import tvDetailComposable from '@/composable/tv/detail';
+import tvCreditsComposable from '@/composable/tv/credits';
+import tvSimilarContentsComposable from '@/composable/tv/similarContents';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
@@ -271,21 +275,90 @@ import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 
+import { ref } from 'vue';
+
 // Vuex Module
 import { createNamespacedHelpers } from 'vuex';
 
 const authModule = createNamespacedHelpers('auth');
 
 export default {
-	name: 'MovieModal',
-
-	extends: movieDetailMixin,
+	name: 'TvModal',
 
 	components: {
 		Modal,
 		SkeletonBox,
 		SkeletonList,
 		MediaCard,
+	},
+
+	props: {
+		tvId: {
+			type: [Number, String],
+			required: true,
+		},
+	},
+
+	setup(props) {
+		const tvId = ref(props.tvId);
+
+		if (typeof tvId.value === 'string') {
+			tvId.value = Number(tvId.value);
+		}
+
+		// Detail Composable
+		const {
+			detail,
+			loadingDetail,
+			firstAirDate,
+			tvTitle,
+			backdropImage,
+			overview,
+			seasonLength,
+			isGenres,
+			isDetail,
+			isDetailLoaded,
+			fetchDetail,
+		} = tvDetailComposable(tvId.value);
+
+		// Credits Composable
+		const { castList, loadingCredits, fetchTvCredits } =
+			tvCreditsComposable(tvId.value);
+
+		const {
+			similarContents,
+			isSimilarContents,
+			loadingSimilarContents,
+			fetchSimilarContents,
+		} = tvSimilarContentsComposable(tvId.value);
+
+		return {
+			// Tv Detail
+			detail,
+			loadingDetail,
+			firstAirDate,
+			tvTitle,
+			backdropImage,
+			overview,
+			seasonLength,
+			isGenres,
+			isDetail,
+			isDetailLoaded,
+
+			// Tv Credits
+			castList,
+			loadingCredits,
+
+			// Tv Similar Contents
+			similarContents,
+			loadingSimilarContents,
+			isSimilarContents,
+
+			// Functions
+			fetchDetail,
+			fetchTvCredits,
+			fetchSimilarContents,
+		};
 	},
 
 	data() {
@@ -301,27 +374,6 @@ export default {
 	computed: {
 		...authModule.mapGetters(['favoriteList', 'likeList', 'hateList']),
 
-		isFavoriteItem() {
-			if (!this.favoriteList.length) return false;
-
-			return (
-				this.favoriteList.filter(item => item.id === +this.movieId)
-					.length > 0
-			);
-		},
-
-		isLikeItem() {
-			if (!this.likeList.length) return false;
-
-			return this.likeList.indexOf(Number(this.movieId)) > -1;
-		},
-
-		isHateItem() {
-			if (!this.hateList.length) return false;
-
-			return this.hateList.indexOf(Number(this.movieId)) > -1;
-		},
-
 		/**
 		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
 		 * @returns array
@@ -333,6 +385,41 @@ export default {
 
 			return ['fas', icon];
 		},
+
+		isLoading() {
+			return (
+				this.loadingDetail ||
+				this.loadingCredits ||
+				this.loadingSimilarContents
+			);
+		},
+
+		isFavoriteItem() {
+			if (!this.favoriteList.length) return false;
+
+			return (
+				this.favoriteList.filter(item => item.id === +this.tvId)
+					.length > 0
+			);
+		},
+
+		isLikeItem() {
+			if (!this.likeList.length) return false;
+
+			return this.likeList.indexOf(Number(this.tvId)) > -1;
+		},
+
+		isHateItem() {
+			if (!this.hateList.length) return false;
+
+			return this.hateList.indexOf(Number(this.tvId)) > -1;
+		},
+	},
+
+	created() {
+		this.fetchDetail();
+		this.fetchTvCredits();
+		this.fetchSimilarContents();
 	},
 
 	methods: {
@@ -345,15 +432,25 @@ export default {
 			'removeHateItem',
 		]),
 
+		// close 이벤트 emit
+		handleClose() {
+			this.$router.back();
+		},
+
+		// 이미지 로드 에러
+		onImageError(event) {
+			event.target.style.visibility = 'hidden';
+		},
+
 		// 찜하기 목록에 추가 클릭 이벤트
 		async handleAddFavorite() {
 			try {
-				const newMovieData = {
-					...this.movieData,
-					mediaType: 'movie',
+				const newTvData = {
+					...this.detail,
+					mediaType: 'tv',
 				};
 
-				await this.addFavoriteItem(newMovieData);
+				await this.addFavoriteItem(newTvData);
 			} catch (error) {
 				console.error('handleAddFavorite', error);
 			}
@@ -362,7 +459,7 @@ export default {
 		// 찜하기 목록에서 제거 클릭 이벤트
 		async handleRemoveFavorite() {
 			try {
-				await this.removeFavoriteItem(Number(this.movieId));
+				await this.removeFavoriteItem(Number(this.tvId));
 			} catch (error) {
 				console.error('handleRemoveFavorite', error);
 			}
@@ -371,12 +468,12 @@ export default {
 		// 좋아요 버튼 클릭 이벤트
 		async handleClickLike() {
 			try {
-				const movieId = Number(this.movieId);
+				const tvId = Number(this.tvId);
 
 				if (this.isLikeItem) {
-					await this.removeLikeItem(movieId);
+					await this.removeLikeItem(tvId);
 				} else {
-					await this.addLikeItem(movieId);
+					await this.addLikeItem(tvId);
 				}
 			} catch (error) {
 				console.error('handleClickLike', error);
@@ -386,33 +483,16 @@ export default {
 		// 싫어요 버튼 클릭 이벤트
 		async handleClickHate() {
 			try {
-				const movieId = Number(this.movieId);
+				const tvId = Number(this.tvId);
 
 				if (this.isHateItem) {
-					await this.removeHateItem(movieId);
+					await this.removeHateItem(tvId);
 				} else {
-					await this.addHateItem(movieId);
+					await this.addHateItem(tvId);
 				}
 			} catch (error) {
 				console.error('handleClickHate', error);
 			}
-		},
-
-		// close 이벤트 emit
-		handleClose() {
-			this.$router.back();
-		},
-
-		// 데이터 fetch
-		async fetchData() {
-			this.fetchMovieDetail();
-			this.fetchMovieCredits();
-			this.fetchSimilarMovies();
-		},
-
-		// 이미지 로드 에러
-		onImageError(event) {
-			event.target.style.visibility = 'hidden';
 		},
 	},
 };
@@ -421,7 +501,7 @@ export default {
 <style lang="scss">
 $modal-padding: 48px;
 
-.movie-modal {
+.tv-modal {
 	&.modal-mask {
 		padding: 30px 0;
 	}
@@ -541,7 +621,6 @@ $modal-padding: 48px;
 
 						&:hover {
 							border-color: $white;
-							color: $white;
 						}
 
 						@include labtop {
@@ -731,7 +810,7 @@ $modal-padding: 48px;
 }
 
 @include mobile {
-	.movie-modal {
+	.tv-modal {
 		&.modal-mask {
 			padding: 0;
 		}

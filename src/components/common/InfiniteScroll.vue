@@ -12,7 +12,7 @@
  * 3. 로직 분리하기
  */
 
-import Spinner from '@/components/common/Spinner.vue';
+import Spinner from '@/components/common/loading/Spinner.vue';
 
 class ObserverState {
 	constructor() {

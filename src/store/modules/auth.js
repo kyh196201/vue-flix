@@ -5,6 +5,17 @@
 // Firebase Auth API
 import firebaseAuth from '@/api/auth';
 
+// Firestore API
+import {
+	fetchUserData,
+	addToFavorites,
+	removeFromFavorites,
+	addToLikes,
+	removeFromLikes,
+	addToHates,
+	removeFromHates,
+} from '@/api/firebase';
+
 // Utils
 import { setUserSession, getUserSession, clearUserSession } from '@/utils/auth';
 
@@ -40,6 +51,12 @@ export default {
 			signIn: false,
 			signUp: false,
 		},
+
+		favoriteList: [],
+
+		likeList: [],
+
+		hateList: [],
 	},
 
 	getters: {
@@ -60,6 +77,21 @@ export default {
 		isAuthenticated: state => {
 			return !!state.idToken;
 		},
+
+		/**
+		 * 사용자 아이디
+		 * @param {object} state
+		 * @returns {string}
+		 */
+		userId: state => {
+			return state.userId;
+		},
+
+		favoriteList: state => state.favoriteList,
+
+		likeList: state => state.likeList,
+
+		hateList: state => state.hateList,
 	},
 
 	mutations: {
@@ -102,8 +134,10 @@ export default {
 			state.idToken = '';
 			state.refreshToken = '';
 			state.expireDate = '';
-
 			state.userProfile = null;
+			state.favoriteList = [];
+			state.likeList = [];
+			state.hateList = [];
 		},
 
 		setAuthError(state, errorData) {
@@ -118,6 +152,19 @@ export default {
 		 */
 		setLoading(state, { key, loading }) {
 			state.loading[key] = loading;
+		},
+
+		//
+		setFavoriteList(state, favoriteList) {
+			state.favoriteList = favoriteList;
+		},
+
+		setLikeList(state, likeList) {
+			state.likeList = likeList;
+		},
+
+		setHateList(state, hateList) {
+			state.hateList = hateList;
 		},
 	},
 
@@ -246,6 +293,202 @@ export default {
 			}
 
 			return true;
+		},
+
+		// 사용자 좋아요, 싫어요, 찜한 목록 가져오기
+		async getUserData({ commit, getters }) {
+			try {
+				if (!getters.isAuthenticated) {
+					throw new Error('로그인이 필요합니다.');
+				}
+
+				const result = await fetchUserData(getters.userId);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				const { favorites, likes, hates } = result.data;
+
+				commit('setFavoriteList', favorites);
+				commit('setLikeList', likes);
+				commit('setHateList', hates);
+
+				return result.data;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		// 사용자 좋아요, 싫어요, 찜한 목록 가져오기
+		async getFavorites({ commit, getters }) {
+			try {
+				console.log('getFavorites in auth module');
+
+				if (!getters.isAuthenticated) {
+					throw new Error('로그인이 필요합니다.');
+				}
+
+				const result = await fetchUserData(getters.userId);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				const userData = result.data;
+
+				commit('setFavoriteList', userData.favorites);
+
+				return userData;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 찜한 목록에 추가하기
+		 * @param {object} context :vuex context
+		 * @param {object} media : movie or tv data
+		 * @returns
+		 */
+		async addFavoriteItem({ dispatch, getters }, media) {
+			try {
+				const userId = getters.userId;
+				const result = await addToFavorites(userId, media);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 찜한 목록에서 제거하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async removeFavoriteItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await removeFromFavorites(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 좋아요 목록에 추가하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async addLikeItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await addToLikes(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 찜한 목록에서 제거하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async removeLikeItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await removeFromLikes(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 싫어요 목록에 추가하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async addHateItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await addToHates(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
+		},
+
+		/**
+		 * 싫어요 목록에서 제거하기
+		 * @param {object} context :vuex context
+		 * @param {string} id : movie or tv id
+		 * @returns
+		 */
+		async removeHateItem({ dispatch, getters }, id) {
+			try {
+				const userId = getters.userId;
+				const result = await removeFromHates(userId, id);
+
+				if (result.isError) {
+					throw result.errorData;
+				}
+
+				await dispatch('getUserData');
+
+				return result;
+			} catch (error) {
+				console.error(error);
+				throw error;
+			}
 		},
 	},
 };

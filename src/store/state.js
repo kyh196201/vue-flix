@@ -2,6 +2,10 @@
 const state = function () {
 	return {
 		isSearchForm: false,
+
+		isHeaderSticky: true,
+
+		isHeaderScroll: false,
 	};
 };
 
