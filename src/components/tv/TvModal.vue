@@ -18,7 +18,7 @@
 
 						<!-- 비디오 -->
 						<div class="billboard__trailer" v-if="videos.length">
-							<VideoPlayer :video="videos[0]" />
+							<VideoPlayer :video-id="videos[0].key" />
 						</div>
 					</div>
 					<div class="billboard__front">
@@ -277,7 +277,7 @@ import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
-import VideoPlayer from '@/components/common/VideoPlayer.vue';
+import VideoPlayer from '@/components/common/YoutubePlayer.vue';
 
 import { ref } from 'vue';
 
