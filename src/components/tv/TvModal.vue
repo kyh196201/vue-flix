@@ -1,5 +1,5 @@
 <template>
-	<Modal class="tv-modal" @close="handleClose" v-bind="modalOption">
+	<modal class="tv-modal" @close="handleClose" v-bind="modalOption">
 		<template v-slot:body>
 			<section class="tv-modal__body">
 				<h2 class="visually-hidden">TV 상세 모달</h2>
@@ -18,7 +18,12 @@
 
 						<!-- 비디오 -->
 						<div class="billboard__trailer" v-if="videos.length">
-							<VideoPlayer :video-id="videos[0].key" />
+							<youtube-player
+								:video-id="videos[0].key"
+								:player-vars="playerVars"
+								@state-change="playerState = $event"
+								@end="handleVideoEnd"
+							/>
 						</div>
 					</div>
 					<div class="billboard__front">
@@ -107,10 +112,20 @@
 										</button>
 									</li>
 								</ul>
-								<button class="btn btn--user">
+								<button
+									class="btn btn--user"
+									v-if="playerState"
+									@click="playerVars.mute = !playerVars.mute"
+								>
 									<font-awesome-icon
+										v-if="isMuted"
 										class="btn__icon"
 										:icon="['fas', 'volume-mute']"
+									></font-awesome-icon>
+									<font-awesome-icon
+										v-else
+										class="btn__icon"
+										:icon="['fas', 'volume-up']"
 									></font-awesome-icon>
 								</button>
 							</div>
@@ -263,7 +278,7 @@
 				</section>
 			</section>
 		</template>
-	</Modal>
+	</modal>
 </template>
 
 <script>
@@ -277,9 +292,9 @@ import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
-import VideoPlayer from '@/components/common/YoutubePlayer.vue';
+import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
 
-import { ref } from 'vue';
+import { ref, reactive, computed } from 'vue';
 
 // Vuex Module
 import { createNamespacedHelpers } from 'vuex';
@@ -294,7 +309,7 @@ export default {
 		SkeletonBox,
 		SkeletonList,
 		MediaCard,
-		VideoPlayer,
+		YoutubePlayer,
 	},
 
 	props: {
@@ -310,6 +325,24 @@ export default {
 		if (typeof tvId.value === 'string') {
 			tvId.value = Number(tvId.value);
 		}
+
+		//#region
+		const playerVars = reactive({
+			mute: false,
+			autoplay: true,
+			loop: true,
+			controls: false,
+		});
+
+		const playerState = ref('');
+
+		const isMuted = computed(() => Boolean(playerVars.mute));
+
+		const handleVideoEnd = function handleVideoEnd() {
+			console.log('video ended!!!');
+		};
+
+		//#endregion
 
 		// Detail Composable
 		const {
@@ -346,6 +379,12 @@ export default {
 		fetchSimilarContents();
 
 		return {
+			// Video Vars
+			playerVars,
+			playerState,
+			isMuted,
+			handleVideoEnd,
+
 			// Tv Detail
 			detail,
 			loadingDetail,
