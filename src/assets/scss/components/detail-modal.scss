@@ -1,0 +1,353 @@
+$modal-padding: 48px;
+
+.detail-modal {
+	&.modal-mask {
+		padding: 30px 0;
+	}
+
+	.modal {
+		// 컨테이너
+		&-container {
+			overflow: hidden;
+			align-self: flex-start;
+			width: 90vw;
+			max-width: 1200px;
+			height: auto;
+			background-color: $modal-color;
+			border-radius: 12px;
+		}
+
+		// close 버튼
+		&__close-btn {
+			top: 10px;
+			right: 10px;
+			z-index: 10;
+		}
+	}
+
+	// 빌보드
+	&__billboard {
+		position: relative;
+		width: 100%;
+		padding-top: 56.25%;
+
+		.billboard {
+			&__back,
+			&__front {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+			}
+
+			&__back {
+				height: 100%;
+				z-index: 0;
+			}
+
+			// poster
+			&__poster {
+				width: 100%;
+				height: 100%;
+				background-color: $media-item-background-color;
+
+				img {
+					display: block;
+					width: 100%;
+					height: auto;
+				}
+			}
+
+			// trailer
+			&__trailer {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+			}
+
+			// front
+			&__front {
+				height: 100%;
+				background: linear-gradient(to top, #181818, transparent 50%);
+			}
+
+			// billboard > info
+			&__info {
+				position: absolute;
+				left: 0;
+				bottom: 50px;
+				width: 100%;
+				padding: 0 $modal-padding;
+			}
+
+			// billboard > title
+			&__title {
+				width: 70%;
+				font-size: 50px;
+				line-height: 1.2;
+				color: $white;
+				@include ellipsis(2);
+			}
+
+			// billboard > interface
+			&__interface {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-top: 20px;
+
+				.btn {
+					transition: all 0.2s ease;
+
+					&--play {
+						height: 42px;
+						padding: 0 22px;
+
+						&:hover {
+							opacity: 0.7;
+						}
+
+						.btn__icon {
+							margin-right: 0.4em;
+						}
+
+						@include labtop {
+							height: 32px;
+						}
+
+						@include tablet {
+							padding: 0 10px;
+						}
+					}
+
+					&--user {
+						width: 42px;
+						height: 42px;
+						font-size: 21px;
+
+						&:hover {
+							border-color: $white;
+						}
+
+						@include labtop {
+							width: 32px;
+							height: 32px;
+							font-size: 16px;
+						}
+					}
+				}
+			}
+
+			// billboard > buttons
+			&__buttons {
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+
+				li {
+					&:not(:last-child) {
+						margin-right: 10px;
+
+						@include labtop {
+							margin-right: 5px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// main
+	&__main {
+		position: relative;
+		padding: 12px $modal-padding 10px;
+		background-color: $modal-color;
+	}
+
+	// main > movie-info
+	&__movie-info {
+		display: flex;
+		margin-bottom: 50px;
+
+		.movie-info {
+			&__left {
+				width: 60%;
+				margin-right: 5%;
+			}
+
+			&__right {
+				width: 35%;
+				font-size: 14px;
+			}
+
+			&__basic {
+				display: flex;
+				align-items: center;
+				margin-bottom: 18px;
+				font-size: 16px;
+
+				& > span {
+					&:not(:last-child) {
+						margin-right: 10px;
+					}
+				}
+			}
+
+			&__synopsis {
+				.synopsis {
+					font-size: 18px;
+				}
+			}
+		}
+	}
+
+	// similar-contents
+	&__similar-contents {
+		position: relative;
+		margin-bottom: 3rem;
+		border-bottom: 1.5px solid rgba(255, 255, 255, 0.45);
+
+		h3 {
+			margin-bottom: 2.5rem;
+			font-size: 2.75rem;
+			line-height: 1em;
+			font-weight: 500;
+		}
+
+		.similar-contents {
+			overflow: hidden;
+			max-height: 90rem;
+
+			&.opened {
+				max-height: none;
+			}
+
+			&:not(.opened) {
+				position: relative;
+
+				&:after {
+					content: '';
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					height: 5rem;
+					background: linear-gradient(to top, #181818, transparent);
+					z-index: 1;
+				}
+			}
+
+			// inner
+			&__inner {
+				padding-bottom: 8rem;
+			}
+
+			// list
+			&__list {
+				display: grid;
+				column-gap: 2rem;
+				row-gap: 2rem;
+				grid-template-columns: repeat(3, 1fr);
+
+				@include tablet {
+					column-gap: 1.6rem;
+					row-gap: 1.6rem;
+					grid-template-columns: repeat(2, 1fr);
+				}
+
+				@include mobile {
+					display: flex;
+					flex-direction: column;
+					column-gap: 0;
+					row-gap: 0;
+				}
+			}
+
+			&__item {
+				@include mobile {
+					&:not(:last-child) {
+						margin-bottom: 1.6rem;
+					}
+				}
+
+				.skeleton-box {
+					border-radius: 4px;
+				}
+
+				.media-card {
+					height: 100%;
+
+					&__inner {
+						display: flex;
+						flex-direction: column;
+						height: 100%;
+					}
+
+					&__backdrop-image {
+						flex: 0;
+					}
+
+					&__info {
+						flex: 1;
+					}
+				}
+			}
+		}
+
+		// fold/unfold btn
+		.btn--fold {
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			transform: translate(-50%, 50%);
+			width: 6rem;
+			height: 6rem;
+			z-index: 1;
+
+			input {
+				display: none;
+			}
+
+			&:hover {
+				border-color: white;
+			}
+		}
+	}
+}
+
+@include mobile {
+	.detail-modal {
+		&.modal-mask {
+			padding: 0;
+		}
+
+		.modal {
+			&-container {
+				width: 100vw;
+				min-height: 100vh;
+				margin: 0;
+				border-radius: 0;
+			}
+		}
+
+		&__movie {
+			&-info {
+				flex-direction: column;
+
+				.movie-info {
+					&__left,
+					&__right {
+						width: 100%;
+					}
+
+					&__left {
+						margin: 0 0 2rem 0;
+					}
+				}
+			}
+		}
+	}
+}
