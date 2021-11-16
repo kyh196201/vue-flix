@@ -6,7 +6,7 @@ import createMediaApi from '@/api/media';
 
 // Utils
 import getImageUrl from '@/utils/common/getImageUrl';
-import { getReleaseYear } from '@/utils/movie';
+import { getReleaseYear, formatRuntime } from '@/utils/movie';
 
 export default function detailComposable(id, mediaType = 'movie') {
 	const detail = ref(null);
@@ -62,6 +62,12 @@ export default function detailComposable(id, mediaType = 'movie') {
 		if (!detail.value?.first_air_date) return '';
 
 		return getReleaseYear(detail.value.first_air_date);
+	});
+
+	const runTime = computed(() => {
+		if (!detail.value?.runtime) return '';
+
+		return formatRuntime(detail.value.runtime);
 	});
 
 	/**
@@ -148,16 +154,22 @@ export default function detailComposable(id, mediaType = 'movie') {
 		loadingDetail: loading,
 
 		// Computed
+		// 영화, tv 공통
 		isDetail,
 		isDetailLoaded,
 		title,
-		releaseDate,
-		firstAirDate,
 		backdropImage,
 		overview,
-		seasonLength,
 		isGenres,
 		filteredVideos,
+
+		// tv
+		firstAirDate,
+		seasonLength,
+
+		// 영화
+		runTime,
+		releaseDate,
 
 		// Functions
 		fetchDetail,

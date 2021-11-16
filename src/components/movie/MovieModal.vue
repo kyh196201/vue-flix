@@ -9,20 +9,28 @@
 						<!-- 포스터 -->
 						<figure class="billboard__poster">
 							<img
-								v-if="movieData"
+								v-if="backdropImage"
 								:src="backdropImage"
-								:alt="movieData.title"
+								:alt="title"
 								@error="onImageError"
 							/>
 						</figure>
 
 						<!-- 비디오 -->
+						<div class="billboard__trailer" v-if="videos.length">
+							<youtube-player
+								:video-id="videos[0].key"
+								:player-vars="playerVars"
+								@state-change="playerState = $event"
+								@end="handleVideoEnd"
+							/>
+						</div>
 					</div>
 					<div class="billboard__front">
-						<div class="billboard__info" v-if="movieData">
+						<div class="billboard__info" v-if="isDetail">
 							<!-- 제목 -->
 							<div class="billboard__title">
-								{{ movieData.title }}
+								{{ title }}
 							</div>
 
 							<!-- 버튼 -->
@@ -104,10 +112,20 @@
 										</button>
 									</li>
 								</ul>
-								<button class="btn btn--user">
+								<button
+									class="btn btn--user"
+									v-if="playerState"
+									@click="playerVars.mute = !playerVars.mute"
+								>
 									<font-awesome-icon
+										v-if="isMuted"
 										class="btn__icon"
 										:icon="['fas', 'volume-mute']"
+									></font-awesome-icon>
+									<font-awesome-icon
+										v-else
+										class="btn__icon"
+										:icon="['fas', 'volume-up']"
 									></font-awesome-icon>
 								</button>
 							</div>
@@ -123,7 +141,7 @@
 						<div class="movie-info__left">
 							<div class="movie-info__basic">
 								<SkeletonBox :width="'50%'" v-if="isLoading" />
-								<template v-else-if="isMovieDataLoaded">
+								<template v-else-if="isDetailLoaded">
 									<span class="release-date">{{
 										releaseDate
 									}}</span>
@@ -186,7 +204,7 @@
 									<ul class="info-row__list">
 										<li
 											class="info-row__item"
-											v-for="genre in movieData.genres"
+											v-for="genre in detail.genres"
 											:key="`genre-${genre.id}`"
 										>
 											<span>{{ genre.name }}</span>
@@ -208,7 +226,7 @@
 							<div class="similar-contents__inner">
 								<ul
 									class="similar-contents__list"
-									v-if="!isSimilarContentsLoaded"
+									v-if="loadingSimilarContents"
 								>
 									<li
 										class="similar-contents__item"
@@ -223,7 +241,7 @@
 								<ul
 									class="similar-contents__list"
 									v-else-if="
-										isSimilarContentsLoaded &&
+										!loadingSimilarContents &&
 										isSimilarContents
 									"
 								>
@@ -233,6 +251,7 @@
 										:key="`similar-${media.id}`"
 									>
 										<MediaCard
+											mediaType="movie"
 											:mediaData="media"
 										></MediaCard>
 									</li>
@@ -262,14 +281,19 @@
 </template>
 
 <script>
-// Mixin
-import movieDetailMixin from '@/mixins/movie';
+// Composable
+import detailComposable from '@/composable/common/detail';
+import creditsComposable from '@/composable/common/credits';
+import similarContentsComposable from '@/composable/common/similarContents';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
+import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
+
+import { ref, reactive, computed } from 'vue';
 
 // Vuex Module
 import { createNamespacedHelpers } from 'vuex';
@@ -277,15 +301,121 @@ import { createNamespacedHelpers } from 'vuex';
 const authModule = createNamespacedHelpers('auth');
 
 export default {
-	name: 'MovieModal',
-
-	extends: movieDetailMixin,
+	name: 'movie-modal',
 
 	components: {
 		Modal,
 		SkeletonBox,
 		SkeletonList,
 		MediaCard,
+		YoutubePlayer,
+	},
+
+	props: {
+		id: {
+			type: [Number, String],
+			required: true,
+		},
+	},
+
+	setup(props) {
+		const id = ref(props.id);
+		const mediaType = ref('movie');
+
+		if (typeof id.value === 'string') {
+			id.value = Number(id.value);
+		}
+
+		// Detail Composable
+		const {
+			detail,
+			loadingDetail,
+			releaseDate,
+			title,
+			backdropImage,
+			overview,
+			runTime,
+			isGenres,
+			isDetail,
+			isDetailLoaded,
+			videos,
+
+			fetchDetail,
+			fetchVideos,
+			deleteVideos,
+		} = detailComposable(id.value, mediaType.value);
+
+		// Credits Composable
+		const { castList, loadingCredits, fetchTvCredits } = creditsComposable(
+			id.value,
+			mediaType.value,
+		);
+
+		const {
+			similarContents,
+			isSimilarContents,
+			loadingSimilarContents,
+			fetchSimilarContents,
+		} = similarContentsComposable(id.value, mediaType.value);
+
+		//#region
+		const playerVars = reactive({
+			mute: false,
+			autoplay: true,
+			loop: false,
+			controls: false,
+		});
+
+		const playerState = ref('');
+
+		const isMuted = computed(() => Boolean(playerVars.mute));
+
+		const handleVideoEnd = function handleVideoEnd() {
+			// player.destroy();
+			deleteVideos();
+			playerState.value = '';
+		};
+		//#endregion
+
+		fetchDetail();
+		fetchVideos();
+		fetchTvCredits();
+		fetchSimilarContents();
+
+		return {
+			// Video Vars
+			playerVars,
+			playerState,
+			isMuted,
+			handleVideoEnd,
+
+			// Tv Detail
+			detail,
+			loadingDetail,
+			releaseDate,
+			title,
+			backdropImage,
+			overview,
+			runTime,
+			isGenres,
+			isDetail,
+			isDetailLoaded,
+			videos,
+
+			// Tv Credits
+			castList,
+			loadingCredits,
+
+			// Tv Similar Contents
+			similarContents,
+			loadingSimilarContents,
+			isSimilarContents,
+
+			// Functions
+			fetchDetail,
+			fetchTvCredits,
+			fetchSimilarContents,
+		};
 	},
 
 	data() {
@@ -297,27 +427,6 @@ export default {
 	computed: {
 		...authModule.mapGetters(['favoriteList', 'likeList', 'hateList']),
 
-		isFavoriteItem() {
-			if (!this.favoriteList.length) return false;
-
-			return (
-				this.favoriteList.filter(item => item.id === +this.movieId)
-					.length > 0
-			);
-		},
-
-		isLikeItem() {
-			if (!this.likeList.length) return false;
-
-			return this.likeList.indexOf(Number(this.movieId)) > -1;
-		},
-
-		isHateItem() {
-			if (!this.hateList.length) return false;
-
-			return this.hateList.indexOf(Number(this.movieId)) > -1;
-		},
-
 		/**
 		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
 		 * @returns array
@@ -328,6 +437,35 @@ export default {
 				: 'caret-down';
 
 			return ['fas', icon];
+		},
+
+		isLoading() {
+			return (
+				this.loadingDetail ||
+				this.loadingCredits ||
+				this.loadingSimilarContents
+			);
+		},
+
+		isFavoriteItem() {
+			if (!this.favoriteList.length) return false;
+
+			return (
+				this.favoriteList.filter(item => item.id === +this.id).length >
+				0
+			);
+		},
+
+		isLikeItem() {
+			if (!this.likeList.length) return false;
+
+			return this.likeList.indexOf(Number(this.id)) > -1;
+		},
+
+		isHateItem() {
+			if (!this.hateList.length) return false;
+
+			return this.hateList.indexOf(Number(this.id)) > -1;
 		},
 	},
 
@@ -341,15 +479,25 @@ export default {
 			'removeHateItem',
 		]),
 
+		// close 이벤트 emit
+		handleClose() {
+			this.$router.back();
+		},
+
+		// 이미지 로드 에러
+		onImageError(event) {
+			event.target.style.visibility = 'hidden';
+		},
+
 		// 찜하기 목록에 추가 클릭 이벤트
 		async handleAddFavorite() {
 			try {
-				const newMovieData = {
-					...this.movieData,
-					mediaType: 'movie',
+				const newTvData = {
+					...this.detail,
+					mediaType: 'tv',
 				};
 
-				await this.addFavoriteItem(newMovieData);
+				await this.addFavoriteItem(newTvData);
 			} catch (error) {
 				console.error('handleAddFavorite', error);
 			}
@@ -358,7 +506,7 @@ export default {
 		// 찜하기 목록에서 제거 클릭 이벤트
 		async handleRemoveFavorite() {
 			try {
-				await this.removeFavoriteItem(Number(this.movieId));
+				await this.removeFavoriteItem(Number(this.id));
 			} catch (error) {
 				console.error('handleRemoveFavorite', error);
 			}
@@ -367,12 +515,12 @@ export default {
 		// 좋아요 버튼 클릭 이벤트
 		async handleClickLike() {
 			try {
-				const movieId = Number(this.movieId);
+				const id = Number(this.id);
 
 				if (this.isLikeItem) {
-					await this.removeLikeItem(movieId);
+					await this.removeLikeItem(id);
 				} else {
-					await this.addLikeItem(movieId);
+					await this.addLikeItem(id);
 				}
 			} catch (error) {
 				console.error('handleClickLike', error);
@@ -382,33 +530,16 @@ export default {
 		// 싫어요 버튼 클릭 이벤트
 		async handleClickHate() {
 			try {
-				const movieId = Number(this.movieId);
+				const id = Number(this.id);
 
 				if (this.isHateItem) {
-					await this.removeHateItem(movieId);
+					await this.removeHateItem(id);
 				} else {
-					await this.addHateItem(movieId);
+					await this.addHateItem(id);
 				}
 			} catch (error) {
 				console.error('handleClickHate', error);
 			}
-		},
-
-		// close 이벤트 emit
-		handleClose() {
-			this.$router.back();
-		},
-
-		// 데이터 fetch
-		async fetchData() {
-			this.fetchMovieDetail();
-			this.fetchMovieCredits();
-			this.fetchSimilarMovies();
-		},
-
-		// 이미지 로드 에러
-		onImageError(event) {
-			event.target.style.visibility = 'hidden';
 		},
 	},
 };
