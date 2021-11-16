@@ -181,12 +181,10 @@ export default {
 
 		// 빌보드 상세 정보 클릭 이벤트
 		handleClickDetail() {
-			const movieId = this.billBoard.id;
-
 			this.$router.push({
 				name: 'MovieModal',
 				params: {
-					movieId,
+					id: this.billBoard.id,
 				},
 			});
 		},
