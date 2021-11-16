@@ -1,5 +1,5 @@
 <template>
-	<Modal class="movie-modal" @close="handleClose" v-bind="modalOption">
+	<Modal class="movie-modal" @close="handleClose">
 		<template v-slot:body>
 			<section class="movie-modal__body">
 				<h2 class="visually-hidden">영화 상세 모달</h2>
@@ -291,10 +291,6 @@ export default {
 	data() {
 		return {
 			isSimilarContentsOpened: false,
-
-			modalOption: {
-				isOpen: true,
-			},
 		};
 	},
 

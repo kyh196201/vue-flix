@@ -1,5 +1,5 @@
 <template>
-	<div class="modal-mask" @click.self="handleClickMask" v-if="open">
+	<div class="modal-mask" @click.self="handleClickMask">
 		<div class="modal-container">
 			<div class="modal">
 				<slot name="close">
@@ -23,18 +23,10 @@
 </template>
 
 <script>
-import { toRefs, ref } from 'vue';
-
 import { KEYS } from '@/utils/common/constants';
 
 export default {
 	props: {
-		// Default modal status
-		isOpen: {
-			type: Boolean,
-			default: false,
-		},
-
 		// Close modal when keypress ESC
 		closeOnKeypress: {
 			type: Boolean,
@@ -42,15 +34,7 @@ export default {
 		},
 	},
 
-	setup(props) {
-		const { isOpen } = toRefs(props);
-
-		const open = ref(isOpen.value);
-
-		return {
-			open,
-		};
-	},
+	emits: ['close'],
 
 	mounted() {
 		this.scrollLock(true);
@@ -74,7 +58,6 @@ export default {
 		},
 
 		close() {
-			this.open = false;
 			this.$emit('close');
 		},
 
