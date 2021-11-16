@@ -1,5 +1,5 @@
 <template>
-	<modal class="detail-modal" @close="handleClose" v-bind="modalOption">
+	<Modal class="detail-modal" @close="handleClose">
 		<template v-slot:body>
 			<section class="detail-modal__body">
 				<h2 class="visually-hidden">TV 상세 모달</h2>
@@ -11,7 +11,7 @@
 							<img
 								v-if="backdropImage"
 								:src="backdropImage"
-								:alt="tvTitle"
+								:alt="title"
 								@error="onImageError"
 							/>
 						</figure>
@@ -30,7 +30,7 @@
 						<div class="billboard__info" v-if="isDetail">
 							<!-- 제목 -->
 							<div class="billboard__title">
-								{{ tvTitle }}
+								{{ title }}
 							</div>
 
 							<!-- 버튼 -->
@@ -91,7 +91,7 @@
 												:icon="['fas', 'thumbs-up']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>좋아요</span
+												>좋아요 목록에 추가/제거</span
 											>
 										</button>
 									</li>
@@ -107,7 +107,7 @@
 												:icon="['fas', 'thumbs-down']"
 											></font-awesome-icon>
 											<span class="btn__title"
-												>마음에 안들어요</span
+												>싫어요 목록에 추가/제거</span
 											>
 										</button>
 									</li>
@@ -278,7 +278,7 @@
 				</section>
 			</section>
 		</template>
-	</modal>
+	</Modal>
 </template>
 
 <script>
@@ -313,18 +313,18 @@ export default {
 	},
 
 	props: {
-		tvId: {
+		id: {
 			type: [Number, String],
 			required: true,
 		},
 	},
 
 	setup(props) {
-		const tvId = ref(props.tvId);
+		const id = ref(props.id);
 		const mediaType = ref('tv');
 
-		if (typeof tvId.value === 'string') {
-			tvId.value = Number(tvId.value);
+		if (typeof id.value === 'string') {
+			id.value = Number(id.value);
 		}
 
 		// Detail Composable
@@ -332,7 +332,7 @@ export default {
 			detail,
 			loadingDetail,
 			firstAirDate,
-			tvTitle,
+			title,
 			backdropImage,
 			overview,
 			seasonLength,
@@ -344,11 +344,11 @@ export default {
 			fetchDetail,
 			fetchVideos,
 			deleteVideos,
-		} = detailComposable(tvId.value, mediaType.value);
+		} = detailComposable(id.value, mediaType.value);
 
 		// Credits Composable
 		const { castList, loadingCredits, fetchTvCredits } = creditsComposable(
-			tvId.value,
+			id.value,
 			mediaType.value,
 		);
 
@@ -357,7 +357,7 @@ export default {
 			isSimilarContents,
 			loadingSimilarContents,
 			fetchSimilarContents,
-		} = similarContentsComposable(tvId.value, mediaType.value);
+		} = similarContentsComposable(id.value, mediaType.value);
 
 		//#region
 		const playerVars = reactive({
@@ -394,7 +394,7 @@ export default {
 			detail,
 			loadingDetail,
 			firstAirDate,
-			tvTitle,
+			title,
 			backdropImage,
 			overview,
 			seasonLength,
@@ -422,10 +422,6 @@ export default {
 	data() {
 		return {
 			isSimilarContentsOpened: false,
-
-			modalOption: {
-				isOpen: true,
-			},
 		};
 	},
 
@@ -456,21 +452,21 @@ export default {
 			if (!this.favoriteList.length) return false;
 
 			return (
-				this.favoriteList.filter(item => item.id === +this.tvId)
-					.length > 0
+				this.favoriteList.filter(item => item.id === +this.id).length >
+				0
 			);
 		},
 
 		isLikeItem() {
 			if (!this.likeList.length) return false;
 
-			return this.likeList.indexOf(Number(this.tvId)) > -1;
+			return this.likeList.indexOf(Number(this.id)) > -1;
 		},
 
 		isHateItem() {
 			if (!this.hateList.length) return false;
 
-			return this.hateList.indexOf(Number(this.tvId)) > -1;
+			return this.hateList.indexOf(Number(this.id)) > -1;
 		},
 	},
 
@@ -517,7 +513,7 @@ export default {
 		// 찜하기 목록에서 제거 클릭 이벤트
 		async handleRemoveFavorite() {
 			try {
-				await this.removeFavoriteItem(Number(this.tvId));
+				await this.removeFavoriteItem(Number(this.id));
 			} catch (error) {
 				console.error('handleRemoveFavorite', error);
 			}
@@ -526,12 +522,12 @@ export default {
 		// 좋아요 버튼 클릭 이벤트
 		async handleClickLike() {
 			try {
-				const tvId = Number(this.tvId);
+				const id = Number(this.id);
 
 				if (this.isLikeItem) {
-					await this.removeLikeItem(tvId);
+					await this.removeLikeItem(id);
 				} else {
-					await this.addLikeItem(tvId);
+					await this.addLikeItem(id);
 				}
 			} catch (error) {
 				console.error('handleClickLike', error);
@@ -541,12 +537,12 @@ export default {
 		// 싫어요 버튼 클릭 이벤트
 		async handleClickHate() {
 			try {
-				const tvId = Number(this.tvId);
+				const id = Number(this.id);
 
 				if (this.isHateItem) {
-					await this.removeHateItem(tvId);
+					await this.removeHateItem(id);
 				} else {
-					await this.addHateItem(tvId);
+					await this.addHateItem(id);
 				}
 			} catch (error) {
 				console.error('handleClickHate', error);

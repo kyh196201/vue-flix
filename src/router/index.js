@@ -27,7 +27,7 @@ const routes = [
 		component: () => import('@/views/HomePage.vue'),
 		children: [
 			{
-				path: 'detail/:movieId',
+				path: 'detail/:id',
 				name: 'MovieModal',
 				component: MovieModal,
 				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
@@ -59,7 +59,7 @@ const routes = [
 		component: () => import('@/views/MediaPage.vue'),
 		children: [
 			{
-				path: 'detail/:movieId',
+				path: 'detail/:id',
 				name: 'MoviePageModal',
 				component: MovieModal,
 				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
@@ -78,7 +78,7 @@ const routes = [
 		component: () => import('@/views/MediaPage.vue'),
 		children: [
 			{
-				path: 'detail/:tvId',
+				path: 'detail/:id',
 				name: 'TvPageModal',
 				component: TvModal,
 				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
@@ -98,7 +98,7 @@ const routes = [
 		component: () => import('@/views/SearchPage.vue'),
 		children: [
 			{
-				path: 'detail/:movieId',
+				path: 'detail/:id',
 				name: 'SearchMovieModal',
 				component: MovieModal,
 				// true로 적용할 경우, 파라미터를 props처럼 사용할 수 있다.
@@ -116,13 +116,13 @@ const routes = [
 		component: () => import('@/views/FavoritePage.vue'),
 		children: [
 			{
-				path: 'detail/movie/:movieId',
+				path: 'detail/movie/:id',
 				name: 'FavoriteMovieModal',
 				component: MovieModal,
 				props: true,
 			},
 			{
-				path: 'detail/tv/:tvId',
+				path: 'detail/tv/:id',
 				name: 'FavoriteTvModal',
 				component: TvModal,
 				props: true,
