@@ -111,15 +111,15 @@ export default {
 				player.value.playVideo();
 			}
 
-			player.value.on('stateChange', function (event) {
-				const state = stateNames[event.data];
+			player.value.on('stateChange', function ({ data }) {
+				const state = stateNames[data];
 
 				if (!state) return;
 
-				playerState.value = event.data;
+				playerState.value = data;
 				context.emit('state-change', state);
 
-				if (state === 'ended') {
+				if (data == 0 && !playerVars.loop) {
 					context.emit('end');
 				}
 			});

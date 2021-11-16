@@ -120,6 +120,10 @@ export default function detailComposable(id) {
 			: [];
 	});
 
+	const deleteVideos = function deleteVideos() {
+		videos.value = [];
+	};
+
 	return {
 		detail,
 		loadingDetail: loading,
@@ -138,5 +142,6 @@ export default function detailComposable(id) {
 		// Functions
 		fetchDetail,
 		fetchVideos,
+		deleteVideos,
 	};
 }

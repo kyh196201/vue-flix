@@ -326,24 +326,6 @@ export default {
 			tvId.value = Number(tvId.value);
 		}
 
-		//#region
-		const playerVars = reactive({
-			mute: false,
-			autoplay: true,
-			loop: true,
-			controls: false,
-		});
-
-		const playerState = ref('');
-
-		const isMuted = computed(() => Boolean(playerVars.mute));
-
-		const handleVideoEnd = function handleVideoEnd() {
-			console.log('video ended!!!');
-		};
-
-		//#endregion
-
 		// Detail Composable
 		const {
 			detail,
@@ -360,6 +342,7 @@ export default {
 
 			fetchDetail,
 			fetchVideos,
+			deleteVideos,
 		} = tvDetailComposable(tvId.value);
 
 		// Credits Composable
@@ -372,6 +355,25 @@ export default {
 			loadingSimilarContents,
 			fetchSimilarContents,
 		} = tvSimilarContentsComposable(tvId.value);
+
+		//#region
+		const playerVars = reactive({
+			mute: false,
+			autoplay: true,
+			loop: false,
+			controls: false,
+		});
+
+		const playerState = ref('');
+
+		const isMuted = computed(() => Boolean(playerVars.mute));
+
+		const handleVideoEnd = function handleVideoEnd() {
+			// player.destroy();
+			deleteVideos();
+			playerState.value = '';
+		};
+		//#endregion
 
 		fetchDetail();
 		fetchVideos();
