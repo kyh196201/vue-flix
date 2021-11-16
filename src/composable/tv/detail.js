@@ -1,3 +1,4 @@
+// FIXME 삭제 common/detail이 공통 js
 import { ref, computed } from 'vue';
 
 // Api

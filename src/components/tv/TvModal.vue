@@ -283,9 +283,12 @@
 
 <script>
 // Composable
-import tvDetailComposable from '@/composable/tv/detail';
-import tvCreditsComposable from '@/composable/tv/credits';
-import tvSimilarContentsComposable from '@/composable/tv/similarContents';
+// import tvDetailComposable from '@/composable/tv/detail';
+// import tvCreditsComposable from '@/composable/tv/credits';
+// import tvSimilarContentsComposable from '@/composable/tv/similarContents';
+import detailComposable from '@/composable/common/detail';
+import creditsComposable from '@/composable/common/credits';
+import similarContentsComposable from '@/composable/common/similarContents';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
@@ -321,6 +324,7 @@ export default {
 
 	setup(props) {
 		const tvId = ref(props.tvId);
+		const mediaType = ref('tv');
 
 		if (typeof tvId.value === 'string') {
 			tvId.value = Number(tvId.value);
@@ -343,18 +347,20 @@ export default {
 			fetchDetail,
 			fetchVideos,
 			deleteVideos,
-		} = tvDetailComposable(tvId.value);
+		} = detailComposable(tvId.value, mediaType.value);
 
 		// Credits Composable
-		const { castList, loadingCredits, fetchTvCredits } =
-			tvCreditsComposable(tvId.value);
+		const { castList, loadingCredits, fetchTvCredits } = creditsComposable(
+			tvId.value,
+			mediaType.value,
+		);
 
 		const {
 			similarContents,
 			isSimilarContents,
 			loadingSimilarContents,
 			fetchSimilarContents,
-		} = tvSimilarContentsComposable(tvId.value);
+		} = similarContentsComposable(tvId.value, mediaType.value);
 
 		//#region
 		const playerVars = reactive({
