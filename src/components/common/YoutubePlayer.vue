@@ -17,10 +17,17 @@ import {
 
 import YouTubePlayer from 'youtube-player';
 
+const UNSTARTED = -1;
+const ENDED = 0;
+const PLAYING = 1;
+const PAUSED = 2;
+const BUFFERING = 3;
+const CUED = 5;
+
 export default {
 	name: 'youtube-payer',
 
-	emits: ['state-change', 'end'],
+	emits: ['state-change', 'end', 'error', 'ready'],
 
 	props: {
 		videoId: {
@@ -55,28 +62,25 @@ export default {
 		const playerState = ref(null);
 
 		const stateNames = {
-			'-1': 'unstarted',
-			0: 'ended',
-			1: 'playing',
-			2: 'paused',
-			3: 'buffering',
-			5: 'video cued',
+			[UNSTARTED]: 'unstarted',
+			[ENDED]: 'ended',
+			[PLAYING]: 'playing',
+			[PAUSED]: 'paused',
+			[BUFFERING]: 'buffering',
+			[CUED]: 'video cued',
 		};
 
 		const isMuted = computed(() => Boolean(playerVars.mute));
 
-		watch(
-			() => isMuted.value,
-			value => {
-				if (!stateNames[playerState.value]) return;
+		watch(isMuted, value => {
+			if (!player.value) return;
 
-				if (value) {
-					player.value.mute();
-				} else {
-					player.value.unMute();
-				}
-			},
-		);
+			if (value) {
+				player.value.mute();
+			} else {
+				player.value.unMute();
+			}
+		});
 
 		// NOTE boolean -> 1, 0으로 어떻게 바꿨는지 참고하기
 		const getPlayerVars = function getPlayerVars(vars = {}) {
