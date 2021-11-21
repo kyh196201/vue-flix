@@ -55,9 +55,9 @@ export default {
 		},
 	},
 
-	setup(props, context) {
+	setup(props, { emit }) {
 		const { videoId, width, height } = toRefs(props);
-		const playerVars = reactive({ ...toRefs(props.playerVars) });
+		const playerVars = reactive(props.playerVars);
 		const player = ref(null);
 
 		const stateNames = {
@@ -95,7 +95,21 @@ export default {
 
 		const updatePlayer = function updatePlayer(newId) {
 			// load new video
-			console.log(newId);
+			if (!newId) {
+				player.value.stopVideo();
+				return;
+			}
+
+			if (playerVars.autoplay) {
+				player.value.loadVideoById({
+					videoId: newId,
+				});
+				return;
+			}
+
+			player.value.cueVideoById({
+				videoId: newId,
+			});
 		};
 
 		// Event handlers
@@ -103,19 +117,19 @@ export default {
 			const state = stateNames[event.data];
 
 			if (!state) return;
-			context.emit('state-change', state);
+			emit('state-change', state);
 
 			if (event.data == ENDED) {
-				context.emit('end');
+				emit('end');
 			}
 		};
 
 		const handleReady = function handleReady(event) {
-			context.emit('ready', event.target);
+			emit('ready', event.target);
 		};
 
 		const handleError = function handleError(event) {
-			context.emit('error', event);
+			emit('error', event);
 		};
 
 		// Watch
@@ -129,7 +143,7 @@ export default {
 			}
 		});
 
-		watch(videoId, updatePlayer, { immediate: true });
+		watch(videoId, updatePlayer);
 
 		// Hooks
 		onMounted(() => {
