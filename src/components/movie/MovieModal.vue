@@ -149,6 +149,7 @@
 									<span class="run-time">
 										{{ runTime }}
 									</span>
+									<StarRating size="large" :value="vote" />
 								</template>
 							</div>
 							<div class="movie-info__synopsis">
@@ -292,6 +293,7 @@ import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
+import StarRating from '@/components/common/StarRating.vue';
 
 import { ref, reactive, computed } from 'vue';
 
@@ -309,6 +311,7 @@ export default {
 		SkeletonList,
 		MediaCard,
 		YoutubePlayer,
+		StarRating,
 	},
 
 	props: {
@@ -332,6 +335,7 @@ export default {
 			loadingDetail,
 			releaseDate,
 			title,
+			vote,
 			backdropImage,
 			overview,
 			runTime,
@@ -394,6 +398,7 @@ export default {
 			loadingDetail,
 			releaseDate,
 			title,
+			vote,
 			backdropImage,
 			overview,
 			runTime,

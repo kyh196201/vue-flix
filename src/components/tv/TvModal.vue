@@ -150,6 +150,7 @@
 									<span class="run-time">
 										시즌 {{ seasonLength }}개
 									</span>
+									<StarRating size="large" :value="vote" />
 								</template>
 							</div>
 							<div class="movie-info__synopsis">
@@ -293,6 +294,7 @@ import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
+import StarRating from '@/components/common/StarRating.vue';
 
 import { ref, reactive, computed } from 'vue';
 
@@ -310,6 +312,7 @@ export default {
 		SkeletonList,
 		MediaCard,
 		YoutubePlayer,
+		StarRating,
 	},
 
 	props: {
@@ -333,6 +336,7 @@ export default {
 			loadingDetail,
 			firstAirDate,
 			title,
+			vote,
 			backdropImage,
 			overview,
 			seasonLength,
@@ -395,6 +399,7 @@ export default {
 			loadingDetail,
 			firstAirDate,
 			title,
+			vote,
 			backdropImage,
 			overview,
 			seasonLength,

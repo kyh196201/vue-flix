@@ -45,6 +45,12 @@ export default function detailComposable(id, mediaType = 'movie') {
 	});
 
 	/**
+	 * 시리즈 또는 영화 사용자 평점
+	 * @returns {number}
+	 */
+	const vote = computed(() => detail.value?.vote_average || 0.0);
+
+	/**
 	 * 영화 출시일
 	 * @returns {string}
 	 */
@@ -158,6 +164,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 		isDetail,
 		isDetailLoaded,
 		title,
+		vote,
 		backdropImage,
 		overview,
 		isGenres,
