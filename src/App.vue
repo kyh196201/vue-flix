@@ -4,7 +4,7 @@
 		<main class="app-main">
 			<router-view></router-view>
 		</main>
-		<AppFooter v-if="isAuthenticated" />
+		<AppFooter v-if="false" />
 
 		<!-- FIXME 모바일 경고 페이지 -->
 		<div class="warn-mobile">
