@@ -1,0 +1,29 @@
+.star-rating {
+    display: inline-block;
+    width:7.55rem;
+    height: 1.25rem;
+    background: url('#{$images}icons/star.png');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    font-size: 0;
+
+    &__on {
+        display: block;
+        width: 0;
+        height: 100%;
+        font-size: 0;
+        background: url('#{$images}icons/star_on.png');
+        background-repeat: repeat-x;
+        background-size: auto 100%;
+    }
+
+    &-sm {
+        width: 6.5rem;
+        height: 1rem;
+    }
+
+    &--lg {
+        width: 9.65rem;
+        height: 1.6rem;
+    }
+}
