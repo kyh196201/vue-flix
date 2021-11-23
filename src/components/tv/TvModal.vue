@@ -19,6 +19,7 @@
 						<!-- 비디오 -->
 						<div class="billboard__trailer" v-if="videos.length">
 							<youtube-player
+								v-if="false"
 								:video-id="videos[0].key"
 								:player-vars="playerVars"
 								@state-change="playerState = $event"
@@ -217,9 +218,13 @@
 						</div>
 					</section>
 
+					<nav class="detail-modal__tabs">
+						<TabList :tabs="tabs" v-model="currentTabId"></TabList>
+					</nav>
+
 					<!-- main > similar -->
 					<section class="detail-modal__similar-contents">
-						<h3>비슷한 콘텐츠</h3>
+						<h3 class="sr-only">비슷한 콘텐츠</h3>
 
 						<section
 							class="similar-contents"
@@ -295,6 +300,7 @@ import SkeletonList from '@/components/common/loading/SkeletonList.vue';
 import MediaCard from '@/components/MediaCard.vue';
 import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
 import StarRating from '@/components/common/StarRating.vue';
+import TabList from '@/components/common/TabList.vue';
 
 import { ref, reactive, computed } from 'vue';
 
@@ -313,6 +319,7 @@ export default {
 		MediaCard,
 		YoutubePlayer,
 		StarRating,
+		TabList,
 	},
 
 	props: {
@@ -329,6 +336,26 @@ export default {
 		if (typeof id.value === 'string') {
 			id.value = Number(id.value);
 		}
+
+		//#region 시즌, 비슷한 컨텐츠 탭
+		const tabs = ref([
+			{
+				id: 1,
+				text: '비슷한 콘텐츠',
+			},
+			{
+				id: 2,
+				text: '시즌 및 회차',
+			},
+		]);
+
+		const currentTabId = ref(tabs.value[0].id);
+
+		const currentTab = computed(() => {
+			return tabs.value.find(({ id }) => currentTabId.value === id);
+		});
+
+		//#endregion
 
 		// Detail Composable
 		const {
@@ -365,7 +392,7 @@ export default {
 
 		//#region
 		const playerVars = reactive({
-			mute: false,
+			mute: true,
 			autoplay: true,
 			loop: false,
 			controls: false,
@@ -388,6 +415,11 @@ export default {
 		fetchSimilarContents();
 
 		return {
+			// Tabs
+			tabs,
+			currentTabId,
+			currentTab,
+
 			// Video Vars
 			playerVars,
 			playerState,

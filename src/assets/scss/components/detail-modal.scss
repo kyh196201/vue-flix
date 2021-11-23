@@ -204,6 +204,20 @@ $modal-padding: 48px;
 		}
 	}
 
+	&__tabs {
+		margin-bottom: 2.5rem;
+
+		.tab-list {
+			&__item {
+				padding: 2rem;
+			}
+
+			&__text {
+				font-size: 2.25rem;
+			}
+		}
+	}
+
 	// similar-contents
 	&__similar-contents {
 		position: relative;
