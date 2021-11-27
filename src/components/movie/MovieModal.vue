@@ -216,61 +216,12 @@
 						</div>
 					</section>
 
-					<!-- main > similar -->
-					<section class="detail-modal__similar-contents">
-						<h3>비슷한 콘텐츠</h3>
-
-						<section
-							class="similar-contents"
-							:class="{ opened: isSimilarContentsOpened }"
-						>
-							<div class="similar-contents__inner">
-								<ul
-									class="similar-contents__list"
-									v-if="loadingSimilarContents"
-								>
-									<li
-										class="similar-contents__item"
-										v-for="i in 6"
-										:key="i"
-									>
-										<SkeletonBox
-											height="30rem"
-										></SkeletonBox>
-									</li>
-								</ul>
-								<ul
-									class="similar-contents__list"
-									v-else-if="
-										!loadingSimilarContents &&
-										isSimilarContents
-									"
-								>
-									<li
-										class="similar-contents__item"
-										v-for="media in similarContents"
-										:key="`similar-${media.id}`"
-									>
-										<MediaCard
-											mediaType="movie"
-											:mediaData="media"
-										></MediaCard>
-									</li>
-								</ul>
-							</div>
-						</section>
-						<!-- caret-up, down -->
-						<label class="btn btn--user btn--fold">
-							<input
-								type="checkbox"
-								v-model="isSimilarContentsOpened"
-							/>
-							<font-awesome-icon
-								class="btn__icon"
-								:icon="foldBtnIcon"
-							></font-awesome-icon>
-							<span class="btn__title">찜하기</span>
-						</label>
+					<!-- 메인 > 컨텐츠 영역 -->
+					<section class="detail-modal__contents">
+						<similar-contents
+							:id="id"
+							mediaType="movie"
+						></similar-contents>
 					</section>
 
 					<!-- main > detail -->
@@ -285,15 +236,14 @@
 // Composable
 import detailComposable from '@/composable/common/detail';
 import creditsComposable from '@/composable/common/credits';
-import similarContentsComposable from '@/composable/common/similarContents';
 
 // Component
 import Modal from '@/components/common/Modal.vue';
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import SkeletonList from '@/components/common/loading/SkeletonList.vue';
-import MediaCard from '@/components/MediaCard.vue';
 import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
 import StarRating from '@/components/common/StarRating.vue';
+import SimilarContents from '@/components/media/SimilarContents.vue';
 
 import { ref, reactive, computed } from 'vue';
 
@@ -309,9 +259,9 @@ export default {
 		Modal,
 		SkeletonBox,
 		SkeletonList,
-		MediaCard,
 		YoutubePlayer,
 		StarRating,
+		SimilarContents,
 	},
 
 	props: {
@@ -355,13 +305,6 @@ export default {
 			mediaType.value,
 		);
 
-		const {
-			similarContents,
-			isSimilarContents,
-			loadingSimilarContents,
-			fetchSimilarContents,
-		} = similarContentsComposable(id.value, mediaType.value);
-
 		//#region
 		const playerVars = reactive({
 			mute: false,
@@ -384,7 +327,6 @@ export default {
 		fetchDetail();
 		fetchVideos();
 		fetchTvCredits();
-		fetchSimilarContents();
 
 		return {
 			// Video Vars
@@ -411,45 +353,17 @@ export default {
 			castList,
 			loadingCredits,
 
-			// Tv Similar Contents
-			similarContents,
-			loadingSimilarContents,
-			isSimilarContents,
-
 			// Functions
 			fetchDetail,
 			fetchTvCredits,
-			fetchSimilarContents,
-		};
-	},
-
-	data() {
-		return {
-			isSimilarContentsOpened: false,
 		};
 	},
 
 	computed: {
 		...authModule.mapGetters(['favoriteList', 'likeList', 'hateList']),
 
-		/**
-		 * 비슷한 콘텐츠 fold 버튼 font-awesome 아이콘
-		 * @returns array
-		 */
-		foldBtnIcon() {
-			const icon = this.isSimilarContentsOpened
-				? 'caret-up'
-				: 'caret-down';
-
-			return ['fas', icon];
-		},
-
 		isLoading() {
-			return (
-				this.loadingDetail ||
-				this.loadingCredits ||
-				this.loadingSimilarContents
-			);
+			return this.loadingDetail || this.loadingCredits;
 		},
 
 		isFavoriteItem() {
