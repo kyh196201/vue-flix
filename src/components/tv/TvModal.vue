@@ -224,10 +224,12 @@
 
 					<!-- 메인 > 컨텐츠 영역 -->
 					<section class="detail-modal__contents">
-						<similar-contents
-							:id="id"
-							mediaType="tv"
-						></similar-contents>
+						<keep-alive>
+							<component
+								:is="currentTabComponent"
+								v-bind="currentTabProps"
+							></component>
+						</keep-alive>
 					</section>
 
 					<!-- main > detail -->
@@ -292,18 +294,33 @@ export default {
 			{
 				id: 1,
 				text: '비슷한 콘텐츠',
+				component: 'similar-contents',
 			},
 			{
 				id: 2,
 				text: '시즌 및 회차',
+				component: '',
 			},
 		]);
 
+		// 현재 선택된 탭 아이디
 		const currentTabId = ref(tabs.value[0].id);
 
-		const currentTab = computed(() => {
-			return tabs.value.find(({ id }) => currentTabId.value === id);
+		// 현재 선택된 탭 컴포넌트
+		const currentTabComponent = computed(() => {
+			const currentTab = tabs.value.find(
+				({ id }) => currentTabId.value === id,
+			);
+
+			// FIXME 시즌 컴포넌트 추가하기
+			return currentTab?.component || 'similar-contents';
 		});
+
+		// 현재 선택된 탭 props
+		const currentTabProps = computed(() => ({
+			id: id.value,
+			mediaType: mediaType.value,
+		}));
 
 		//#endregion
 
@@ -360,7 +377,8 @@ export default {
 			// Tabs
 			tabs,
 			currentTabId,
-			currentTab,
+			currentTabComponent,
+			currentTabProps,
 
 			// Video Vars
 			playerVars,
