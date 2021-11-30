@@ -95,9 +95,8 @@ const getSimilarTvPrograms = async (id, page = 1) => {
 };
 
 /**
- *
+ * 티비 비디오 정보 조회
  * @param {number} id : tv id
- * @returns
  */
 const getVideos = async id => {
 	try {
@@ -122,4 +121,39 @@ const getVideos = async id => {
 	}
 };
 
-export { getTvDetail, getTvCredits, getSimilarTvPrograms, getVideos };
+/**
+ * 티비 시즌 별 상세 정보
+ * @param {number} id : tv id
+ * @param {number} seasonNumber : 시즌 넘버
+ */
+const getSeasonDetail = async (id, seasonNumber = 1) => {
+	try {
+		const url = `${id}/season/${seasonNumber}`;
+
+		const { data } = await tvInstance.get(url);
+
+		return {
+			isError: false,
+			data,
+		};
+	} catch (error) {
+		console.error('getSeasonDetail error...', error);
+		const { response } = error;
+
+		return {
+			isError: true,
+			errorData: {
+				message: response?.data?.status_message || error.message,
+				statusCode: response?.data?.status_code || null,
+			},
+		};
+	}
+};
+
+export {
+	getTvDetail,
+	getTvCredits,
+	getSimilarTvPrograms,
+	getVideos,
+	getSeasonDetail,
+};
