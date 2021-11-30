@@ -227,6 +227,7 @@
 							<component
 								:is="currentTabComponent"
 								v-bind="currentTabProps"
+								:key="currentTabId"
 							></component>
 						</keep-alive>
 					</section>
@@ -252,6 +253,7 @@ import YoutubePlayer from '@/components/common/YoutubePlayer.vue';
 import StarRating from '@/components/common/StarRating.vue';
 import TabList from '@/components/common/TabList.vue';
 import SimilarContents from '@/components/media/SimilarContents.vue';
+import SeasonList from '@/components/media/SeasonList.vue';
 
 import { ref, reactive, computed } from 'vue';
 
@@ -271,6 +273,7 @@ export default {
 		StarRating,
 		TabList,
 		SimilarContents,
+		SeasonList,
 	},
 
 	props: {
@@ -298,7 +301,7 @@ export default {
 			{
 				id: 2,
 				text: '시즌 및 회차',
-				component: '',
+				component: 'season-list',
 			},
 		]);
 
@@ -316,10 +319,19 @@ export default {
 		});
 
 		// 현재 선택된 탭 props
-		const currentTabProps = computed(() => ({
-			id: id.value,
-			mediaType: mediaType.value,
-		}));
+		const currentTabProps = computed(() => {
+			if (currentTabComponent.value === 'season-list') {
+				return {
+					id: id.value,
+					seasons: seasons.value,
+				};
+			} else {
+				return {
+					id: id.value,
+					mediaType: mediaType.value,
+				};
+			}
+		});
 
 		//#endregion
 
@@ -337,6 +349,7 @@ export default {
 			isDetail,
 			isDetailLoaded,
 			videos,
+			seasons,
 
 			fetchDetail,
 			fetchVideos,

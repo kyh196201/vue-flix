@@ -100,13 +100,21 @@ export default function detailComposable(id, mediaType = 'movie') {
 	});
 
 	/**
+	 * 시즌
+	 * @returns {array}
+	 */
+	const seasons = computed(() => {
+		if (mediaType.value === 'movie') return [];
+
+		return detail.value?.seasons;
+	});
+
+	/**
 	 * 시즌 개수
 	 * @returns {number}
 	 */
 	const seasonLength = computed(() => {
-		if (mediaType.value === 'movie') return 0;
-
-		return detail.value?.seasons?.length || 0;
+		return seasons.value.length > 0;
 	});
 
 	/**
@@ -175,6 +183,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 
 		// tv
 		firstAirDate,
+		seasons,
 		seasonLength,
 
 		// 영화
