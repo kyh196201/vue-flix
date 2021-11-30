@@ -234,8 +234,8 @@
 
 <script>
 // Composable
-import detailComposable from '@/composable/common/detail';
-import creditsComposable from '@/composable/common/credits';
+import detailComposable from '@/composable/media/detail';
+import creditsComposable from '@/composable/media/credits';
 
 // Component
 import Modal from '@/components/common/Modal.vue';

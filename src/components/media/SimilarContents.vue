@@ -37,7 +37,7 @@
 import { toRefs, ref, computed } from 'vue';
 
 // Composables
-import similarContentsComposable from '@/composable/common/similarContents';
+import similarContentsComposable from '@/composable/media/similarContents';
 
 // Components
 import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
