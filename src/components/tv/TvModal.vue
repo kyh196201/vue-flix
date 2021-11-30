@@ -19,7 +19,6 @@
 						<!-- 비디오 -->
 						<div class="billboard__trailer" v-if="videos.length">
 							<youtube-player
-								v-if="false"
 								:video-id="videos[0].key"
 								:player-vars="playerVars"
 								@state-change="playerState = $event"
