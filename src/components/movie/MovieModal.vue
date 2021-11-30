@@ -297,12 +297,12 @@ export default {
 			fetchDetail,
 			fetchVideos,
 			deleteVideos,
-		} = detailComposable(id.value, mediaType.value);
+		} = detailComposable(id, mediaType);
 
 		// Credits Composable
 		const { castList, loadingCredits, fetchTvCredits } = creditsComposable(
-			id.value,
-			mediaType.value,
+			id,
+			mediaType,
 		);
 
 		//#region

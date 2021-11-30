@@ -8,7 +8,7 @@ export default function creditsComposable(id, mediaType = 'movie') {
 	const credits = ref(null);
 	const loading = ref(false);
 
-	const api = createMediaApi(mediaType);
+	const api = createMediaApi(mediaType.value);
 
 	/**
 	 * 대표 출연진
@@ -25,7 +25,7 @@ export default function creditsComposable(id, mediaType = 'movie') {
 	// 영화 출연진 조회
 	const fetchTvCredits = async () => {
 		loading.value = true;
-		const result = await api.getCredits(id);
+		const result = await api.getCredits(id.value);
 
 		if (result.isError) {
 			throw result.errorData;

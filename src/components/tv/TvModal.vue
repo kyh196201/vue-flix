@@ -341,17 +341,17 @@ export default {
 			fetchDetail,
 			fetchVideos,
 			deleteVideos,
-		} = detailComposable(id.value, mediaType.value);
+		} = detailComposable(id, mediaType);
 
 		// Credits Composable
 		const { castList, loadingCredits, fetchTvCredits } = creditsComposable(
-			id.value,
-			mediaType.value,
+			id,
+			mediaType,
 		);
 
 		//#region
 		const playerVars = reactive({
-			mute: true,
+			mute: false,
 			autoplay: true,
 			loop: false,
 			controls: false,

@@ -9,11 +9,14 @@ import getImageUrl from '@/utils/common/getImageUrl';
 import { getReleaseYear, formatRuntime } from '@/utils/movie';
 
 export default function detailComposable(id, mediaType = 'movie') {
+	console.log('detail id', id);
+	console.log('detail mediaType', mediaType);
+
 	const detail = ref(null);
 	const videos = ref([]);
 	const loading = ref(false);
 
-	const api = createMediaApi(mediaType);
+	const api = createMediaApi(mediaType.value);
 
 	// #region Computed
 
@@ -35,9 +38,9 @@ export default function detailComposable(id, mediaType = 'movie') {
 	const title = computed(() => {
 		if (!isDetail.value) return '';
 
-		if (mediaType === 'movie') {
+		if (mediaType.value === 'movie') {
 			return detail.value.title || detail.value['original_title'];
-		} else if (mediaType === 'tv') {
+		} else if (mediaType.value === 'tv') {
 			return detail.value.name || detail.value['original_name'];
 		}
 
@@ -101,7 +104,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 	 * @returns {number}
 	 */
 	const seasonLength = computed(() => {
-		if (mediaType === 'movie') return 0;
+		if (mediaType.value === 'movie') return 0;
 
 		return detail.value?.seasons?.length || 0;
 	});
@@ -125,7 +128,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 	// #region Functions
 	const fetchDetail = async function fetchDetail() {
 		loading.value = true;
-		const result = await api.getDetail(id);
+		const result = await api.getDetail(id.value);
 
 		if (result.isError) {
 			throw result.errorData;
@@ -137,7 +140,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 
 	// 비디오 리스트 조회
 	const fetchVideos = async function fetchVideos() {
-		const result = await api.getVideos(id);
+		const result = await api.getVideos(id.value);
 
 		if (result.isError) {
 			// FIXME 에러 처리 어떻게할지 생각해보기
