@@ -1,3 +1,109 @@
-.season-list {
-    
+.seasons {
+    // 헤더 영역
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    &__title {
+        font-size: 2.4rem;
+        font-weight: bold;
+    }
+
+    // 시즌 선택 메뉴
+    &__menu {
+        &:deep .dropdown-menu {
+            &__btn,
+            &__content {
+                border: 0.1em solid rgb(77, 77, 77);
+                border-radius: 0.3em;
+                background-color: rgb(36, 36, 36);
+                font-size: 1.8rem;
+                color: $white;
+            }
+
+            &__btn {
+                position: relative;
+                padding: 0.5em 3em 0.5em 1em;
+                font-weight: bold;
+
+                &:hover {
+                    opacity: 0.8;
+                    transition: 0.3s;
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    right: 1em;
+                    width: 10px;
+                    height: 5px;
+                    margin-top: -2.5px;
+                    background: url('#{$images}icons/caret-down.svg') no-repeat center/100%;
+                    transition: transform 0.3s;
+                    will-change: transform;
+                }
+            }
+
+            &__content {
+                right: 0;
+                width: auto;
+                margin-top: 0.25em;
+                padding: 0.25em 0;
+            }
+        }
+
+        &.open {
+            &:deep .dropdown-menu {
+                &__btn {
+                    &::after {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+
+        .season-list {
+            &__season {
+                cursor: pointer;
+                padding: 0.5em 0.8em;
+                font-size: 1.8rem;
+                font-weight: bold;
+                white-space: nowrap;
+
+                &:focus,
+                &:hover {
+                    background-color: rgb(66, 66, 66);
+                    outline: 0;
+                }
+
+                &:last-child {
+                    margin-top: 0.4rem;
+                    border-top: 0.2rem solid rgb(77, 77, 77);
+                }
+            }
+
+            &__name,
+            &__episodes {
+                vertical-align: middle;
+                line-height: 1.4;
+            }
+
+            &__episodes {
+                margin-left: 0.4em;
+                font-size: 0.8em;
+                font-weight: normal;
+            }
+        }
+    }
+
+    // 시즌 리스트
+
+    &__box {
+        // FIXME 삭제
+        min-height: 500px;
+    }
 }
