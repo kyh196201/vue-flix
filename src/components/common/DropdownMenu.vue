@@ -1,8 +1,10 @@
 <template>
-	<div class="dropdown-menu" ref="wrapper">
+	<div class="dropdown-menu" ref="wrapper" :class="{ open: open }">
 		<div class="dropdown-menu__activator" ref="activator">
 			<slot name="button">
-				<button class="dropdown-menu__btn">dropdown</button>
+				<button class="dropdown-menu__btn">
+					<slot name="title">dropdown</slot>
+				</button>
 			</slot>
 		</div>
 		<div
@@ -149,7 +151,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .dropdown-menu {
 	position: relative;
 
