@@ -114,7 +114,7 @@ export default function detailComposable(id, mediaType = 'movie') {
 	 * @returns {number}
 	 */
 	const seasonLength = computed(() => {
-		return seasons.value.length > 0;
+		return detail.value?.number_of_seasons;
 	});
 
 	/**
