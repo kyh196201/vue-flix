@@ -9,10 +9,16 @@ const imgSizes = {
 	still_sizes: ['w92', 'w185', 'w300', 'original'],
 };
 
-export default function getImageUrl(url, size = 2, type) {
+export default function getImageUrl(url, size = 2, type = 'poster') {
+	let imageSize = '';
+
 	if (type === 'backdrop') {
-		return baseImageUrl + imgSizes.backdrop_sizes[size] + url;
+		imageSize = imgSizes.backdrop_sizes[size];
+	} else if (type === 'still') {
+		imageSize = imgSizes.still_sizes[size];
 	} else {
-		return baseImageUrl + imgSizes.poster_sizes[size] + url;
+		imageSize = imgSizes.poster_sizes[size];
 	}
+
+	return baseImageUrl + imageSize + url;
 }
