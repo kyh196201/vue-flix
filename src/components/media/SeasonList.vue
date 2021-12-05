@@ -1,5 +1,5 @@
 <template>
-	<section class="seasons">
+	<section class="seasons" :class="{ opened: open }">
 		<h3 class="sr-only">시즌 및 회차 정보</h3>
 
 		<header class="seasons__header">
@@ -39,52 +39,33 @@
 
 		<div class="seasons__box">
 			<div class="seasons__content">
-				<ul class="seasons__episodes">
-					<li
-						class="episode"
-						role="button"
-						tabindex="0"
-						aria-label="시작의 마을"
+				<template v-if="loading"> loading... </template>
+
+				<ul class="seasons__episodes" v-else>
+					<template
+						v-for="(episode, index) in episodes"
+						:key="`episode-${index}`"
 					>
-						<strong class="episode__number">50</strong>
-						<div class="episode__poster">
-							<figure class="episode__figure">
-								<img
-									src="https://image.tmdb.org/t/p/w342/uacNwki3PqXEFk9Pal9Ng5NwwAI.jpg"
-									alt="123"
-								/>
-							</figure>
-						</div>
-						<div class="episode__info">
-							<div class="episode__header">
-								<h5 class="episode__title">시작의 마을</h5>
-								<span class="episode__air-date"
-									>2021-09-17</span
-								>
-							</div>
-							<p class="episode__overview">
-								Lorem ipsum dolor sit, amet consectetur
-								adipisicing elit. Nemo tempora debitis sapiente
-								modi omnis doloribus laudantium voluptatibus
-								esse obcaecati reiciendis nostrum, laboriosam
-								fuga, quod facilis quia recusandae in adipisci
-								suscipit!
-							</p>
-						</div>
-					</li>
+						<episode :episode="episode"></episode>
+					</template>
 				</ul>
 			</div>
 		</div>
 
 		<!-- caret-up, down -->
-		<label class="btn btn--user btn--fold">
-			<input type="checkbox" />
+		<button class="btn btn--user btn--fold" @click="open = !open">
+			<span class="sr-only">찜하기</span>
 			<font-awesome-icon
+				v-if="open"
 				class="btn__icon"
 				:icon="['fas', 'caret-up']"
 			></font-awesome-icon>
-			<span class="btn__title">찜하기</span>
-		</label>
+			<font-awesome-icon
+				v-else
+				class="btn__icon"
+				:icon="['fas', 'caret-down']"
+			></font-awesome-icon>
+		</button>
 	</section>
 </template>
 
@@ -93,6 +74,7 @@ import { toRefs, ref, watch, computed } from 'vue';
 
 // 컴포넌트
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
+import Episode from './Episode.vue';
 
 // API
 import { getSeasonDetail } from '@/api/tv';
@@ -102,6 +84,7 @@ export default {
 
 	components: {
 		DropdownMenu,
+		Episode,
 	},
 
 	props: {
@@ -122,8 +105,13 @@ export default {
 	setup(props) {
 		const { seasons, id } = toRefs(props);
 
+		// 시즌 리스트 영역 펼침 여부
+		const open = ref(false);
+
 		// 시즌 회차 리스트
 		const episodes = ref([]);
+
+		const loading = ref(false);
 
 		// 현재 선택된 시즌 아이디
 		const currentSeasonId = ref(null);
@@ -135,12 +123,15 @@ export default {
 			return seasons.value.find(({ id }) => id === currentSeasonId.value);
 		});
 
+		// 최초 컴포넌튼 생성 시 선택된 시즌 id 설정
 		if (seasons.value.length) {
 			currentSeasonId.value = seasons.value[0].id;
 		}
 
 		// 시즌 정보 조회
 		const fetchSeasonDetail = async () => {
+			loading.value = true;
+
 			const seasonNumber = currentSeason.value.season_number;
 
 			const result = await getSeasonDetail(id.value, seasonNumber);
@@ -150,6 +141,8 @@ export default {
 			}
 
 			episodes.value = result.data.episodes;
+
+			loading.value = false;
 		};
 
 		// 선택된 시즌 넘버 변경 감지
@@ -164,6 +157,8 @@ export default {
 		);
 
 		return {
+			open,
+			loading,
 			currentSeason,
 			episodes,
 		};
