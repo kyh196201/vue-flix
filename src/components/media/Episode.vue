@@ -1,15 +1,15 @@
 <template>
 	<li
 		class="episode"
-		role="button"
-		tabindex="0"
 		:aria-label="episode.name"
 		:data-episode-id="episode.id"
 	>
-		<strong class="episode__number">50</strong>
+		<strong class="episode__number">
+			{{ episode.episode_number }}
+		</strong>
 		<div class="episode__poster">
 			<figure class="episode__figure">
-				<img :src="posterImage" :alt="episode.name" />
+				<img v-lazy-image="stillImage" :alt="episode.name" />
 			</figure>
 		</div>
 		<div class="episode__info">
@@ -48,7 +48,8 @@ export default {
 	setup(props) {
 		const episode = reactive(props.episode);
 
-		const posterImage = computed(() => {
+		// 에피소드 스틸컷 이미지
+		const stillImage = computed(() => {
 			const { still_path } = episode;
 
 			if (!still_path) return '';
@@ -57,7 +58,7 @@ export default {
 		});
 
 		return {
-			posterImage,
+			stillImage,
 		};
 	},
 };
@@ -68,9 +69,11 @@ export default {
 	display: flex;
 	align-items: center;
 	padding: 1.6rem;
-	// font-size: 0.8em;
-	// font-weight: normal;
 	cursor: pointer;
+
+	&:focus {
+		outline: 0.1rem solid $white;
+	}
 
 	&__number,
 	&__title,
@@ -80,6 +83,8 @@ export default {
 	}
 
 	&__number {
+		min-width: 2em;
+		text-align: center;
 		font-size: 2.4rem;
 	}
 

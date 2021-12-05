@@ -30,6 +30,8 @@
         align-items: center;
         justify-content: space-between;
         margin-bottom: 1rem;
+        padding: 1rem 0;
+        border-bottom: 0.1rem solid #404040;
     }
 
     &__title {
@@ -119,6 +121,24 @@
 		max-height: 90rem;
 		padding-bottom: 8rem;
 	}
+
+    &__episodes {
+        padding: 1rem;
+
+        &:deep {
+            .episode {
+                border-bottom: 0.1rem solid #404040;
+            }
+        }
+
+        &:deep {
+            .skeleton-box {
+                &:not(:last-child) {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+    }
 
     // fold/unfold btn
 	.btn--fold {

@@ -5,7 +5,7 @@
 		<header class="seasons__header">
 			<h4 class="seasons__title">회차</h4>
 
-			<!-- 드롭다운 영역 -->
+			<!-- 시즌 선택 메뉴 영역 -->
 			<dropdown-menu class="seasons__menu">
 				<template #title>
 					<span v-if="currentSeason">
@@ -16,13 +16,15 @@
 				<template #content>
 					<ul class="season-list" role="menu">
 						<template
-							v-for="(season, index) in seasons"
-							:key="`season-${index}`"
+							v-for="season in seasons"
+							:key="`season-${season.id}`"
 						>
 							<li
 								class="season-list__season"
 								role="menuitem"
 								tabindex="0"
+								:data-season-id="season.id"
+								@click="currentSeasonId = season.id"
 							>
 								<strong class="season-list__name">
 									{{ season.name }}
@@ -39,14 +41,25 @@
 
 		<div class="seasons__box">
 			<div class="seasons__content">
-				<template v-if="loading"> loading... </template>
-
-				<ul class="seasons__episodes" v-else>
+				<ul class="seasons__episodes">
+					<template v-if="loading">
+						<template
+							v-for="(i, index) in 6"
+							:key="`skeleton-${index}`"
+						>
+							<skeleton-box height="10rem"></skeleton-box>
+						</template>
+					</template>
 					<template
+						v-else
 						v-for="(episode, index) in episodes"
 						:key="`episode-${index}`"
 					>
-						<episode :episode="episode"></episode>
+						<episode
+							role="button"
+							tabindex="0"
+							:episode="episode"
+						></episode>
 					</template>
 				</ul>
 			</div>
@@ -74,6 +87,7 @@ import { toRefs, ref, watch, computed } from 'vue';
 
 // 컴포넌트
 import DropdownMenu from '@/components/common/DropdownMenu.vue';
+import SkeletonBox from '@/components/common/loading/SkeletonBox.vue';
 import Episode from './Episode.vue';
 
 // API
@@ -84,6 +98,7 @@ export default {
 
 	components: {
 		DropdownMenu,
+		SkeletonBox,
 		Episode,
 	},
 
@@ -160,6 +175,7 @@ export default {
 			open,
 			loading,
 			currentSeason,
+			currentSeasonId,
 			episodes,
 		};
 	},
