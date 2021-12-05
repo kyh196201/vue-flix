@@ -32,14 +32,6 @@
 								</span>
 							</li>
 						</template>
-						<li
-							class="season-list__season"
-							role="menuitem"
-							tabindex="0"
-						>
-							<!-- 컴포넌트 분리? -->
-							<span>전체 회차 표시</span>
-						</li>
 					</ul>
 				</template>
 			</dropdown-menu>
@@ -48,29 +40,51 @@
 		<div class="seasons__box">
 			<div class="seasons__content">
 				<ul class="seasons__episodes">
-					<li>
-						<!-- 컴포넌트 분리? -->
-						<div class="episode">
-							<strong class="episode__order">50</strong>
-							<div class="episode__info">
-								<div class="episode__info-header">
-									<h5 class="episode__title">시작의 마을</h5>
-									<span class="episode__vote">평점</span>
-								</div>
-								<p class="episode__overview">
-									Lorem ipsum dolor sit, amet consectetur
-									adipisicing elit. Nemo tempora debitis
-									sapiente modi omnis doloribus laudantium
-									voluptatibus esse obcaecati reiciendis
-									nostrum, laboriosam fuga, quod facilis quia
-									recusandae in adipisci suscipit!
-								</p>
+					<li
+						class="episode"
+						role="button"
+						tabindex="0"
+						aria-label="시작의 마을"
+					>
+						<strong class="episode__number">50</strong>
+						<div class="episode__poster">
+							<figure class="episode__figure">
+								<img
+									src="https://image.tmdb.org/t/p/w342/uacNwki3PqXEFk9Pal9Ng5NwwAI.jpg"
+									alt="123"
+								/>
+							</figure>
+						</div>
+						<div class="episode__info">
+							<div class="episode__header">
+								<h5 class="episode__title">시작의 마을</h5>
+								<span class="episode__air-date"
+									>2021-09-17</span
+								>
 							</div>
+							<p class="episode__overview">
+								Lorem ipsum dolor sit, amet consectetur
+								adipisicing elit. Nemo tempora debitis sapiente
+								modi omnis doloribus laudantium voluptatibus
+								esse obcaecati reiciendis nostrum, laboriosam
+								fuga, quod facilis quia recusandae in adipisci
+								suscipit!
+							</p>
 						</div>
 					</li>
 				</ul>
 			</div>
 		</div>
+
+		<!-- caret-up, down -->
+		<label class="btn btn--user btn--fold">
+			<input type="checkbox" />
+			<font-awesome-icon
+				class="btn__icon"
+				:icon="['fas', 'caret-up']"
+			></font-awesome-icon>
+			<span class="btn__title">찜하기</span>
+		</label>
 	</section>
 </template>
 
