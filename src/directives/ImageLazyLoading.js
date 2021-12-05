@@ -1,11 +1,4 @@
 // Custom Directive for image lazy loading
-
-/**
- * TODO
- * 1. placeholder 엘리먼트 생성하기 (lazy 클래스는 MovieItem에만 있으므로 공통 적용 불가능)
- * 2. image load error 처리
- */
-
 import placeholderImage from '@/assets/images/common/placeholder-image.jpg';
 
 const lazyImage = {
@@ -43,6 +36,10 @@ const lazyImage = {
 			el.classList.remove('lazy');
 			el.observer.disconnect();
 
+			/**
+			 * onerror 이벤트 핸들러가 실행되고, placeholder 이미지가 src로 세팅될 때
+			 * 다시 onload 이벤트 핸들러가 실행되는데, 에러가 발생했을 경우에는 error 클래스를 지우지 않기위함
+			 */
 			if (!isError) {
 				el.classList.remove('error');
 			}
