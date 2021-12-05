@@ -34,16 +34,22 @@ const lazyImage = {
 		}, observerOption);
 	},
 	mounted(el) {
+		let isError = false;
+
+		el.classList.add('lazy-image');
+
 		el.onload = function () {
 			el.removeAttribute('data-src');
 			el.classList.remove('lazy');
-			el.closest('.media-item')?.classList.remove('error');
-
 			el.observer.disconnect();
+
+			if (!isError) {
+				el.classList.remove('error');
+			}
 		};
 
 		el.onerror = function () {
-			// FIXME 임시 error 처리
+			isError = true;
 			el.setAttribute('src', placeholderImage);
 			el.classList.add('error');
 			el.classList.remove('lazy');
