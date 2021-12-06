@@ -28,18 +28,15 @@ export default {
 
 		animation: {
 			type: Boolean,
-			default: false,
+			default: true,
 		},
 	},
 
 	computed: {
 		computedStyle() {
-			const self = this;
-
 			return {
-				width: self.width,
-				height: self.height,
-				backgroundColor: self.backgroundColor,
+				width: this.width,
+				height: this.height,
 			};
 		},
 
@@ -53,6 +50,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$bg-color: rgba(73, 80, 87, 0.7);
+
 .skeleton-box {
 	display: flex;
 	width: 100%;
@@ -61,17 +60,18 @@ export default {
 	padding: 0;
 	font-size: 0px;
 	border-radius: 0.2rem;
+	background-color: $bg-color;
 
 	&.shine {
 		// animation
-		animation: shine 1.5s infinite;
+		animation: shine 2s infinite;
 	}
 }
 
 @keyframes shine {
 	0%,
 	100% {
-		opacity: 0.5;
+		opacity: 0.3;
 	}
 
 	50% {
