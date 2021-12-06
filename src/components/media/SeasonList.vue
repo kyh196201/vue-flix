@@ -43,30 +43,38 @@
 			<div class="seasons__content">
 				<ul class="seasons__episodes">
 					<template v-if="loading">
-						<template
+						<li
+							class="seasons__skeleton"
 							v-for="(i, index) in 6"
 							:key="`skeleton-${index}`"
 						>
 							<skeleton-box height="10rem"></skeleton-box>
-						</template>
+						</li>
 					</template>
-					<template
-						v-else
-						v-for="(episode, index) in episodes"
-						:key="`episode-${index}`"
-					>
-						<episode
-							role="button"
-							tabindex="0"
-							:episode="episode"
-						></episode>
+					<template v-else>
+						<template v-if="episodes.length">
+							<episode
+								v-for="(episode, index) in episodes"
+								:key="`episode-${index}`"
+								role="button"
+								tabindex="0"
+								:episode="episode"
+							></episode>
+						</template>
+						<li class="seasons__no-episode" v-else>
+							<p>등록된 에피소드가 없습니다. 😱</p>
+						</li>
 					</template>
 				</ul>
 			</div>
 		</div>
 
 		<!-- caret-up, down -->
-		<button class="btn btn--user btn--fold" @click="open = !open">
+		<button
+			class="btn btn--user btn--fold"
+			v-show="episodes.length"
+			@click="open = !open"
+		>
 			<span class="sr-only">찜하기</span>
 			<font-awesome-icon
 				v-if="open"

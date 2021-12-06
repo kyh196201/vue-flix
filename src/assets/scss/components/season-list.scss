@@ -130,14 +130,17 @@
                 border-bottom: 0.1rem solid #404040;
             }
         }
+    }
 
-        &:deep {
-            .skeleton-box {
-                &:not(:last-child) {
-                    margin-bottom: 1rem;
-                }
-            }
+    &__skeleton {
+        &:not(:last-child) {
+            margin-bottom: 1rem;
         }
+    }
+
+    &__no-episode {
+        text-align: center;
+        font-size: 2rem;
     }
 
     // fold/unfold btn
