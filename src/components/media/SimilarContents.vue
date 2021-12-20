@@ -16,7 +16,10 @@
 					v-for="media in similarContents"
 					:key="`similar-${media.id}`"
 				>
-					<MediaCard mediaType="tv" :mediaData="media"></MediaCard>
+					<MediaCard
+						:mediaType="mediaType"
+						:mediaData="media"
+					></MediaCard>
 				</li>
 			</ul>
 		</div>
